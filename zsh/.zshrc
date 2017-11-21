@@ -47,7 +47,7 @@ antigen bundle rust
 antigen bundle docker
 antigen bundle docker-compose
 
-antigen theme https://github.com/caiogondim/bullet-train-oh-my-zsh-theme bullet-train
+antigen theme https://github.com/wouldgo/bullet-train.zsh bullet-train
 antigen apply
 
 first-tab() {
