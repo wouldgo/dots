@@ -11,6 +11,5 @@ set -e && \
 
 sudo ${CURRENT_DIR}/deps/apt.sh && \
 sudo ${CURRENT_DIR}/deps/text-info.sh 6.5 && \
-${CURRENT_DIR}/deps/powerline-fonts.sh && \
 
 sudo ${CURRENT_DIR}/compile-zsh.sh

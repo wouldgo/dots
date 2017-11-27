@@ -16,6 +16,11 @@ if ! ${CURRENT_DIR}/system/fix-python.sh; then
   echo "python alias wasn't usefull" 2>&1
 fi
 
+echo "Installing fonts" && \
+if ! ${CURRENT_DIR}/font/powerline-fonts.sh; then
+  echo "font installation went wrong" 2>&1
+fi
+
 echo "Preparing shell configuration..." && \
 if ! ${CURRENT_DIR}/zsh/confs/user.sh; then
   echo "zsh configurations for ${USER} are already set" 2>&1

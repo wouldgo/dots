@@ -3,13 +3,13 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
 FONT_FACE="Ubuntu Mono derivative Powerline"
 FONT_SIZE="12"
 
-[[ ! -f ~/git/confs/dots/powerline-fonts ]] || {
+[[ ! -f ${CURRENT_DIR}/../powerline-fonts ]] || {
   echo "powerline fonts are already downloaded" 2>&1
   exit 0;
 } && \
 
-git clone https://github.com/powerline/fonts.git ~/git/confs/dots/powerline-fonts &&
-~/git/confs/dots/powerline-fonts/install.sh && \
+git clone https://github.com/powerline/fonts.git ${CURRENT_DIR}/../powerline-fonts &&
+${CURRENT_DIR}/../powerline-fonts/install.sh && \
 
 #XXX sudo ${CURRENT_DIR}/font-system-console.sh && \
 command -v gconftool-2 && {
