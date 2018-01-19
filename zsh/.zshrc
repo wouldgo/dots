@@ -37,30 +37,22 @@ BULLETTRAIN_GIT_PROMPT_CMD="\$(git_customized_status)"
 BULLETTRAIN_GIT_EXTENDED=false
 
 source <(antibody init)
-antibody bundle robbyrussell/oh-my-zsh folder:themes/robbyrussell
+antibody bundle robbyrussell/oh-my-zsh folder:lib
+
 antibody bundle mttrs/zsh-git-prompt
 antibody bundle robbyrussell/oh-my-zsh folder:plugins/git
 antibody bundle robbyrussell/oh-my-zsh folder:plugins/gulp
 antibody bundle robbyrussell/oh-my-zsh folder:plugins/nvm
 antibody bundle robbyrussell/oh-my-zsh folder:plugins/rust
+antibody bundle robbyrussell/oh-my-zsh folder:plugins/cargo
 antibody bundle robbyrussell/oh-my-zsh folder:plugins/docker
+antibody bundle docker/compose folder:contrib/completion/zsh
 antibody bundle robbyrussell/oh-my-zsh folder:plugins/docker-compose
+antibody bundle robbyrussell/oh-my-zsh folder:plugins/golang
 antibody bundle robbyrussell/oh-my-zsh folder:plugins/kubectl
-antibody bundle https://github.com/wouldgo/bullet-train.zsh bullet-train
-#source ${CONFS_FOLDER}/antigen.zsh
-#antigen use oh-my-zsh
-#
-#antigen bundle mttrs/zsh-git-prompt
-#antigen bundle git
-#antigen bundle gulp
-#antigen bundle nvm
-#antigen bundle rust
-#antigen bundle docker
-#antigen bundle docker-compose
-#antigen bundle kubectl
-#
-#antigen theme https://github.com/wouldgo/bullet-train.zsh bullet-train
-#antigen apply
+antibody bundle wouldgo/bullet-train.zsh
+
+antibody update
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
