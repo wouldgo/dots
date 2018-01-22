@@ -46,7 +46,6 @@ antibody bundle robbyrussell/oh-my-zsh folder:plugins/nvm
 antibody bundle robbyrussell/oh-my-zsh folder:plugins/rust
 antibody bundle robbyrussell/oh-my-zsh folder:plugins/cargo
 antibody bundle robbyrussell/oh-my-zsh folder:plugins/docker
-antibody bundle docker/compose folder:contrib/completion/zsh
 antibody bundle robbyrussell/oh-my-zsh folder:plugins/docker-compose
 antibody bundle robbyrussell/oh-my-zsh folder:plugins/golang
 antibody bundle robbyrussell/oh-my-zsh folder:plugins/kubectl
