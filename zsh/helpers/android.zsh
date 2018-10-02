@@ -1,4 +1,4 @@
 #!/usr/bin/env zsh
 
-path=('/home/dario/platform-tools' '/home/dario/apktool' '/home/dario/dex2jar' '/home/dario/jadx/bin' $path)
+path=('/home/dario/android/platform-tools' '/home/dario/android/apktool' $path)
 export PATH
