@@ -3,6 +3,7 @@ CONFS_FOLDER=~/git/confs/dots/zsh
 HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=10000
+VENV_HOME=$HOME/.virtual-envs
 
 #customizations
 for FILE in ${CONFS_FOLDER}/helpers/*.zsh; do
@@ -54,37 +55,14 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-first-tab() {
-  if [[ $#BUFFER == 0 ]]; then
-    BUFFER="ls -al "
-    CURSOR=7
-    zle list-choices
-  else
-    zle expand-or-complete
-  fi
-}
 
 autoload -U add-zsh-hook
-load-nvmrc() {
-  local node_version="$(nvm version)"
-  local nvmrc_path="$(nvm_find_nvmrc)"
-
-  if [ -n "$nvmrc_path" ]; then
-    local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
-
-    if [ "$nvmrc_node_version" = "N/A" ]; then
-      nvm install
-    elif [ "$nvmrc_node_version" != "$node_version" ]; then
-      nvm use
-    fi
-  elif [ "$node_version" != "$(nvm version default)" ]; then
-    echo "Reverting to nvm default version"
-    nvm use default
-  fi
-}
 
 zle -N first-tab
 bindkey '^I' first-tab
 
 add-zsh-hook chpwd load-nvmrc
 load-nvmrc
+
+add-zsh-hook chpwd load-virtualenv
+load-virtualenv
