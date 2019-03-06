@@ -5,6 +5,11 @@ echo "Preparing git folder" && \
 mkdir --parents --verbose ~/git/confs && \
 
 echo "Removing workspace shortcuts" && \
+if ! "${CURRENT_DIR}"/system/install-git-secret.sh; then
+  echo "Something went wrong" 2>&1
+fi
+
+echo "Removing workspace shortcuts" && \
 if ! "${CURRENT_DIR}"/system/disable-workspace-keys.sh; then
   echo "Something went wrong" 2>&1
 fi
