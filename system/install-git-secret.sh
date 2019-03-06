@@ -7,5 +7,4 @@ wget -qO - https://api.bintray.com/users/sobolevn/keys/gpg/public.key | \
   sudo apt-key add - && \
 
 sudo apt update && \
-sudo apt install -y git-secret && \
-sudo apt autoremove -y
+sudo apt install -y git-secret

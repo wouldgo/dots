@@ -4,7 +4,12 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
 echo "Preparing git folder" && \
 mkdir --parents --verbose ~/git/confs && \
 
-echo "Removing workspace shortcuts" && \
+echo "Updating system" && \
+if ! "${CURRENT_DIR}"/system/update-system.sh; then
+  echo "Something went wrong" 2>&1
+fi
+
+echo "Installing git secret command" && \
 if ! "${CURRENT_DIR}"/system/install-git-secret.sh; then
   echo "Something went wrong" 2>&1
 fi
