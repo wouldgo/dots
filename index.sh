@@ -44,9 +44,27 @@ if ! "${CURRENT_DIR}"/vim/confs/user.sh; then
   echo "vim configurations for ${USER} are already set" 2>&1
 fi
 
+echo "Installing zsh tmux and vim" && \
 sudo apt install -y \
     zsh \
     tmux \
     vim
 
 sudo chsh "${USER}" -s "$(command -v zsh)"
+
+echo "Installing rbenv" && \
+sudo apt install -y \
+  curl \
+  libssl-dev \
+  libreadline-dev \
+  zlib1g-dev \
+  autoconf \
+  bison \
+  build-essential \
+  libyaml-dev \
+  libreadline-dev \
+  libncurses5-dev \
+  libffi-dev \
+  libgdbm-dev
+
+curl -sL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash -
