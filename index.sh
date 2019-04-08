@@ -44,7 +44,7 @@ if ! "${CURRENT_DIR}"/vim/confs/user.sh; then
   echo "vim configurations for ${USER} are already set" 2>&1
 fi
 
-echo "Installing zsh tmux and vim" && \
+echo "Installing zsh tmux and vim..." && \
 sudo apt install -y \
     zsh \
     tmux \
@@ -52,7 +52,7 @@ sudo apt install -y \
 
 sudo chsh "${USER}" -s "$(command -v zsh)"
 
-echo "Installing rbenv" && \
+echo "Installing rbenv..." && \
 sudo apt install -y \
   curl \
   libssl-dev \
@@ -65,6 +65,10 @@ sudo apt install -y \
   libreadline-dev \
   libncurses5-dev \
   libffi-dev \
-  libgdbm-dev
-
+  libgdbm-dev && \
 curl -sL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash -
+
+echo "Installing rustup..." && \
+wget -O /tmp/rustup.sh https://sh.rustup.rs && \
+bash /tmp/rustup.sh -y &&
+rm -Rfv /tmp/rustup.sh
