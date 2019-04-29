@@ -1,9 +1,10 @@
 #!/usr/bin/env zsh
 
+_VENV_FILENAME=".virtualenv"
+
 load-virtualenv() {
-  if [[ -f ".venv" ]]; then
-    _VENV_NAME=$(cat .venv)
-    _VENV_PATH="${VENV_HOME}/${_VENV_NAME}"
+  if [[ -f "${_VENV_FILENAME}" ]]; then
+    _VENV_PATH=".venv"
 
     if [[ ! -d "${_VENV_PATH}" ]]; then
       python3 -m venv ${_VENV_PATH}

@@ -3,7 +3,6 @@ CONFS_FOLDER=~/git/confs/dots/zsh
 HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=10000
-VENV_HOME=$HOME/.virtual-envs
 
 #customizations
 for FILE in ${CONFS_FOLDER}/helpers/*.zsh; do
