@@ -13,6 +13,10 @@ load-virtualenv() {
     if [[ "${VIRTUAL_ENV}" != "${_VENV_PATH}" ]]; then
       source "${_VENV_PATH}"/bin/activate
     fi
+
+    if [[ -f "requirements.txt" ]]; then
+      pip install -r requirements.txt
+    fi
   elif [ -n "${VIRTUAL_ENV}" ]; then
 
     deactivate
