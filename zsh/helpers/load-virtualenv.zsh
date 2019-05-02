@@ -19,6 +19,9 @@ load-virtualenv() {
       source "${_VENV_PATH}"/bin/activate
     fi
 
+    echo "Updating pip..."
+    pip install --upgrade pip
+
     if [[ -f "requirements.txt" ]]; then
       echo "Installing dependecies from requirements.txt file..."
       pip install -r requirements.txt
