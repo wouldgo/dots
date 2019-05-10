@@ -24,6 +24,7 @@ BULLETTRAIN_PROMPT_ORDER=(
     nvm
     aws
     go
+    rust
     elixir
     git
     hg
@@ -37,6 +38,7 @@ BULLETTRAIN_GIT_PROMPT_CMD="\$(git_customized_status)"
 BULLETTRAIN_GIT_EXTENDED=false
 
 source ${CONFS_FOLDER}/antigen.zsh
+source ${HOME}/.cargo/env
 antigen use oh-my-zsh
 
 antigen bundle mttrs/zsh-git-prompt
@@ -45,7 +47,6 @@ antigen bundle gulp
 antigen bundle nvm
 antigen bundle rust
 antigen bundle docker
-antigen bundle docker-compose
 
 antigen theme https://github.com/wouldgo/bullet-train.zsh bullet-train
 antigen apply
