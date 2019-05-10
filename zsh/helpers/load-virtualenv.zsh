@@ -3,20 +3,30 @@
 _VENV_FILENAME=".virtualenv"
 
 load-virtualenv() {
-  if [[ -f "${_VENV_FILENAME}" ]]; then
-    _VENV_VERSION="$(cat ${_VENV_FILENAME})"
-    _VENV_PATH=".venv"
-    _PYTHON_BINARY="$(command -v python${_VENV_VERSION})"
+  #I want the same env for the subfolders
+  if [[ -n "${VIRTUAL_ENV}" ]]; then
+    local parent_virtual_env=$(dirname ${VIRTUAL_ENV})
+    if [[ "${PWD##${parent_virtual_env}}" != "${PWD}" ]]; then
 
-    if [[ ! -d "${_VENV_PATH}" ]]; then
-      echo "Using binary ${_PYTHON_BINARY} to create virtual environment..."
-      ${_PYTHON_BINARY} -m venv ${_VENV_PATH}
+      return 0;
+    fi
+  fi
+
+  #file is present
+  if [[ -f "${_VENV_FILENAME}" ]]; then
+    local virtual_env_version="$(cat ${_VENV_FILENAME})"
+    local virtual_env_path=".venv"
+    local python_binary="$(command -v python${virtual_env_version})"
+
+    if [[ ! -d "${virtual_env_path}" ]]; then
+      echo "Using binary ${python_binary} to create virtual environment..."
+      ${python_binary} -m venv ${virtual_env_path}
     fi
 
     # Check to see if already activated to avoid redundant activating
-    if [[ "${VIRTUAL_ENV}" != "${_VENV_PATH}" ]]; then
+    if [[ "${VIRTUAL_ENV}" != "${virtual_env_path}" ]]; then
       echo "Activating virtual environment..."
-      source "${_VENV_PATH}"/bin/activate
+      source "${virtual_env_path}"/bin/activate
     fi
 
     echo "Updating pip..."
@@ -28,7 +38,7 @@ load-virtualenv() {
     fi
 
     echo "All done."
-  elif [ -n "${VIRTUAL_ENV}" ]; then
+  elif [[ -n "${VIRTUAL_ENV}" ]]; then
 
     echo "Deactivating current virtual environment..."
     deactivate
