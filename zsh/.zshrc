@@ -43,18 +43,19 @@ antigen use oh-my-zsh
 
 antigen bundle mttrs/zsh-git-prompt
 antigen bundle git
-antigen bundle gulp
 antigen bundle nvm
-antigen bundle rust
 antigen bundle docker
 
 antigen theme https://github.com/wouldgo/bullet-train.zsh bullet-train
 antigen apply
 
+#Completion
+fpath=(~/.zsh/completion $fpath)
+autoload -Uz compinit && compinit -i
+
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-
 
 autoload -U add-zsh-hook
 

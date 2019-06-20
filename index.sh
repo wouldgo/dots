@@ -34,6 +34,9 @@ if ! "${CURRENT_DIR}"/zsh/confs/user.sh; then
   echo "zsh configurations for ${USER} are already set" 2>&1
 fi
 
+echo "Creating zsh completion folder for ${USER}..." && \
+mkdir --parents --verbose ~/.zsh/completion && \
+
 echo "Preparing tmux configuration..." && \
 if ! "${CURRENT_DIR}"/tmux/confs/user.sh; then
   echo "tmux configurations for ${USER} are already set" 2>&1
@@ -48,9 +51,12 @@ echo "Installing zsh tmux and vim..." && \
 sudo apt install -y \
     zsh \
     tmux \
-    vim
+    vim && \
 
-sudo chsh "${USER}" -s "$(command -v zsh)"
+sudo chsh "${USER}" -s "$(command -v zsh)" && \
+
+echo "Running script for completion in terminal" && \
+"${CURRENT_DIR}"/zsh/completion.sh && \
 
 echo "Installing rbenv..." && \
 sudo apt install -y \
