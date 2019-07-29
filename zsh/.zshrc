@@ -4,6 +4,11 @@ HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=10000
 
+export NVM_DIR="$HOME/.nvm"
+export GVM_DIR="$HOME/.gvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "${GVM_DIR}/scripts/gvm" ] && source "${GVM_DIR}/scripts/gvm"
+
 #customizations
 for FILE in ${CONFS_FOLDER}/helpers/*.zsh; do
 
@@ -44,6 +49,7 @@ antigen use oh-my-zsh
 antigen bundle mttrs/zsh-git-prompt
 antigen bundle git
 antigen bundle nvm
+antigen bundle dgnest/zsh-gvm-plugin
 antigen bundle docker
 
 antigen theme https://github.com/wouldgo/bullet-train.zsh bullet-train
@@ -52,10 +58,6 @@ antigen apply
 #Completion
 fpath=(~/.zsh/completion $fpath)
 autoload -Uz compinit && compinit -i
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 autoload -U add-zsh-hook
 
@@ -67,3 +69,6 @@ load-nvmrc
 
 add-zsh-hook chpwd load-virtualenv
 load-virtualenv
+
+add-zsh-hook chpwd load-gvmrc
+load-gvmrc
