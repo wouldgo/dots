@@ -4,8 +4,8 @@ HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=10000
 
-export NVM_DIR="$HOME/.nvm"
-export GVM_DIR="$HOME/.gvm"
+export NVM_DIR="${HOME}/.nvm"
+export GVM_DIR="${HOME}/.gvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "${GVM_DIR}/scripts/gvm" ] && source "${GVM_DIR}/scripts/gvm"
 
