@@ -53,6 +53,8 @@ antigen bundle dgnest/zsh-gvm-plugin
 antigen bundle docker
 
 antigen theme https://github.com/wouldgo/bullet-train.zsh bullet-train
+
+antigen bundle johanhaleby/kubetail
 antigen apply
 
 #Completion
