@@ -8,16 +8,16 @@ FONT_SIZE="12"
   exit 0;
 } && \
 
-git clone https://github.com/powerline/fonts.git ${CURRENT_DIR}/../powerline-fonts &&
-${CURRENT_DIR}/../powerline-fonts/install.sh && \
+git clone https://github.com/powerline/fonts.git "${CURRENT_DIR}/../powerline-fonts" &&
+"${CURRENT_DIR}/../powerline-fonts/install.sh" && \
 
 #XXX sudo ${CURRENT_DIR}/font-system-console.sh && \
-command -v gconftool-2 && {
+if command -v gconftool-2; then
 
   gconftool-2 --set /apps/gnome-terminal/profiles/Default/use_system_font --type=boolean false && \
   gconftool-2 --set /apps/gnome-terminal/profiles/Default/font --type string "${FONT_FACE} ${FONT_SIZE}"
-} || {
+else
 
   echo "No GNOME shell..." 2>&1
   exit 0;
-}
+fi

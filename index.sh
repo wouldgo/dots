@@ -19,11 +19,6 @@ if ! "${CURRENT_DIR}"/system/disable-workspace-keys.sh; then
   echo "Something went wrong" 2>&1
 fi
 
-echo "Fixing python" && \
-if ! "${CURRENT_DIR}"/system/fix-python.sh; then
-  echo "python alias wasn't usefull" 2>&1
-fi
-
 echo "Installing fonts" && \
 if ! "${CURRENT_DIR}"/font/powerline-fonts.sh; then
   echo "font installation went wrong" 2>&1

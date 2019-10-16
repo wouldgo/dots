@@ -8,4 +8,4 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
 ) && \
 
 curl -L git.io/antigen > ~/git/confs/dots/zsh/antigen.zsh && \
-ln -s ${CURRENT_DIR}/../.zshrc ~/.zshrc
+ln -s "${CURRENT_DIR}/../.zshrc" ~/.zshrc

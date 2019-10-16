@@ -6,4 +6,4 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
   exit 1;
 } && \
 
-ln -s ${CURRENT_DIR}/../.tmux.conf ~/.tmux.conf
+ln -s "${CURRENT_DIR}/../.tmux.conf" ~/.tmux.conf
