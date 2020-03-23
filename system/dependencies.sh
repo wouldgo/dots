@@ -17,4 +17,6 @@ sudo apt install -y \
   mercurial \
   make \
   binutils \
-  gcc
+  gcc \
+  python-virtualenv \
+  python3-venv
