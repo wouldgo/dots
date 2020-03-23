@@ -66,6 +66,8 @@ wget -O /tmp/rustup.sh https://sh.rustup.rs && \
 bash /tmp/rustup.sh -y &&
 rm -Rfv /tmp/rustup.sh && \
 
+curl -s "https://get.sdkman.io" | bash && \
+
 echo "Remeber to install:
   - https://github.com/nvm-sh/nvm
   - https://github.com/moovweb/gvm"
