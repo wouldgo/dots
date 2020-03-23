@@ -9,6 +9,11 @@ if ! "${CURRENT_DIR}"/system/update-system.sh; then
   echo "Something went wrong" 2>&1
 fi
 
+echo "Installing dependencies" && \
+if ! "${CURRENT_DIR}"/system/dependencies.sh; then
+  echo "Something went wrong" 2>&1
+fi
+
 echo "Installing git secret command" && \
 if ! "${CURRENT_DIR}"/system/install-git-secret.sh; then
   echo "Something went wrong" 2>&1
@@ -54,19 +59,6 @@ echo "Running script for completion in terminal" && \
 "${CURRENT_DIR}"/zsh/completion.sh && \
 
 echo "Installing rbenv..." && \
-sudo apt install -y \
-  curl \
-  libssl-dev \
-  libreadline-dev \
-  zlib1g-dev \
-  autoconf \
-  bison \
-  build-essential \
-  libyaml-dev \
-  libreadline-dev \
-  libncurses5-dev \
-  libffi-dev \
-  libgdbm-dev && \
 curl -sL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash -
 
 echo "Installing rustup..." && \
