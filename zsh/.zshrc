@@ -23,16 +23,16 @@ BULLETTRAIN_PROMPT_ORDER=(
     #context
     dir
     screen
-    perl
+    #perl
     ruby
     virtualenv
     nvm
-    aws
+    #aws
     go
     rust
-    elixir
+    #elixir
     git
-    hg
+    #hg
     cmd_exec_time
   )
 
