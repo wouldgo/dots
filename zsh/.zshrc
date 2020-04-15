@@ -23,6 +23,7 @@ BULLETTRAIN_PROMPT_ORDER=(
     #context
     dir
     screen
+    kctx
     #perl
     ruby
     virtualenv
@@ -55,7 +56,12 @@ antigen bundle docker
 antigen theme https://github.com/wouldgo/bullet-train.zsh bullet-train
 
 antigen bundle johanhaleby/kubetail
+antigen bundle ahmetb/kubectx
 antigen apply
+
+ln -sf ~/.antigen/bundles/ahmetb/kubectx/completion/kubectx.zsh ~/.zsh/completion/_kubectx.zsh
+ln -sf ~/.antigen/bundles/ahmetb/kubectx/completion/kubens.zsh ~/.zsh/completion/_kubens.zsh
+ln -sf ~/.antigen/bundles/johanhaleby/kubetail/completion/kubetail.zsh ~/.zsh/completion/_kubetail.zsh
 
 #Completion
 fpath=(~/.zsh/completion $fpath)
