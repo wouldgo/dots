@@ -25,7 +25,7 @@ BULLETTRAIN_PROMPT_ORDER=(
     screen
     kctx
     #perl
-    ruby
+    #ruby
     virtualenv
     nvm
     #aws
