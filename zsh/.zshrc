@@ -57,6 +57,7 @@ antigen theme https://github.com/wouldgo/bullet-train.zsh bullet-train
 
 antigen bundle johanhaleby/kubetail
 antigen bundle ahmetb/kubectx
+antigen bundle StackExchange/blackbox
 antigen apply
 
 ln -sf ~/.antigen/bundles/ahmetb/kubectx/completion/kubectx.zsh ~/.zsh/completion/_kubectx.zsh
