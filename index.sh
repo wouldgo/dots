@@ -68,6 +68,6 @@ rm -Rfv /tmp/rustup.sh && \
 
 curl -s "https://get.sdkman.io" | bash && \
 
-echo "Remeber to install:
+echo "Remember to install:
   - https://github.com/nvm-sh/nvm
   - https://github.com/moovweb/gvm"
