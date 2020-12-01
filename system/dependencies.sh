@@ -17,4 +17,8 @@ sudo apt install -y \
   mercurial \
   make \
   binutils \
-  gcc
+  gcc \
+  python3-venv && \
+
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python2 1 && \
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 2
