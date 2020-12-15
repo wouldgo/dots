@@ -1,0 +1,15 @@
+ohmyzsh/ohmyzsh
+ohmyzsh/ohmyzsh path:plugins/git
+ohmyzsh/ohmyzsh path:plugins/nvm
+ohmyzsh/ohmyzsh path:plugins/docker kind:fpath
+
+mttrs/zsh-git-prompt
+dgnest/zsh-gvm-plugin
+
+johanhaleby/kubetail kind:path
+ahmetb/kubectx kind:path
+
+#johanhaleby/kubetail path:completion kind:fpath
+#ahmetb/kubectx path:completion kind:fpath
+
+wouldgo/bullet-train.zsh

@@ -1,4 +1,5 @@
 CONFS_FOLDER=~/git/confs/dots/zsh
+ZSH=$(${CONFS_FOLDER}/antibody path ohmyzsh/ohmyzsh)
 
 HISTFILE=~/.histfile
 HISTSIZE=1000
@@ -43,29 +44,15 @@ BULLETTRAIN_PROMPT_ADD_NEWLINE=false
 BULLETTRAIN_GIT_PROMPT_CMD="\$(git_customized_status)"
 BULLETTRAIN_GIT_EXTENDED=false
 
-source ${CONFS_FOLDER}/antigen.zsh
 source ${HOME}/.cargo/env
-antigen use oh-my-zsh
+source ${CONFS_FOLDER}/zsh_plugins.sh
 
-antigen bundle mttrs/zsh-git-prompt
-antigen bundle git
-antigen bundle nvm
-antigen bundle dgnest/zsh-gvm-plugin
-antigen bundle docker
-
-antigen theme https://github.com/wouldgo/bullet-train.zsh bullet-train
-
-antigen bundle johanhaleby/kubetail
-antigen bundle ahmetb/kubectx
-antigen bundle StackExchange/blackbox
-antigen apply
-
-ln -sf ~/.antigen/bundles/ahmetb/kubectx/completion/kubectx.zsh ~/.zsh/completion/_kubectx.zsh
-ln -sf ~/.antigen/bundles/ahmetb/kubectx/completion/kubens.zsh ~/.zsh/completion/_kubens.zsh
-ln -sf ~/.antigen/bundles/johanhaleby/kubetail/completion/kubetail.zsh ~/.zsh/completion/_kubetail.zsh
+ln -sf $(${CONFS_FOLDER}/antibody path ahmetb/kubectx)/completion/kubectx.zsh ~/.zsh/completion/_kubectx.zsh
+ln -sf $(${CONFS_FOLDER}/antibody path ahmetb/kubectx)/completion/kubens.zsh ~/.zsh/completion/_kubens.zsh
+ln -sf $(${CONFS_FOLDER}/antibody path johanhaleby/kubetail)/completion/kubetail.zsh ~/.zsh/completion/_kubetail.zsh
 
 #Completion
-fpath=(~/.zsh/completion $fpath)
+fpath+=( ~/.zsh/completion )
 autoload -Uz compinit && compinit -i
 
 autoload -U add-zsh-hook

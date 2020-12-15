@@ -7,5 +7,5 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
   exit 1;
 ) && \
 
-curl -L git.io/antigen > ~/git/confs/dots/zsh/antigen.zsh && \
+curl -sfL git.io/antibody | sh -s - -b "${CURRENT_DIR}" && \
 ln -s "${CURRENT_DIR}/../.zshrc" ~/.zshrc

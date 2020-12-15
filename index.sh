@@ -55,9 +55,6 @@ sudo apt install -y \
 
 sudo chsh "${USER}" -s "$(command -v zsh)" && \
 
-echo "Running script for completion in terminal" && \
-"${CURRENT_DIR}"/zsh/completion.sh && \
-
 echo "Installing rbenv..." && \
 curl -sL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash -
 
