@@ -1,7 +1,10 @@
 ohmyzsh/ohmyzsh
 ohmyzsh/ohmyzsh path:plugins/git
 ohmyzsh/ohmyzsh path:plugins/nvm
+ohmyzsh/ohmyzsh path:plugins/node
+ohmyzsh/ohmyzsh path:plugins/npm
 ohmyzsh/ohmyzsh path:plugins/docker kind:fpath
+ohmyzsh/ohmyzsh path:plugins/cargo kind:fpath
 
 mttrs/zsh-git-prompt
 dgnest/zsh-gvm-plugin
