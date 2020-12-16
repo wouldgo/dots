@@ -7,5 +7,6 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
   exit 1;
 ) && \
 
-curl -sfL git.io/antibody | sh -s - -b "${CURRENT_DIR}" && \
+curl -sfL git.io/antibody | sh -s - -b "${CURRENT_DIR}/.." && \
+"${CURRENT_DIR}/../antibody-update-plugins.sh" && \
 ln -s "${CURRENT_DIR}/../.zshrc" ~/.zshrc
