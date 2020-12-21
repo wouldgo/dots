@@ -1,4 +1,4 @@
 #!/usr/bin/env zsh
 
-export SDKMAN_DIR="/home/dario/.sdkman"
-[[ -s "/home/dario/.sdkman/bin/sdkman-init.sh" ]] && source "/home/dario/.sdkman/bin/sdkman-init.sh"
+export SDKMAN_DIR="${HOME}/.sdkman"
+[[ -s "${HOME}/.sdkman/bin/sdkman-init.sh" ]] && source "${HOME}/.sdkman/bin/sdkman-init.sh"

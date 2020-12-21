@@ -1,7 +1,10 @@
 #!/usr/bin/env zsh
 
-path=('/home/dario/esp/bin' $path)
-export PATH
+export ESP_SDK_ROOT="${HOME}/esp"
+export ESP_SDK_BIN="${ESP_SDK_ROOT}/bin"
+export IDF_PATH="${ESP_SDK_ROOT}/esp-idf"
 
-export IDF_PATH='/home/dario/esp/esp-idf'
-
+if [ -d "${ESP_SDK_BIN}" ]; then
+  path=("${ESP_SDK_BIN}" $path)
+  export PATH
+fi

@@ -1,6 +1,11 @@
 #!/usr/bin/env zsh
 
-path=('/home/dario/.rbenv/bin' $path)
-export PATH
+export RBENV_ROOT="${HOME}/.rbenv"
+export RBENV_BIN="${RBENV_ROOT}/bin"
 
-eval "$(rbenv init -)"
+if [ -d "${RBENV_BIN}" ]; then
+  path=("${RBENV_BIN}" $path)
+  export PATH
+
+  eval "$(rbenv init -)"
+fi
