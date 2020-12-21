@@ -12,21 +12,19 @@ fi
 echo "Installing dependencies" && \
 if ! "${CURRENT_DIR}"/system/dependencies.sh; then
   echo "Something went wrong" 2>&1
-fi
-
-echo "Installing git secret command" && \
-if ! "${CURRENT_DIR}"/system/install-git-secret.sh; then
-  echo "Something went wrong" 2>&1
+  exit 1;
 fi
 
 echo "Removing workspace shortcuts" && \
 if ! "${CURRENT_DIR}"/system/disable-workspace-keys.sh; then
   echo "Something went wrong" 2>&1
+  exit 1;
 fi
 
 echo "Installing fonts" && \
 if ! "${CURRENT_DIR}"/font/powerline-fonts.sh; then
   echo "font installation went wrong" 2>&1
+  exit 1;
 fi
 
 echo "Preparing shell configuration..." && \
@@ -61,8 +59,9 @@ curl -sL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer
 echo "Installing rustup..." && \
 wget -O /tmp/rustup.sh https://sh.rustup.rs && \
 bash /tmp/rustup.sh -y &&
-rm -Rfv /tmp/rustup.sh && \
+rm -Rfv /tmp/rustup.sh
 
+echo "Installing sdkman" && \
 curl -s "https://get.sdkman.io" | bash && \
 
 echo "Remember to install:
