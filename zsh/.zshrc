@@ -51,6 +51,8 @@ ln -sf $(${CONFS_FOLDER}/antibody path ahmetb/kubectx)/completion/kubectx.zsh ~/
 ln -sf $(${CONFS_FOLDER}/antibody path ahmetb/kubectx)/completion/kubens.zsh ~/.zsh/completion/_kubens.zsh
 ln -sf $(${CONFS_FOLDER}/antibody path johanhaleby/kubetail)/completion/kubetail.zsh ~/.zsh/completion/_kubetail.zsh
 
+export PATH="${HOME}/.local/bin:$PATH"
+
 #Completion
 fpath+=( ~/.zsh/completion )
 autoload -Uz compinit && compinit -i
