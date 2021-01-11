@@ -5,17 +5,6 @@ HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=10000
 
-export NVM_DIR="${HOME}/.nvm"
-export GVM_DIR="${HOME}/.gvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "${GVM_DIR}/scripts/gvm" ] && source "${GVM_DIR}/scripts/gvm"
-
-#customizations
-for FILE in ${CONFS_FOLDER}/helpers/*.zsh; do
-
-  source ${FILE}
-done
-
 #bullet-train
 BULLETTRAIN_PROMPT_ORDER=(
     #time
@@ -43,6 +32,17 @@ BULLETTRAIN_PROMPT_SEPARATE_LINE=false
 BULLETTRAIN_PROMPT_ADD_NEWLINE=false
 BULLETTRAIN_GIT_PROMPT_CMD="\$(git_customized_status)"
 BULLETTRAIN_GIT_EXTENDED=false
+
+export NVM_DIR="${HOME}/.nvm"
+export GVM_DIR="${HOME}/.gvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "${GVM_DIR}/scripts/gvm" ] && source "${GVM_DIR}/scripts/gvm"
+
+#customizations
+for FILE in ${CONFS_FOLDER}/helpers/*.zsh; do
+
+  source ${FILE}
+done
 
 source ${HOME}/.cargo/env
 source ${CONFS_FOLDER}/zsh_plugins.sh

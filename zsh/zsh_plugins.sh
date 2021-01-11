@@ -8,6 +8,8 @@ source /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-oh
 fpath+=( /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-ohmyzsh-SLASH-ohmyzsh/plugins/node )
 source /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-ohmyzsh-SLASH-ohmyzsh/plugins/npm/npm.plugin.zsh
 fpath+=( /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-ohmyzsh-SLASH-ohmyzsh/plugins/npm )
+source /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-ohmyzsh-SLASH-ohmyzsh/plugins/kubectl/kubectl.plugin.zsh
+fpath+=( /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-ohmyzsh-SLASH-ohmyzsh/plugins/kubectl )
 fpath+=( /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-ohmyzsh-SLASH-ohmyzsh/plugins/docker )
 fpath+=( /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-ohmyzsh-SLASH-ohmyzsh/plugins/cargo )
 source /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-mttrs-SLASH-zsh-git-prompt/git-prompt.plugin.zsh
