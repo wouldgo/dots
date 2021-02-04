@@ -1,4 +1,4 @@
-#Fri Jan 22 14:56:13 CET 2021
+#Fri Jan 22 14:59:15 CET 2021
 \!/=
 /configuration/org.eclipse.core.net/org.eclipse.core.net.hasMigrated=true
 /configuration/org.eclipse.ui.ide/MAX_RECENT_WORKSPACES=10
@@ -73,7 +73,7 @@
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.problem.missingHashCodeMethod=warning
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.problem.missingOverrideAnnotation=info
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.problem.missingSynchronizedOnInheritedMethod=warning
-/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.problem.nonExternalizedStringLiteral=warning
+/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.problem.nonExternalizedStringLiteral=ignore
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.problem.parameterAssignment=warning
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.problem.possibleAccidentalBooleanAssignment=warning
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.problem.potentialNullReference=warning
