@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
 
-##[[ ! -f ~/.tmux.conf ]] || [[ ! -f ~/.tpm ]] || {
-##  echo "tmux configurations are already done" 2>&1
-##  exit 1;
-##} && \
+[[ ! -f ~/.tmux.conf ]] || [[ ! -f ~/.tpm ]] || {
+  echo "tmux configurations are already done" 2>&1
+  exit 1;
+} && \
 
 wget "https://github.com/tmux-plugins/tpm/archive/master.zip" -O "${CURRENT_DIR}/.."/tpm.zip
 unzip -o "${CURRENT_DIR}"/../tpm.zip
