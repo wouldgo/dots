@@ -8,6 +8,8 @@ if [ -d ${ANDROID_SDK_ROOT} ]; then
     "${ANDROID_SDK_ROOT}/platform-tools"
     "${ANDROID_SDK_ROOT}/apktool"
     "${ANDROID_SDK_ROOT}/emulator"
+    "${ANDROID_SDK_ROOT}/tools"
+    "${ANDROID_SDK_ROOT}/tools/bin"
     $path)
   export PATH
 fi
