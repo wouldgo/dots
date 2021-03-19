@@ -6,9 +6,9 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
   exit 1;
 } && \
 
-wget "https://github.com/tmux-plugins/tpm/archive/master.zip" -O "${CURRENT_DIR}/.."/tpm.zip
-unzip -o "${CURRENT_DIR}"/../tpm.zip
-rm "${CURRENT_DIR}/.."/tpm.zip
+wget "https://github.com/tmux-plugins/tpm/archive/master.zip" -O "${CURRENT_DIR}"/tpm.zip
+unzip -o "${CURRENT_DIR}"/tpm.zip -d "${CURRENT_DIR}/../"
+rm "${CURRENT_DIR}"/tpm.zip
 
 mkdir -p ~/.tmux/plugins
 
