@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 function do_it () {
   local CURRENT_DIR
 

@@ -8,7 +8,6 @@ ohmyzsh/ohmyzsh path:plugins/docker kind:fpath
 ohmyzsh/ohmyzsh path:plugins/cargo kind:fpath
 
 mttrs/zsh-git-prompt
-dgnest/zsh-gvm-plugin
 
 johanhaleby/kubetail kind:path
 ahmetb/kubectx kind:path

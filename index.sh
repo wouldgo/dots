@@ -64,6 +64,11 @@ rm -Rfv /tmp/rustup.sh
 echo "Installing sdkman" && \
 curl -s "https://get.sdkman.io" | bash && \
 
+echo "Installing gvm" && \
+mkdir -p "/home/${USER}/.gvm"
+curl -sL -o "/home/${USER}/.gvm/gvm" https://github.com/andrewkroh/gvm/releases/download/v0.3.0/gvm-linux-amd64 && \
+chmod u+x "/home/${USER}/.gvm/gvm"
+
 echo "Remember to install:
   - https://github.com/nvm-sh/nvm
-  - https://github.com/moovweb/gvm"
+  - https://github.com/andrewkroh/gvm"
