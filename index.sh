@@ -65,10 +65,7 @@ echo "Installing sdkman" && \
 curl -s "https://get.sdkman.io" | bash && \
 
 echo "Installing gvm" && \
-mkdir -p "/home/${USER}/.gvm"
-curl -sL -o "/home/${USER}/.gvm/gvm" https://github.com/andrewkroh/gvm/releases/download/v0.3.0/gvm-linux-amd64 && \
-chmod u+x "/home/${USER}/.gvm/gvm"
+zsh < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)
 
 echo "Remember to install:
-  - https://github.com/nvm-sh/nvm
-  - https://github.com/andrewkroh/gvm"
+  - https://github.com/nvm-sh/nvm"

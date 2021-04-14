@@ -34,7 +34,9 @@ BULLETTRAIN_GIT_PROMPT_CMD="\$(git_customized_status)"
 BULLETTRAIN_GIT_EXTENDED=false
 
 export NVM_DIR="${HOME}/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+export GVM_DIR="${HOME}/.gvm"
+[[ -s "${NVM_DIR}/nvm.sh" ]] && source "${NVM_DIR}/nvm.sh"
+[[ -s "${GVM_DIR}/scripts/gvm" ]] && source "${GVM_DIR}/scripts/gvm"
 
 #customizations
 for FILE in ${CONFS_FOLDER}/helpers/*.zsh; do
