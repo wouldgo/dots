@@ -9,26 +9,18 @@ if [[ ! -n "${_GO_SYSTEM_VERSION}" ]]; then
 fi
 
 load-gvmrc() {
-  #I want the same env for the subfolders
-  if [[ -n "${_GVMRC_FILE_PATH}" ]]; then
-    local parent_gvmrc_path=$(dirname ${_GVMRC_FILE_PATH})
-    if [[ "${PWD##${parent_gvmrc_path}}" != "${PWD}" ]]; then
+  local current_dir="${1:-$(pwd)}"
 
-      return 0;
-    fi
-  fi
-
-  #file is present
-  if [[ -f "${_GVM_RC_FILE}" ]]; then
-    local go_version="$(grep -oP '^go\W+(.*)$' ${_GVM_RC_FILE} | sed -e 's/go //')"
+  if [[ -f "${current_dir}/${_GVM_RC_FILE}" ]]; then
+    local go_version="$(grep -oP '^go\W+(.*)$' ${current_dir}/${_GVM_RC_FILE} | sed -e 's/go //')"
 
     gvm install "go${go_version}" -pb -b -B
     gvm use "go${go_version}"
+  elif [[ "${current_dir}" != '/' ]]; then
 
-    _GVMRC_FILE_PATH=$(realpath ${_GVM_RC_FILE})
-  elif [[ -n "${_GVMRC_FILE_PATH}" ]]; then
+    load-gvmrc $(dirname ${current_dir})
+  else
 
-    unset _GVMRC_FILE_PATH && \
     gvm use "go${_GO_SYSTEM_VERSION}"
   fi
 }
