@@ -13,7 +13,6 @@ dgnest/zsh-gvm-plugin
 johanhaleby/kubetail kind:path
 ahmetb/kubectx kind:path
 
-#johanhaleby/kubetail path:completion kind:fpath
-#ahmetb/kubectx path:completion kind:fpath
+StackExchange/blackbox
 
 wouldgo/bullet-train.zsh
