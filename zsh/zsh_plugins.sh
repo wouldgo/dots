@@ -20,5 +20,3 @@ export PATH="/home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SL
 export PATH="/home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-ahmetb-SLASH-kubectx:$PATH"
 source /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-StackExchange-SLASH-blackbox/blackbox.plugin.zsh
 fpath+=( /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-StackExchange-SLASH-blackbox )
-source /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-wouldgo-SLASH-bullet-train.zsh/bullet-train.zsh-theme
-fpath+=( /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-wouldgo-SLASH-bullet-train.zsh )

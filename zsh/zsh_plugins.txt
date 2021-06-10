@@ -14,5 +14,3 @@ johanhaleby/kubetail kind:path
 ahmetb/kubectx kind:path
 
 StackExchange/blackbox
-
-wouldgo/bullet-train.zsh

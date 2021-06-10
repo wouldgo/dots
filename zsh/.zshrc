@@ -5,34 +5,6 @@ HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=10000
 
-#bullet-train
-BULLETTRAIN_PROMPT_ORDER=(
-    #time
-    status
-    #custom
-    #context
-    dir
-    screen
-    kctx
-    #perl
-    #ruby
-    virtualenv
-    nvm
-    #aws
-    go
-    rust
-    #elixir
-    git
-    #hg
-    cmd_exec_time
-  )
-
-BULLETTRAIN_PROMPT_CHAR=""
-BULLETTRAIN_PROMPT_SEPARATE_LINE=false
-BULLETTRAIN_PROMPT_ADD_NEWLINE=false
-BULLETTRAIN_GIT_PROMPT_CMD="\$(git_customized_status)"
-BULLETTRAIN_GIT_EXTENDED=false
-
 export NVM_DIR="${HOME}/.nvm"
 export GVM_DIR="${HOME}/.gvm"
 [[ -s "${NVM_DIR}/nvm.sh" ]] && source "${NVM_DIR}/nvm.sh"
