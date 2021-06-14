@@ -1,6 +1,7 @@
 CONFS_FOLDER=~/git/confs/dots/zsh
-ZSH=$(${CONFS_FOLDER}/antibody path ohmyzsh/ohmyzsh)
+#ZSH=$(${CONFS_FOLDER}/antibody path ohmyzsh/ohmyzsh)
 
+ZSH_CACHE_DIR=/tmp
 HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=10000
@@ -28,7 +29,6 @@ export PATH="${HOME}/.local/bin:$PATH"
 #Completion
 fpath+=( ~/.zsh/completion )
 autoload -Uz compinit && compinit -i
-
 autoload -U add-zsh-hook
 
 zle -N first-tab
@@ -42,3 +42,5 @@ load-virtualenv
 
 add-zsh-hook chpwd load-gvmrc
 load-gvmrc
+
+zstyle ':completion:*' menu select

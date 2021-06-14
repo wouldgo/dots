@@ -16,7 +16,7 @@ BULLETTRAIN_STATUS_FG=white
 # NVM
 BULLETTRAIN_NVM_BG=green
 BULLETTRAIN_NVM_FG=white
-BULLETTRAIN_NVM_PREFIX="⬡ "
+BULLETTRAIN_NVM_PREFIX="⬡"
 
 # Go
 BULLETTRAIN_GO_BG=cyan
@@ -46,19 +46,14 @@ BULLETTRAIN_DIR_EXTENDED=1
 # GIT
 BULLETTRAIN_GIT_BG=white
 BULLETTRAIN_GIT_FG=black
-ZSH_THEME_GIT_PROMPT_PREFIX="\ue0a0"
-ZSH_THEME_GIT_PROMPT_SUFFIX=""
-ZSH_THEME_GIT_PROMPT_DIRTY="%F{red}✘%F{black}"
-ZSH_THEME_GIT_PROMPT_CLEAN="%F{green}✔%F{black}"
-ZSH_THEME_GIT_PROMPT_ADDED="%F{green}✚%F{black}"
-ZSH_THEME_GIT_PROMPT_MODIFIED="%F{blue}✹%F{black}"
-ZSH_THEME_GIT_PROMPT_DELETED="%F{red}✖%F{black}"
-ZSH_THEME_GIT_PROMPT_UNTRACKED="%F{yellow}✭%F{black}"
-ZSH_THEME_GIT_PROMPT_RENAMED="➜"
-ZSH_THEME_GIT_PROMPT_UNMERGED="═"
-ZSH_THEME_GIT_PROMPT_AHEAD="⬆"
-ZSH_THEME_GIT_PROMPT_BEHIND="⬇"
-ZSH_THEME_GIT_PROMPT_DIVERGED="⬍"
+
+__THEME_GIT_BEHIND="⬇"
+__THEME_GIT_AHEAD="⬆"
+__THEME_GIT_STAGED="%F{green}✚%F{black}"
+__THEME_GIT_CONFLICTS="%F{red}✘%F{black}"
+__THEME_GIT_CHANGED="%F{blue}✹%F{black}"
+__THEME_GIT_UNTRACKED="%F{yellow}✭%F{black}"
+__THEME_GIT_CLEAN="%F{green}✓%F{black}"
 
 # SCREEN
 BULLETTRAIN_SCREEN_BG=white
@@ -66,8 +61,8 @@ BULLETTRAIN_SCREEN_FG=black
 BULLETTRAIN_SCREEN_PREFIX="⬗"
 
 # COMMAND EXECUTION TIME
-BULLETTRAIN_EXEC_TIME_ELAPSED=5
-BULLETTRAIN_EXEC_TIME_BG=yellow
+___THEME_EXEC_TIME_ELAPSED=5
+___THEME_EXEC_TIME_BG=yellow
 BULLETTRAIN_EXEC_TIME_FG=black
 
 # ------------------------------------------------------------------------------
@@ -138,7 +133,7 @@ preexec() {
 precmd() {
   local stop=`date +%s`
   local start=${cmd_timestamp:-$stop}
-  let BULLETTRAIN_last_exec_duration=$stop-$start
+  let ___THEME_last_exec_duration=$stop-$start
   cmd_timestamp=''
 }
 
@@ -147,15 +142,53 @@ prompt_context() {
 }
 
 prompt_cmd_exec_time() {
-  [ $BULLETTRAIN_last_exec_duration -gt $BULLETTRAIN_EXEC_TIME_ELAPSED ] && prompt_segment $BULLETTRAIN_EXEC_TIME_BG $BULLETTRAIN_EXEC_TIME_FG "$(displaytime $BULLETTRAIN_last_exec_duration)"
+  [ $___THEME_last_exec_duration -gt $___THEME_EXEC_TIME_ELAPSED ] && prompt_segment $___THEME_EXEC_TIME_BG $BULLETTRAIN_EXEC_TIME_FG "$(displaytime $___THEME_last_exec_duration)"
 }
 
 # Git
+__theme_git_status () {
+  precmd_update_git_vars
+  if [ -n "$__CURRENT_GIT_STATUS" ]; then
+    STATUS="$GIT_BRANCH "
+
+    if [ "$GIT_AHEAD" -ne "0" ]; then
+      STATUS="$STATUS$__THEME_GIT_AHEAD $GIT_AHEAD "
+    fi
+
+    if [ "$GIT_BEHIND" -ne "0" ]; then
+      STATUS="$STATUS$__THEME_GIT_BEHIND $GIT_BEHIND "
+    fi
+
+    if [ "$GIT_STAGED" -ne "0" ]; then
+      STATUS="$STATUS$__THEME_GIT_STAGED $GIT_STAGED "
+    fi
+
+    if [ "$GIT_CONFLICTS" -ne "0" ]; then
+      STATUS="$STATUS$__THEME_GIT_CONFLICTS $GIT_CONFLICTS "
+    fi
+
+    if [ "$GIT_CHANGED" -ne "0" ]; then
+      STATUS="$STATUS$__THEME_GIT_CHANGED $GIT_CHANGED "
+    fi
+
+    if [ "$GIT_UNTRACKED" -ne "0" ]; then
+      STATUS="$STATUS$__THEME_GIT_UNTRACKED $GIT_UNTRACKED "
+    fi
+
+    if [ "$GIT_CHANGED" -eq "0" ] && [ "$GIT_CONFLICTS" -eq "0" ] && [ "$GIT_STAGED" -eq "0" ] && [ "$GIT_UNTRACKED" -eq "0" ]
+    then
+      STATUS="$STATUS$__THEME_GIT_CLEAN"
+    fi
+    echo "${STATUS}"
+  fi
+}
+
+
 prompt_git() {
   if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
-    prompt_segment $BULLETTRAIN_GIT_BG $BULLETTRAIN_GIT_FG
+    local git_status="$(__theme_git_status)"
 
-    echo -n $(git_customized_status)
+    prompt_segment $BULLETTRAIN_GIT_BG $BULLETTRAIN_GIT_FG $git_status
   fi
 }
 
@@ -187,7 +220,7 @@ prompt_nvm() {
       return
     fi
 
-    prompt_segment $BULLETTRAIN_NVM_BG $BULLETTRAIN_NVM_FG $BULLETTRAIN_NVM_PREFIX$nvm_prompt
+    prompt_segment $BULLETTRAIN_NVM_BG $BULLETTRAIN_NVM_FG $BULLETTRAIN_NVM_PREFIX $nvm_prompt
   fi
 }
 
