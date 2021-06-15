@@ -1,8 +1,7 @@
-CONFS_FOLDER=~/git/confs/dots/zsh
-#ZSH=$(${CONFS_FOLDER}/antibody path ohmyzsh/ohmyzsh)
+CONFS_FOLDER="${HOME}/git/confs/dots/zsh"
+HISTFILE="${HOME}/.histfile"
 
 ZSH_CACHE_DIR=/tmp
-HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=10000
 
@@ -29,7 +28,7 @@ export PATH="${HOME}/.local/bin:$PATH"
 #Completion
 fpath+=( ~/.zsh/completion )
 autoload -Uz compinit && compinit -i
-autoload -U add-zsh-hook
+autoload -Uz add-zsh-hook
 
 zle -N first-tab
 bindkey '^I' first-tab

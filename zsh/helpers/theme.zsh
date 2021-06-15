@@ -213,14 +213,13 @@ prompt_dir() {
 # nvm
 prompt_nvm() {
   if [[ (-f $(nvm_find_nvmrc)) ]]; then
-    local nvm_prompt
+    local nvm_prompt=$(nvm current 2>/dev/null)
 
-    nvm_prompt=$(nvm current 2>/dev/null)
     if [[ "${nvm_prompt}x" == "x" || "${nvm_prompt}" == "system" ]]; then
       return
     fi
 
-    prompt_segment $BULLETTRAIN_NVM_BG $BULLETTRAIN_NVM_FG $BULLETTRAIN_NVM_PREFIX $nvm_prompt
+    prompt_segment $BULLETTRAIN_NVM_BG $BULLETTRAIN_NVM_FG "${BULLETTRAIN_NVM_PREFIX} ${nvm_prompt}"
   fi
 }
 
