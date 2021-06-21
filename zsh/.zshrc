@@ -29,6 +29,7 @@ export PATH="${HOME}/.local/bin:$PATH"
 fpath+=( ~/.zsh/completion )
 autoload -Uz compinit && compinit -i
 autoload -Uz add-zsh-hook
+autoload -U select-word-style
 
 zle -N first-tab
 bindkey '^I' first-tab
@@ -42,4 +43,7 @@ load-virtualenv
 add-zsh-hook chpwd load-gvmrc
 load-gvmrc
 
+select-word-style bash
+
 zstyle ':completion:*' menu select
+
