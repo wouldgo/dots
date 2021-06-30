@@ -29,8 +29,8 @@ BULLETTRAIN_RUST_FG=white
 BULLETTRAIN_RUST_PREFIX="🦀"
 
 # Kubernetes Context
-BULLETTRAIN_KCTX_BG=black
-BULLETTRAIN_KCTX_FG=cyan
+BULLETTRAIN_KCTX_BG=magenta
+BULLETTRAIN_KCTX_FG=white
 BULLETTRAIN_KCTX_PREFIX="⎈"
 
 # VIRTUALENV
@@ -252,8 +252,11 @@ prompt_rust() {
 # Kubernetes Context
 prompt_kctx() {
   if [[ $(command -v kubectl) ]]; then
+    local k8s_context=$(kubectl config view --minify --output "jsonpath={.current-context}{':'}{..namespace}" 2>/dev/null)
 
-    prompt_segment $BULLETTRAIN_KCTX_BG $BULLETTRAIN_KCTX_FG $BULLETTRAIN_KCTX_PREFIX" $(kubectl config view --minify --output "jsonpath={.current-context}{':'}{..namespace}" 2>/dev/null)"
+    [[ $k8s_context =~ ^.*:$  ]] && k8s_context=${k8s_context%?}
+
+    prompt_segment $BULLETTRAIN_KCTX_BG $BULLETTRAIN_KCTX_FG $BULLETTRAIN_KCTX_PREFIX" ${k8s_context}"
   fi
 }
 
