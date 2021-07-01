@@ -11,6 +11,7 @@ export GVM_DIR="${HOME}/.gvm"
 [[ -s "${GVM_DIR}/scripts/gvm" ]] && source "${GVM_DIR}/scripts/gvm"
 
 #customizations
+eval `dircolors ${CONFS_FOLDER}/dircolors.256dark`
 for FILE in ${CONFS_FOLDER}/helpers/*.zsh; do
 
   source ${FILE}
@@ -46,4 +47,4 @@ load-gvmrc
 select-word-style bash
 
 zstyle ':completion:*' menu select
-
+zstyle -e ':completion:*:default' list-colors 'reply=("${PREFIX:+=(#bi)($PREFIX:t)(?)*==02}:${(s.:.)LS_COLORS}")';

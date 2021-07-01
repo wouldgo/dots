@@ -15,6 +15,7 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
   "$KREW" install krew
 ) \
 
+wget -O "${CURRENT_DIR}/dircolors.256dark" https://raw.githubusercontent.com/seebi/dircolors-solarized/master/dircolors.256dark && \
 curl -sfL git.io/antibody | sh -s - -b "${CURRENT_DIR}/.." && \
 "${CURRENT_DIR}/../antibody-update-plugins.sh" && \
 ln -s "${CURRENT_DIR}/../.zshrc" ~/.zshrc
