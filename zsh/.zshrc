@@ -11,7 +11,7 @@ export GVM_DIR="${HOME}/.gvm"
 [[ -s "${GVM_DIR}/scripts/gvm" ]] && source "${GVM_DIR}/scripts/gvm"
 
 #customizations
-eval `dircolors ${CONFS_FOLDER}/dircolors.256dark`
+eval `dircolors ${CONFS_FOLDER}/colors/nord-dircolors`
 for FILE in ${CONFS_FOLDER}/helpers/*.zsh; do
 
   source ${FILE}
