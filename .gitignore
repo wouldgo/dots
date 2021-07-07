@@ -1,6 +1,6 @@
 tmux/tpm-master/
 zsh/antibody
 zsh/antigen.zsh
-zsh/dircolors.256dark
+zsh/colors/*
 powerline-fonts/
 vimconf/
