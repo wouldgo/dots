@@ -3,49 +3,49 @@
 VIRTUAL_ENV_DISABLE_PROMPT=true
 
 # CONTEXT
-BULLETTRAIN_CONTEXT_BG=black
-BULLETTRAIN_CONTEXT_FG=default
-BULLETTRAIN_CONTEXT_HOSTNAME=%m
+__THEME_CONTEXT_BG=default
+__THEME_CONTEXT_FG=black
+__THEME_CONTEXT_HOSTNAME=%m
 
 # STATUS
-BULLETTRAIN_STATUS_EXIT_SHOW=false
-BULLETTRAIN_STATUS_BG=green
-BULLETTRAIN_STATUS_ERROR_BG=red
-BULLETTRAIN_STATUS_FG=white
+__THEME_STATUS_EXIT_SHOW=false
+__THEME_STATUS_BG=green
+__THEME_STATUS_ERROR_BG=red
+__THEME_STATUS_FG=white
 
 # NVM
-BULLETTRAIN_NVM_BG=green
-BULLETTRAIN_NVM_FG=white
-BULLETTRAIN_NVM_PREFIX="⬡"
+__THEME_NVM_BG=green
+__THEME_NVM_FG=black
+__THEME_NVM_PREFIX="⬡"
 
 # Go
-BULLETTRAIN_GO_BG=cyan
-BULLETTRAIN_GO_FG=white
-BULLETTRAIN_GO_PREFIX="go"
+__THEME_GO_BG=cyan
+__THEME_GO_FG=black
+__THEME_GO_PREFIX="go"
 
 # Rust
-BULLETTRAIN_RUST_BG=black
-BULLETTRAIN_RUST_FG=white
-BULLETTRAIN_RUST_PREFIX="🦀"
+__THEME_RUST_BG=red
+__THEME_RUST_FG=black
+__THEME_RUST_PREFIX="🦀"
 
 # Kubernetes Context
-BULLETTRAIN_KCTX_BG=magenta
-BULLETTRAIN_KCTX_FG=white
-BULLETTRAIN_KCTX_PREFIX="⎈"
+__THEME_KCTX_BG=magenta
+__THEME_KCTX_FG=black
+__THEME_KCTX_PREFIX="⎈"
 
 # VIRTUALENV
-BULLETTRAIN_VIRTUALENV_BG=yellow
-BULLETTRAIN_VIRTUALENV_FG=white
-BULLETTRAIN_VIRTUALENV_PREFIX=🐍
+__THEME_VIRTUALENV_BG=yellow
+__THEME_VIRTUALENV_FG=black
+__THEME_VIRTUALENV_PREFIX=🐍
 
 # DIR
-BULLETTRAIN_DIR_BG=blue
-BULLETTRAIN_DIR_FG=white
-BULLETTRAIN_DIR_EXTENDED=1
+__THEME_DIR_BG=blue
+__THEME_DIR_FG=black
+__THEME_DIR_EXTENDED=1
 
 # GIT
-BULLETTRAIN_GIT_BG=white
-BULLETTRAIN_GIT_FG=black
+__THEME_GIT_BG=white
+__THEME_GIT_FG=black
 
 __THEME_GIT_BEHIND="⬇"
 __THEME_GIT_AHEAD="⬆"
@@ -56,14 +56,14 @@ __THEME_GIT_UNTRACKED="%F{yellow}✭%F{black}"
 __THEME_GIT_CLEAN="%F{green}✓%F{black}"
 
 # SCREEN
-BULLETTRAIN_SCREEN_BG=white
-BULLETTRAIN_SCREEN_FG=black
-BULLETTRAIN_SCREEN_PREFIX="⬗"
+__THEME_SCREEN_BG=white
+__THEME_SCREEN_FG=black
+__THEME_SCREEN_PREFIX="⬗"
 
 # COMMAND EXECUTION TIME
-___THEME_EXEC_TIME_ELAPSED=5
-___THEME_EXEC_TIME_BG=yellow
-BULLETTRAIN_EXEC_TIME_FG=black
+__THEME_EXEC_TIME_ELAPSED=5
+__THEME_EXEC_TIME_BG=yellow
+__THEME_EXEC_TIME_FG=black
 
 # ------------------------------------------------------------------------------
 # SEGMENT DRAWING
@@ -109,7 +109,7 @@ prompt_end() {
 # Context: user@hostname (who am I and where am I)
 context() {
   local user="$(whoami)"
-  [[ "$user" != "$BULLETTRAIN_CONTEXT_DEFAULT_USER" || -n "$BULLETTRAIN_IS_SSH_CLIENT" ]] && echo -n "${user}@$BULLETTRAIN_CONTEXT_HOSTNAME"
+  [[ "$user" != "$__THEME_CONTEXT_DEFAULT_USER" || -n "$__THEME_IS_SSH_CLIENT" ]] && echo -n "${user}@$__THEME_CONTEXT_HOSTNAME"
 }
 
 # Based on http://stackoverflow.com/a/32164707/3859566
@@ -138,11 +138,11 @@ precmd() {
 }
 
 prompt_context() {
-  prompt_segment $BULLETTRAIN_CONTEXT_BG $BULLETTRAIN_CONTEXT_FG "$(context)"
+  prompt_segment $__THEME_CONTEXT_BG $__THEME_CONTEXT_FG "$(context)"
 }
 
 prompt_cmd_exec_time() {
-  [ $___THEME_last_exec_duration -gt $___THEME_EXEC_TIME_ELAPSED ] && prompt_segment $___THEME_EXEC_TIME_BG $BULLETTRAIN_EXEC_TIME_FG "$(displaytime $___THEME_last_exec_duration)"
+  [ $___THEME_last_exec_duration -gt $__THEME_EXEC_TIME_ELAPSED ] && prompt_segment $__THEME_EXEC_TIME_BG $__THEME_EXEC_TIME_FG "$(displaytime $___THEME_last_exec_duration)"
 }
 
 # Git
@@ -188,7 +188,7 @@ prompt_git() {
   if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
     local git_status="$(__theme_git_status)"
 
-    prompt_segment $BULLETTRAIN_GIT_BG $BULLETTRAIN_GIT_FG $git_status
+    prompt_segment $__THEME_GIT_BG $__THEME_GIT_FG $git_status
   fi
 }
 
@@ -196,10 +196,10 @@ prompt_git() {
 prompt_dir() {
   local dir=''
 
-  if [[ $BULLETTRAIN_DIR_EXTENDED == 0 ]]; then
+  if [[ $__THEME_DIR_EXTENDED == 0 ]]; then
     #short directories
     dir="${dir}%1~"
-  elif [[ $BULLETTRAIN_DIR_EXTENDED == 2 ]]; then
+  elif [[ $__THEME_DIR_EXTENDED == 2 ]]; then
     #long directories
     dir="${dir}%0~"
   else
@@ -207,7 +207,7 @@ prompt_dir() {
     dir="${dir}%4(c:...:)%3c"
   fi
 
-  prompt_segment $BULLETTRAIN_DIR_BG $BULLETTRAIN_DIR_FG $dir
+  prompt_segment $__THEME_DIR_BG $__THEME_DIR_FG $dir
 }
 
 # nvm
@@ -219,7 +219,7 @@ prompt_nvm() {
       return
     fi
 
-    prompt_segment $BULLETTRAIN_NVM_BG $BULLETTRAIN_NVM_FG "${BULLETTRAIN_NVM_PREFIX} ${nvm_prompt}"
+    prompt_segment $__THEME_NVM_BG $__THEME_NVM_FG "${__THEME_NVM_PREFIX} ${nvm_prompt}"
   fi
 }
 
@@ -229,7 +229,7 @@ prompt_go() {
 
   if [[ -f "${current_dir}/go.mod" && $(command -v go) ]]; then
 
-    prompt_segment $BULLETTRAIN_GO_BG $BULLETTRAIN_GO_FG $BULLETTRAIN_GO_PREFIX" $(go version  | grep --colour=never -oE '[[:digit:]]+.[[:digit:]]+' | head -n 1)"
+    prompt_segment $__THEME_GO_BG $__THEME_GO_FG $__THEME_GO_PREFIX" $(go version  | grep --colour=never -oE '[[:digit:]]+.[[:digit:]]+' | head -n 1)"
   elif [[ "${current_dir}" != '/' ]]; then
 
     prompt_go $(dirname ${current_dir})
@@ -242,7 +242,7 @@ prompt_rust() {
 
   if [[ -f "${current_dir}/Cargo.toml" && $(command -v rustc) ]]; then
 
-    prompt_segment $BULLETTRAIN_RUST_BG $BULLETTRAIN_RUST_FG $BULLETTRAIN_RUST_PREFIX" $(rustc -V version | cut -d' ' -f2)"
+    prompt_segment $__THEME_RUST_BG $__THEME_RUST_FG $__THEME_RUST_PREFIX" $(rustc -V version | cut -d' ' -f2)"
   elif [[ "${current_dir}" != '/' ]]; then
 
     prompt_rust $(dirname ${current_dir})
@@ -256,7 +256,7 @@ prompt_kctx() {
 
     [[ $k8s_context =~ ^.*:$  ]] && k8s_context=${k8s_context%?}
 
-    prompt_segment $BULLETTRAIN_KCTX_BG $BULLETTRAIN_KCTX_FG $BULLETTRAIN_KCTX_PREFIX" ${k8s_context}"
+    prompt_segment $__THEME_KCTX_BG $__THEME_KCTX_FG $__THEME_KCTX_PREFIX" ${k8s_context}"
   fi
 }
 
@@ -264,10 +264,10 @@ prompt_kctx() {
 prompt_virtualenv() {
   local virtualenv_path="$VIRTUAL_ENV"
   if [[ -n $virtualenv_path && -n $VIRTUAL_ENV_DISABLE_PROMPT ]]; then
-    prompt_segment $BULLETTRAIN_VIRTUALENV_BG $BULLETTRAIN_VIRTUALENV_FG $BULLETTRAIN_VIRTUALENV_PREFIX" $(python --version | sed 's/Python\ //g') ($(basename $virtualenv_path))"
+    prompt_segment $__THEME_VIRTUALENV_BG $__THEME_VIRTUALENV_FG $__THEME_VIRTUALENV_PREFIX" $(python --version | sed 's/Python\ //g') ($(basename $virtualenv_path))"
   elif which pyenv &> /dev/null; then
     if [[ "$(pyenv version | sed -e 's/ (set.*$//' | tr '\n' ' ' | sed 's/.$//')" != "system" ]]; then
-      prompt_segment $BULLETTRAIN_VIRTUALENV_BG $BULLETTRAIN_VIRTUALENV_FG $BULLETTRAIN_VIRTUALENV_PREFIX" $(pyenv version | sed -e 's/ (set.*$//' | tr '\n' ' ' | sed 's/.$//')"
+      prompt_segment $__THEME_VIRTUALENV_BG $__THEME_VIRTUALENV_FG $__THEME_VIRTUALENV_PREFIX" $(pyenv version | sed -e 's/ (set.*$//' | tr '\n' ' ' | sed 's/.$//')"
     fi
   fi
 }
@@ -276,7 +276,7 @@ prompt_virtualenv() {
 prompt_screen() {
   local session_name="$STY"
   if [[ "$session_name" != "" ]]; then
-    prompt_segment $BULLETTRAIN_SCREEN_BG $BULLETTRAIN_SCREEN_FG $BULLETTRAIN_SCREEN_PREFIX" $session_name"
+    prompt_segment $__THEME_SCREEN_BG $__THEME_SCREEN_FG $__THEME_SCREEN_PREFIX" $session_name"
   fi
 }
 
@@ -287,15 +287,15 @@ prompt_screen() {
 prompt_status() {
   local symbols
   symbols=()
-  [[ $RETVAL -ne 0 && $BULLETTRAIN_STATUS_EXIT_SHOW != true ]] && symbols+="✘"
-  [[ $RETVAL -ne 0 && $BULLETTRAIN_STATUS_EXIT_SHOW == true ]] && symbols+="✘ $RETVAL"
+  [[ $RETVAL -ne 0 && $__THEME_STATUS_EXIT_SHOW != true ]] && symbols+="✘"
+  [[ $RETVAL -ne 0 && $__THEME_STATUS_EXIT_SHOW == true ]] && symbols+="✘ $RETVAL"
   [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}⚡%f"
   [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="⚙"
 
   if [[ -n "$symbols" && $RETVAL -ne 0 ]]; then
-    prompt_segment $BULLETTRAIN_STATUS_ERROR_BG $BULLETTRAIN_STATUS_FG "$symbols"
+    prompt_segment $__THEME_STATUS_ERROR_BG $__THEME_STATUS_FG "$symbols"
   elif [[ -n "$symbols" ]]; then
-    prompt_segment $BULLETTRAIN_STATUS_BG $BULLETTRAIN_STATUS_FG "$symbols"
+    prompt_segment $__THEME_STATUS_BG $__THEME_STATUS_FG "$symbols"
   fi
 
 }
