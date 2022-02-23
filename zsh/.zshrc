@@ -5,6 +5,8 @@ ZSH_CACHE_DIR=/tmp
 HISTSIZE=1000
 SAVEHIST=10000
 
+setopt +o nomatch
+
 export NVM_DIR="${HOME}/.nvm"
 export GVM_DIR="${HOME}/.gvm"
 [[ -s "${NVM_DIR}/nvm.sh" ]] && source "${NVM_DIR}/nvm.sh"
