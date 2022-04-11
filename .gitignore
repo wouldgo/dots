@@ -4,4 +4,3 @@ zsh/antigen.zsh
 zsh/colors/*
 !zsh/colors/index.sh
 powerline-fonts/
-vimconf/
