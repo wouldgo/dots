@@ -1,136 +1,106 @@
-"-----------------------------------------"
-" Source: http://github.com/wouldgo/vimconf "
-"-----------------------------------------"
+""" Automatically create needed files and folders on first run (*nix only)
+call system('mkdir -p $HOME/.vim/{autoload,bundle,swap,undo}')
+if !filereadable($HOME.'/.vimrc.plugins') | call system('touch $HOME/.vimrc.plugins') | endif
+if !filereadable($HOME.'/.vimrc.first') | call system('touch $HOME/.vimrc.first') | endif
+if !filereadable($HOME.'/.vimrc.last') | call system('touch $HOME/.vimrc.last') | endif
 
-""" Automatically create needed files and folders on first run (*nix only) {{{
-    call system('mkdir -p $HOME/.vim/{autoload,bundle,swap,undo}')
-    if !filereadable($HOME.'/.vimrc.plugins') | call system('touch $HOME/.vimrc.plugins') | endif
-    if !filereadable($HOME.'/.vimrc.first') | call system('touch $HOME/.vimrc.first') | endif
-    if !filereadable($HOME.'/.vimrc.last') | call system('touch $HOME/.vimrc.last') | endif
-""" }}}
-""" vim-plug plugin manager {{{
-    " Automatic installation
-    " https://github.com/junegunn/vim-plug/wiki/faq#automatic-installation
-    if empty(glob('~/.vim/autoload/plug.vim'))
-        let g:clone_details = 'https://github.com/junegunn/vim-plug.git $HOME/.vim/bundle/vim-plug'
-        silent call system('git clone --depth 1 '. g:clone_details)
-        if v:shell_error | silent call system('git clone ' . g:clone_details) | endif
-        silent !ln -s $HOME/.vim/bundle/vim-plug/plug.vim $HOME/.vim/autoload/plug.vim
-        augroup FirstPlugInstall
-            autocmd! VimEnter * PlugInstall --sync | source $MYVIMRC
-        augroup END
-    endif
+""" vim-plug plugin manager
+if empty(glob('~/.vim/autoload/plug.vim'))
+  let g:clone_details = 'https://github.com/junegunn/vim-plug.git $HOME/.vim/bundle/vim-plug'
+  silent call system('git clone --depth 1 '. g:clone_details)
+  if v:shell_error | silent call system('git clone ' . g:clone_details) | endif
+  silent !ln -s $HOME/.vim/bundle/vim-plug/plug.vim $HOME/.vim/autoload/plug.vim
+  augroup FirstPlugInstall
+    autocmd! VimEnter * PlugInstall --sync | source $MYVIMRC
+  augroup END
+endif
 
-    """ Plugins to be disabled {{{
-    """ https://github.com/timss/vimconf/issues/13
-        " Create empty list with names of disabled plugins if not defined
-        let g:plugs_disabled = get(g:, 'plug_disabled', [])
+""" Plugins to disable
+""" https://github.com/timss/vimconf/issues/13
+" Create empty list with names of disabled plugins if not defined
+let g:plugs_disabled = get(g:, 'plug_disabled', [])
 
-        " Trim and extract repo name
-        " Same substitute/fnamemodify args as vim-plug itself
-        " https://github.com/junegunn/vim-plug/issues/469#issuecomment-226965736
-        function! s:plugs_disable(repo)
-            let l:repo = substitute(a:repo, '[\/]\+$', '', '')
-            let l:name = fnamemodify(l:repo, ':t:s?\.git$??')
-            call add(g:plugs_disabled, l:name)
-        endfunction
+" Trim and extract repo name
+" Same substitute/fnamemodify args as vim-plug itself
+" https://github.com/junegunn/vim-plug/issues/469#issuecomment-226965736
+function! s:plugs_disable(repo)
+  let l:repo = substitute(a:repo, '[\/]\+$', '', '')
+  let l:name = fnamemodify(l:repo, ':t:s?\.git$??')
+  call add(g:plugs_disabled, l:name)
+endfunction
 
-        " Append to list of repo names to be disabled just like they're added
-        " UnPlug 'junegunn/vim-plug'
-        command! -nargs=1 -bar UnPlug call s:plugs_disable(<args>)
-    """ }}}
+" Append to list of repo names to be disabled just like they're added
+" UnPlug 'junegunn/vim-plug'
+command! -nargs=1 -bar UnPlug call s:plugs_disable(<args>)
 
-    " Default to same plugin directory as vundle etc
-    call plug#begin('~/.vim/bundle')
-    " Nerdtree
-    Plug 'scrooloose/nerdtree'
-    Plug 'Xuyuanp/nerdtree-git-plugin'
-    Plug 'jistr/vim-nerdtree-tabs'
+" Default to same plugin directory as vundle etc
+call plug#begin('~/.vim/bundle')
+  " <Tab> everything!
+  Plug 'ervandew/supertab'
 
-    " <Tab> everything!
-    Plug 'ervandew/supertab'
+  " Fuzzy finder (files, mru, etc)
+  Plug 'ctrlpvim/ctrlp.vim'
 
-    " Fuzzy finder (files, mru, etc)
-    Plug 'ctrlpvim/ctrlp.vim'
+  " A pretty statusline, bufferline integration
+  Plug 'itchyny/lightline.vim'
+  Plug 'bling/vim-bufferline'
 
-    " A pretty statusline, bufferline integration
-    Plug 'itchyny/lightline.vim'
-    Plug 'bling/vim-bufferline'
+  " Undo history visualizer
+  Plug 'mbbill/undotree'
 
-    " Undo history visualizer
-    Plug 'mbbill/undotree'
+  " Nord
+  Plug 'arcticicestudio/nord-vim'
 
-    " Dracula
-    Plug 'dracula/vim'
+  " Universal commenting with toggle, motions, embedded syntax and more
+  Plug 'tomtom/tcomment_vim'
 
-    " Universal commenting with toggle, motions, embedded syntax and more
-    Plug 'tomtom/tcomment_vim'
+  " Autoclose (, " etc
+  Plug 'somini/vim-autoclose'
 
-    " Autoclose (, " etc
-    Plug 'somini/vim-autoclose'
+  " Handle surround chars like ''
+  Plug 'tpope/vim-surround'
 
-    " UNIX shell command helpers, e.g. sudo, chmod, remove etc.
-    Plug 'tpope/vim-eunuch'
+  " Align your = etc.
+  Plug 'junegunn/vim-easy-align'
 
-    " Git wrapper inside Vim
-    Plug 'tpope/vim-fugitive'
+  " A fancy start screen, shows MRU etc.
+  Plug 'mhinz/vim-startify'
 
-    " Handle surround chars like ''
-    Plug 'tpope/vim-surround'
+  " Vim signs (:h signs) for modified lines based off VCS (e.g. Git)
+  Plug 'mhinz/vim-signify'
 
-    " Align your = etc.
-    Plug 'junegunn/vim-easy-align'
+  " Awesome syntax checker.
+  " REQUIREMENTS: See :h syntastic-intro
+  Plug 'vim-syntastic/syntastic'
 
-    " Snippets like textmate
-    if has('python') || has('python3')
-        Plug 'honza/vim-snippets'
-        Plug 'sirver/ultisnips'
-    endif
+  " Local plugins
+  if filereadable($HOME.'/.vimrc.plugins')
+    source $HOME/.vimrc.plugins
+  endif
 
-    " A fancy start screen, shows MRU etc.
-    Plug 'mhinz/vim-startify'
+  " Remove disabled plugins from installation/initialization
+  " https://vi.stackexchange.com/q/13471/5070
+  call filter(g:plugs, 'index(g:plugs_disabled, v:key) == -1')
 
-    " Vim signs (:h signs) for modified lines based off VCS (e.g. Git)
-    Plug 'mhinz/vim-signify'
+  " Initalize plugin system
+call plug#end()
 
-    " Awesome syntax checker.
-    " REQUIREMENTS: See :h syntastic-intro
-    Plug 'vim-syntastic/syntastic'
+""" Local leading config, only for prerequisites and will be overwritten
+if filereadable($HOME.'/.vimrc.first')
+  source $HOME/.vimrc.first
+endif
 
-    " Functions, class data etc.
-    " depends on either exuberant-ctags or universal-ctags
-    if executable('ctags-exuberant') || executable('ctags')
-        Plug 'majutsushi/tagbar'
-    endif
-
-    " Local plugins
-    if filereadable($HOME.'/.vimrc.plugins')
-        source $HOME/.vimrc.plugins
-    endif
-
-    " Remove disabled plugins from installation/initialization
-    " https://vi.stackexchange.com/q/13471/5070
-    call filter(g:plugs, 'index(g:plugs_disabled, v:key) == -1')
-
-    " Initalize plugin system
-    call plug#end()
-""" }}}
-""" Local leading config, only for prerequisites and will be overwritten {{{
-    if filereadable($HOME.'/.vimrc.first')
-        source $HOME/.vimrc.first
-    endif
-""" }}}
 """ User interface {{{
     """ Syntax highlighting {{{
         filetype plugin indent on                   " detect file plugin+indent
         syntax on                                   " syntax highlighting
-        color dracula                               " colorscheme from plugin
+        color nord                               " colorscheme from plugin
         """ Force behavior and filetypes, and by extension highlighting {{{
-            augroup FileTypeRules
-                autocmd!
-                autocmd BufNewFile,BufRead *.md set ft=markdown tw=79
-                autocmd BufNewFile,BufRead *.tex set ft=tex tw=79
-            augroup END
+        augroup FileTypeRules
+          autocmd!
+          autocmd BufNewFile,BufRead *.md set ft=markdown tw=79
+          autocmd BufNewFile,BufRead *.tex set ft=tex tw=79
+        augroup END
         """ }}}
         """ 256 colors for maximum {{{
             if (&term =~ "xterm") || (&term =~ "screen")
@@ -162,7 +132,7 @@
 """ General settings {{{
     set completeopt=menu,preview,longest            " insert mode completion
     set hidden                                      " buffer change, more undo
-    set history=1000                                " default 20
+    set history=9999                                " default 20
     set laststatus=2                                " always show statusline
     set linebreak                                   " don't cut words on wrap
     set listchars=tab:>\                            " > to highlight <Tab>
@@ -452,22 +422,6 @@
         " Skip check on :wq, :x, :ZZ etc
         let g:syntastic_check_on_wq = 0
     """ }}}
-    """ Nerdtree {{{
-        autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-        map <Leader>n <plug>NERDTreeTabsToggle<CR>
-        let g:NERDTreeQuitOnOpen=1
-        let g:NERDTreeGitStatusIndicatorMapCustom = {
-            \ "Modified"  : "✹",
-            \ "Staged"    : "✚",
-            \ "Untracked" : "✭",
-            \ "Renamed"   : "➜",
-            \ "Unmerged"  : "═",
-            \ "Deleted"   : "✖",
-            \ "Dirty"     : "✗",
-            \ "Clean"     : "✔︎",
-            \ "Unknown"   : "?"
-            \ }
-    """ }}}
     """ Supertab {{{
         " Complete based on context (compl-omni, compl-filename, ..)
         let g:SuperTabDefaultCompletionType = 'context'
@@ -491,7 +445,7 @@
     """ }}}
     """ Lightline {{{
         let g:lightline = {
-            \ 'color': 'dracula',
+            \ 'colorscheme': 'nord',
             \ 'active': {
             \     'left': [
             \         ['mode', 'paste'],
@@ -501,7 +455,8 @@
             \     'right': [
             \         ['lineinfo'],
             \         ['percent'],
-            \         ['fileformat', 'fileencoding', 'filetype', 'syntastic']
+            \         ['fileformat'],
+            \         ['syntastic']
             \     ]
             \ },
             \ 'component': {

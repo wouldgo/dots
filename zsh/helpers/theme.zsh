@@ -3,101 +3,105 @@
 VIRTUAL_ENV_DISABLE_PROMPT=true
 
 # CONTEXT
-__THEME_CONTEXT_BG=default
-__THEME_CONTEXT_FG=black
+__THEME_CONTEXT_FG=default
 __THEME_CONTEXT_HOSTNAME=%m
 
 # STATUS
-__THEME_STATUS_EXIT_SHOW=false
-__THEME_STATUS_BG=green
-__THEME_STATUS_ERROR_BG=red
-__THEME_STATUS_FG=white
+__THEME_STATUS_FG=green
+__THEME_STATUS_ERROR_FG=red
 
 # NVM
-__THEME_NVM_BG=green
-__THEME_NVM_FG=black
+__THEME_NVM_FG=green
 __THEME_NVM_PREFIX="⬡"
 
 # Go
-__THEME_GO_BG=cyan
-__THEME_GO_FG=black
+__THEME_GO_FG=cyan
 __THEME_GO_PREFIX="go"
 
 # Rust
-__THEME_RUST_BG=red
-__THEME_RUST_FG=black
+__THEME_RUST_FG=red
 __THEME_RUST_PREFIX="🦀"
 
 # Kubernetes Context
-__THEME_KCTX_BG=magenta
-__THEME_KCTX_FG=black
+__THEME_KCTX_FG=blue
 __THEME_KCTX_PREFIX="⎈"
 
 # VIRTUALENV
-__THEME_VIRTUALENV_BG=yellow
-__THEME_VIRTUALENV_FG=black
-__THEME_VIRTUALENV_PREFIX=🐍
+__THEME_VIRTUALENV_FG=yellow
+__THEME_VIRTUALENV_PREFIX="🐍"
 
 # DIR
-__THEME_DIR_BG=blue
-__THEME_DIR_FG=black
+__THEME_DIR_FG=white
 __THEME_DIR_EXTENDED=1
 
 # GIT
-__THEME_GIT_BG=white
-__THEME_GIT_FG=black
+__THEME_GIT_FG=white
 
 __THEME_GIT_BEHIND="⬇"
 __THEME_GIT_AHEAD="⬆"
-__THEME_GIT_STAGED="%F{green}✚%F{black}"
-__THEME_GIT_CONFLICTS="%F{red}✘%F{black}"
-__THEME_GIT_CHANGED="%F{blue}✹%F{black}"
-__THEME_GIT_UNTRACKED="%F{yellow}✭%F{black}"
-__THEME_GIT_CLEAN="%F{green}✓%F{black}"
+__THEME_GIT_STAGED="%F{green}✚"
+__THEME_GIT_CONFLICTS="%F{red}✖"
+__THEME_GIT_CHANGED="%F{blue}✹"
+__THEME_GIT_UNTRACKED="%F{yellow}✭"
+__THEME_GIT_CLEAN="%F{green}✓"
 
 # SCREEN
-__THEME_SCREEN_BG=white
-__THEME_SCREEN_FG=black
+__THEME_SCREEN_FG=white
 __THEME_SCREEN_PREFIX="⬗"
 
 # COMMAND EXECUTION TIME
 __THEME_EXEC_TIME_ELAPSED=5
-__THEME_EXEC_TIME_BG=yellow
-__THEME_EXEC_TIME_FG=black
+__THEME_EXEC_TIME_FG=yellow
 
 # ------------------------------------------------------------------------------
 # SEGMENT DRAWING
 # A few functions to make it easy and re-usable to draw segmented prompts
 # ------------------------------------------------------------------------------
 
-CURRENT_BG='NONE'
-SEGMENT_SEPARATOR=''
+CURRENT_FG='NONE'
+OPEN_SEGMENT_SEPARATOR='\u27EA'
+CLOSE_SEGMENT_SEPARATOR='\u27EB'
 
 # Begin a segment
-# Takes three arguments, background, foreground and text. All of them can be omitted,
-# rendering default background/foreground and no text.
+# prompt_segment foreground_color=default text=none ignore_separators=false
 prompt_segment() {
-  local bg fg
-  [[ -n $1 ]] && bg="%K{$1}" || bg="%k"
-  [[ -n $2 ]] && fg="%F{$2}" || fg="%f"
-  if [[ $CURRENT_BG != 'NONE' && $1 != $CURRENT_BG ]]; then
-    echo -n " %{$bg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR%{$fg%} "
+  local __fg
+  local __ignore_separators
+  [[ -n $1 ]] && __fg="%F{$1}" || __fg="%f"
+  [[ -n $3 ]] && __ignore_separators=$3 || __ignore_separators=false
+  if [[ ${CURRENT_FG} != 'NONE' && $1 != ${CURRENT_FG} ]]; then
+
+    echo -n "%{%k%F{${CURRENT_FG}}%}%{$__fg%}"
+    if [[ ${__ignore_separators} != true ]]; then
+      echo -n "${OPEN_SEGMENT_SEPARATOR}"
+    fi
   else
-    echo -n "%{$bg%}%{$fg%} "
+
+    echo -n "%{%k%}%{$__fg%}"
+    if [[ ${__ignore_separators} != true ]]; then
+      echo -n "${OPEN_SEGMENT_SEPARATOR}"
+    fi
   fi
-  CURRENT_BG=$1
-  [[ -n $3 ]] && echo -n $3
+
+  CURRENT_FG=$1
+  if [[ -n $2 ]]; then
+
+    echo -n "$2%F{${CURRENT_FG}}"
+    if [[ $__ignore_separators != true ]]; then
+      echo -n "${CLOSE_SEGMENT_SEPARATOR}"
+    fi
+  fi
 }
 
 # End the prompt, closing any open segments
 prompt_end() {
-  if [[ -n $CURRENT_BG ]]; then
-    echo -n " %{%k%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR"
+  if [[ -n ${CURRENT_FG} ]]; then
+    echo -n "%{%k%F{${CURRENT_FG}}%}"
   else
     echo -n "%{%k%}"
   fi
   echo -n "%{%f%}"
-  CURRENT_BG=''
+  CURRENT_FG='NONE'
 }
 
 # ------------------------------------------------------------------------------
@@ -138,57 +142,57 @@ precmd() {
 }
 
 prompt_context() {
-  prompt_segment $__THEME_CONTEXT_BG $__THEME_CONTEXT_FG "$(context)"
+  prompt_segment $__THEME_CONTEXT_FG "$(context)"
 }
 
 prompt_cmd_exec_time() {
-  [ $___THEME_last_exec_duration -gt $__THEME_EXEC_TIME_ELAPSED ] && prompt_segment $__THEME_EXEC_TIME_BG $__THEME_EXEC_TIME_FG "$(displaytime $___THEME_last_exec_duration)"
+  [ $___THEME_last_exec_duration -gt $__THEME_EXEC_TIME_ELAPSED ] && prompt_segment $__THEME_EXEC_TIME_FG "$(displaytime $___THEME_last_exec_duration)"
 }
 
 # Git
 __theme_git_status () {
   precmd_update_git_vars
+  local __status=()
   if [ -n "$__CURRENT_GIT_STATUS" ]; then
-    STATUS="$GIT_BRANCH "
+    __status+=($GIT_BRANCH)
 
     if [ "$GIT_AHEAD" -ne "0" ]; then
-      STATUS="$STATUS$__THEME_GIT_AHEAD $GIT_AHEAD "
+      __status+="$__THEME_GIT_AHEAD $GIT_AHEAD"
     fi
 
     if [ "$GIT_BEHIND" -ne "0" ]; then
-      STATUS="$STATUS$__THEME_GIT_BEHIND $GIT_BEHIND "
+      __status+="$__THEME_GIT_BEHIND $GIT_BEHIND"
     fi
 
     if [ "$GIT_STAGED" -ne "0" ]; then
-      STATUS="$STATUS$__THEME_GIT_STAGED $GIT_STAGED "
+      __status+="$__THEME_GIT_STAGED $GIT_STAGED"
     fi
 
     if [ "$GIT_CONFLICTS" -ne "0" ]; then
-      STATUS="$STATUS$__THEME_GIT_CONFLICTS $GIT_CONFLICTS "
+      __status+="$__THEME_GIT_CONFLICTS $GIT_CONFLICTS"
     fi
 
     if [ "$GIT_CHANGED" -ne "0" ]; then
-      STATUS="$STATUS$__THEME_GIT_CHANGED $GIT_CHANGED "
+      __status+="$__THEME_GIT_CHANGED $GIT_CHANGED"
     fi
 
     if [ "$GIT_UNTRACKED" -ne "0" ]; then
-      STATUS="$STATUS$__THEME_GIT_UNTRACKED $GIT_UNTRACKED "
+      __status+="$__THEME_GIT_UNTRACKED $GIT_UNTRACKED"
     fi
 
     if [ "$GIT_CHANGED" -eq "0" ] && [ "$GIT_CONFLICTS" -eq "0" ] && [ "$GIT_STAGED" -eq "0" ] && [ "$GIT_UNTRACKED" -eq "0" ]
     then
-      STATUS="$STATUS$__THEME_GIT_CLEAN"
+      __status+="$__THEME_GIT_CLEAN"
     fi
-    echo "${STATUS}"
+    echo -n "${(j: :)__status}"
   fi
 }
-
 
 prompt_git() {
   if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
     local git_status="$(__theme_git_status)"
 
-    prompt_segment $__THEME_GIT_BG $__THEME_GIT_FG $git_status
+    prompt_segment $__THEME_GIT_FG $git_status
   fi
 }
 
@@ -207,7 +211,7 @@ prompt_dir() {
     dir="${dir}%4(c:...:)%3c"
   fi
 
-  prompt_segment $__THEME_DIR_BG $__THEME_DIR_FG $dir
+  prompt_segment $__THEME_DIR_FG $dir
 }
 
 # nvm
@@ -219,7 +223,7 @@ prompt_nvm() {
       return
     fi
 
-    prompt_segment $__THEME_NVM_BG $__THEME_NVM_FG "${__THEME_NVM_PREFIX} ${nvm_prompt}"
+    prompt_segment $__THEME_NVM_FG "${__THEME_NVM_PREFIX} ${nvm_prompt}"
   fi
 }
 
@@ -229,7 +233,7 @@ prompt_go() {
 
   if [[ -f "${current_dir}/go.mod" && $(command -v go) ]]; then
 
-    prompt_segment $__THEME_GO_BG $__THEME_GO_FG $__THEME_GO_PREFIX" $(go version  | grep --colour=never -oE '[[:digit:]]+.[[:digit:]]+' | head -n 1)"
+    prompt_segment $__THEME_GO_FG $__THEME_GO_PREFIX" $(go version  | grep --colour=never -oE '[[:digit:]]+.[[:digit:]]+' | head -n 1)"
   elif [[ "${current_dir}" != '/' ]]; then
 
     prompt_go $(dirname ${current_dir})
@@ -242,7 +246,7 @@ prompt_rust() {
 
   if [[ -f "${current_dir}/Cargo.toml" && $(command -v rustc) ]]; then
 
-    prompt_segment $__THEME_RUST_BG $__THEME_RUST_FG $__THEME_RUST_PREFIX" $(rustc -V version | cut -d' ' -f2)"
+    prompt_segment $__THEME_RUST_FG $__THEME_RUST_PREFIX" $(rustc -V version | cut -d' ' -f2)"
   elif [[ "${current_dir}" != '/' ]]; then
 
     prompt_rust $(dirname ${current_dir})
@@ -256,7 +260,7 @@ prompt_kctx() {
 
     [[ $k8s_context =~ ^.*:$  ]] && k8s_context=${k8s_context%?}
 
-    prompt_segment $__THEME_KCTX_BG $__THEME_KCTX_FG $__THEME_KCTX_PREFIX" ${k8s_context}"
+    prompt_segment $__THEME_KCTX_FG $__THEME_KCTX_PREFIX" ${k8s_context}"
   fi
 }
 
@@ -264,10 +268,10 @@ prompt_kctx() {
 prompt_virtualenv() {
   local virtualenv_path="$VIRTUAL_ENV"
   if [[ -n $virtualenv_path && -n $VIRTUAL_ENV_DISABLE_PROMPT ]]; then
-    prompt_segment $__THEME_VIRTUALENV_BG $__THEME_VIRTUALENV_FG $__THEME_VIRTUALENV_PREFIX" $(python --version | sed 's/Python\ //g') ($(basename $virtualenv_path))"
+    prompt_segment $__THEME_VIRTUALENV_FG $__THEME_VIRTUALENV_PREFIX" $(python --version | sed 's/Python\ //g') ($(basename $virtualenv_path))"
   elif which pyenv &> /dev/null; then
     if [[ "$(pyenv version | sed -e 's/ (set.*$//' | tr '\n' ' ' | sed 's/.$//')" != "system" ]]; then
-      prompt_segment $__THEME_VIRTUALENV_BG $__THEME_VIRTUALENV_FG $__THEME_VIRTUALENV_PREFIX" $(pyenv version | sed -e 's/ (set.*$//' | tr '\n' ' ' | sed 's/.$//')"
+      prompt_segment $__THEME_VIRTUALENV_FG $__THEME_VIRTUALENV_PREFIX" $(pyenv version | sed -e 's/ (set.*$//' | tr '\n' ' ' | sed 's/.$//')"
     fi
   fi
 }
@@ -276,28 +280,24 @@ prompt_virtualenv() {
 prompt_screen() {
   local session_name="$STY"
   if [[ "$session_name" != "" ]]; then
-    prompt_segment $__THEME_SCREEN_BG $__THEME_SCREEN_FG $__THEME_SCREEN_PREFIX" $session_name"
+    prompt_segment $__THEME_SCREEN_FG $__THEME_SCREEN_PREFIX" $session_name"
   fi
 }
 
 # Status:
 # - was there an error
-# - am I root
 # - are there background jobs?
 prompt_status() {
   local symbols
   symbols=()
-  [[ $RETVAL -ne 0 && $__THEME_STATUS_EXIT_SHOW != true ]] && symbols+="✘"
-  [[ $RETVAL -ne 0 && $__THEME_STATUS_EXIT_SHOW == true ]] && symbols+="✘ $RETVAL"
-  [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}⚡%f"
+  [[ $RETVAL -ne 0 ]] && symbols+="✖"
   [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="⚙"
 
   if [[ -n "$symbols" && $RETVAL -ne 0 ]]; then
-    prompt_segment $__THEME_STATUS_ERROR_BG $__THEME_STATUS_FG "$symbols"
+    prompt_segment $__THEME_STATUS_ERROR_FG "${(j: :)symbols}" true
   elif [[ -n "$symbols" ]]; then
-    prompt_segment $__THEME_STATUS_BG $__THEME_STATUS_FG "$symbols"
+    prompt_segment $__THEME_STATUS_FG "${(j: :)symbols}" true
   fi
-
 }
 
 # ------------------------------------------------------------------------------
@@ -307,7 +307,6 @@ prompt_status() {
 
 build_prompt() {
   RETVAL=$?
-  prompt_status
   #prompt_context
   prompt_dir
   prompt_screen
@@ -318,6 +317,7 @@ build_prompt() {
   prompt_rust
   prompt_git
   prompt_cmd_exec_time
+  prompt_status
   prompt_end
 }
 
