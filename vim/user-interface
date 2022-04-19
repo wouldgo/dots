@@ -1,0 +1,43 @@
+""" Syntax highlighting {{{
+  filetype plugin indent on                " detect file plugin+indent
+  syntax on                                " syntax highlighting
+
+  """ Nord customizations {{{
+  augroup nord-theme-overrides
+    autocmd!
+    autocmd ColorScheme nord highlight Visual ctermbg=11 guibg=#EBCB8B ctermfg=9 guifg=#BF616A
+  augroup END
+  """ }}}
+
+  colorscheme nord                          " colorscheme from plugin
+
+  """ Force behavior and filetypes, and by extension highlighting {{{
+    augroup FileTypeRules
+      autocmd!
+      autocmd BufNewFile,BufRead *.md set ft=markdown tw=79
+      autocmd BufNewFile,BufRead *.tex set ft=tex tw=79
+      autocmd BufNewFile,BufRead *.go set ft=go tw=79
+    augroup END
+  """ }}}
+
+  """ 256 colors for maximum {{{
+      if (&term =~ "xterm") || (&term =~ "screen")
+          set t_Co=256
+      endif
+  """ }}}
+""" }}}
+
+""" Interface general {{{
+  set cursorline                              " hilight cursor line
+  set more                                    " ---more--- like less
+  set number                                  " line numbers
+  set scrolloff=3                             " lines above/below cursor
+  set showcmd                                 " show cmds being typed
+  set title                                   " window title
+  set vb t_vb=                                " disable beep and flashing
+  """ Depending on your setup you may want to enforce UTF-8. {{{
+    """ Should generally be set in your environment LOCALE/$LANG
+    set encoding=utf-8                    " default $LANG/latin1
+    set fileencoding=utf-8                " default none
+  """ }}}
+""" }}}

@@ -1,0 +1,196 @@
+""" Startify {{{
+  let g:startify_bookmarks = [
+    \ $HOME . '/.vimrc', $HOME . '/.vimrc.first',
+    \ $HOME . '/.vimrc.last', $HOME . '/.vimrc.plugins'
+    \ ]
+  let g:startify_custom_header = [
+    \ '   http://github.com/wouldgo/dots',
+    \ ''
+    \ ]
+  let g:startify_files_number = 5
+""" }}}
+
+""" CtrlP {{{
+  " Don't recalculate files on start (slow)
+  let g:ctrlp_clear_cache_on_exit = 0
+  let g:ctrlp_working_path_mode = 'ra'
+
+  " Don't split in Startify
+  let g:ctrlp_reuse_window = 'startify'
+""" }}}
+
+""" Syntastic {{{
+  " Automatic checking for active, only when :SyntasticCheck for passive
+  " NOTE: override these in $HOME/.vimrc.first as needed!
+  " https://github.com/timss/vimconf/issues/9
+  let g:syntastic_mode_map = get(g:, 'syntastic_mode_map', {
+    \ 'mode': 'passive',
+    \ 'active_filetypes':
+      \ ['c', 'cpp', 'js', 'python', 'go'] })
+
+  " Skip check on :wq, :x, :ZZ etc
+  let g:syntastic_check_on_wq = 0
+""" }}}
+
+""" Supertab {{{
+  " Complete based on context (compl-omni, compl-filename, ..)
+  let g:SuperTabDefaultCompletionType = 'context'
+
+  " Longest common match, e.g. 'b<Tab>' => 'bar' for 'barbar', 'barfoo'
+  let g:SuperTabLongestEnhanced = 1
+  let g:SuperTabLongestHighlight = 1
+""" }}}
+
+""" UltiSnips {{{
+  let g:UltiSnipsExpandTrigger='<Tab>'
+  let g:UltiSnipsJumpForwardTrigger='<Tab>'
+  let g:UltiSnipsJumpBackwardTrigger='<S-Tab>'
+""" }}}
+
+""" Automatically remove preview window after autocomplete {{{
+  """ (mainly for clang_complete)
+  augroup RemovePreview
+    autocmd!
+    autocmd CursorMovedI * if pumvisible() == 0 | pclose | endif
+    autocmd InsertLeave * if pumvisible() == 0 | pclose | endif
+  augroup END
+""" }}}
+
+""" Lightline {{{
+  let g:lightline = {
+    \ 'colorscheme': 'nord',
+    \ 'active': {
+    \   'left': [
+    \     ['mode', 'paste'],
+    \     ['readonly'],
+    \     ['ctrlpmark', 'bufferline']
+    \   ],
+    \   'right': [
+    \     ['lineinfo'],
+    \     ['percent'],
+    \     ['fileformat'],
+    \     ['syntastic']
+    \   ]
+    \ },
+    \ 'component': {
+    \   'paste': '%{&paste?"!":""}'
+    \ },
+    \ 'component_function': {
+    \   'mode'         : 'LightlineMode',
+    \   'readonly'     : 'LightlineReadonly',
+    \   'ctrlpmark'    : 'LightlineCtrlPMark',
+    \   'bufferline'   : 'LightlineBufferline',
+    \   'fileformat'   : 'LightlineFileformat',
+    \   'fileencoding' : 'LightlineFileencoding',
+    \   'filetype'     : 'LightlineFiletype'
+    \ },
+    \ 'component_expand': {
+    \   'syntastic': 'SyntasticStatuslineFlag',
+    \ },
+    \ 'component_type': {
+    \   'syntastic': 'middle',
+    \ },
+    \ 'subseparator': {
+    \   'left': '|', 'right': '|'
+    \ }
+  \ }
+
+  " Ensure that each mode indicator is the same size and casing
+  let g:lightline.mode_map = {
+    \ 'n'      : ' N ',
+    \ 'i'      : ' I ',
+    \ 'R'      : ' R ',
+    \ 'v'      : ' V ',
+    \ 'V'      : 'V-L',
+    \ 'c'      : ' C ',
+    \ "\<C-v>" : 'V-B',
+    \ 's'      : ' S ',
+    \ 'S'      : 'S-L',
+    \ "\<C-s>" : 'S-B',
+    \ '?'      : '      '
+  \}
+
+  function! LightlineMode()
+    let l:fname = expand('%:t')
+    return l:fname ==# 'ControlP' ? 'CtrlP' :
+      \ winwidth(0) > 60 ? lightline#mode() : ''
+  endfunction
+
+  function! LightlineReadonly()
+    return &filetype !~? 'help' && &readonly ? '≠' : '' " or ⭤
+  endfunction
+
+  function! LightlineCtrlPMark()
+    if expand('%:t') =~# 'ControlP' && has_key(g:lightline, 'ctrlp_item')
+      call lightline#link('iR'[g:lightline.ctrlp_regex])
+      return lightline#concatenate([
+          \ g:lightline.ctrlp_prev,
+          \ g:lightline.ctrlp_item,
+          \ g:lightline.ctrlp_next
+        \], 0)
+    else
+      return ''
+    endif
+  endfunction
+
+  " https://github.com/itchyny/lightline.vim/issues/36
+  function! LightlineBufferline()
+    call bufferline#refresh_status()
+    let b = g:bufferline_status_info.before
+    let c = g:bufferline_status_info.current
+    let a = g:bufferline_status_info.after
+    let alen = strlen(a)
+    let blen = strlen(b)
+    let clen = strlen(c)
+    let w = winwidth(0) * 4 / 11
+    if w < alen+blen+clen
+      let whalf = (w - strlen(c)) / 2
+      let aa = alen > whalf && blen > whalf ? a[:whalf] : alen + blen < w - clen || alen < whalf ? a : a[:(w - clen - blen)]
+      let bb = alen > whalf && blen > whalf ? b[-(whalf):] : alen + blen < w - clen || blen < whalf ? b : b[-(w - clen - alen):]
+      return (strlen(bb) < strlen(b) ? '...' : '') . bb . c . aa . (strlen(aa) < strlen(a) ? '...' : '')
+    else
+      return b . c . a
+    endif
+  endfunction
+
+  function! LightlineFileformat()
+      return winwidth(0) > 90 ? &fileformat : ''
+  endfunction
+
+  function! LightlineFileencoding()
+      return winwidth(0) > 80 ? (&fileencoding !=# '' ? &fileencoding : &encoding) : ''
+  endfunction
+
+  function! LightlineFiletype()
+      return winwidth(0) > 70 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
+  endfunction
+
+  let g:ctrlp_status_func = {
+    \ 'main': 'CtrlPStatusFunc_1',
+    \ 'prog': 'CtrlPStatusFunc_2',
+  \ }
+
+  function! CtrlPStatusFunc_1(focus, byfname, regex, prev, item, next, marked)
+      let g:lightline.ctrlp_regex = a:regex
+      let g:lightline.ctrlp_prev = a:prev
+      let g:lightline.ctrlp_item = a:item
+      let g:lightline.ctrlp_next = a:next
+      return lightline#statusline(0)
+  endfunction
+
+  function! CtrlPStatusFunc_2(str)
+      return lightline#statusline(0)
+  endfunction
+
+  function! s:syntastic()
+      SyntasticCheck
+      call lightline#update()
+  endfunction
+
+  augroup AutoSyntastic
+      autocmd!
+      execute 'autocmd FileType ' .
+          \join(g:syntastic_mode_map['active_filetypes'], ',') .
+          \' autocmd BufWritePost <buffer> :call s:syntastic()'
+  augroup END
+""" }}}

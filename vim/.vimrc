@@ -92,104 +92,14 @@ if filereadable($HOME.'/.vimrc.first')
   source $HOME/.vimrc.first
 endif
 
-""" User interface {{{
-  """ Syntax highlighting {{{
-    filetype plugin indent on                   " detect file plugin+indent
-    syntax on                                   " syntax highlighting
-    color nord                               " colorscheme from plugin
-    """ Force behavior and filetypes, and by extension highlighting {{{
-    augroup FileTypeRules
-      autocmd!
-      autocmd BufNewFile,BufRead *.md set ft=markdown tw=79
-      autocmd BufNewFile,BufRead *.tex set ft=tex tw=79
-    augroup END
-    """ }}}
-    """ 256 colors for maximum {{{
-        if (&term =~ "xterm") || (&term =~ "screen")
-            set t_Co=256
-        endif
-    """ }}}
-  """ }}}
-  """ Interface general {{{
-    set cursorline                              " hilight cursor line
-    set more                                    " ---more--- like less
-    set number                                  " line numbers
-    set scrolloff=3                             " lines above/below cursor
-    set showcmd                                 " show cmds being typed
-    set title                                   " window title
-    set vb t_vb=                                " disable beep and flashing
-    """ Depending on your setup you may want to enforce UTF-8. {{{
-      """ Should generally be set in your environment LOCALE/$LANG
-      set encoding=utf-8                    " default $LANG/latin1
-      set fileencoding=utf-8                " default none
-    """ }}}
-  """ }}}
-""" }}}
+source $HOME/git/confs/dots/vim/user-interface
+source $HOME/git/confs/dots/vim/general-settings
 
-""" General settings {{{
-  set completeopt=menu,preview,longest            " insert mode completion
-  set hidden                                      " buffer change, more undo
-  set history=9999                                " default 20
-  set laststatus=2                                " always show statusline
-  set linebreak                                   " don't cut words on wrap
-  set listchars=tab:>\                            " > to highlight <Tab>
-  set list                                        " displaying listchars
-  set mouse=                                      " disable mouse
-  set noshowmode                                  " hide mode cmd line
-  set noexrc                                      " don't use other .*rc(s)
-  set nostartofline                               " keep cursor column pos
-  set nowrap                                      " don't wrap lines
-  set numberwidth=5                               " 99999 lines
-  set shortmess+=I                                " disable startup message
-  set splitbelow                                  " splits go below w/focus
-  set splitright                                  " vsplits go right w/focus
-  set ttyfast                                     " for faster redraws etc
-  set ttymouse=xterm2                             " experimental
-  """ Folding {{{
-    set foldcolumn=0                            " hide folding column
-    set foldmethod=indent                       " folds using indent
-    set foldnestmax=10                          " max 10 nested folds
-    set foldlevelstart=99                       " folds open by default
-  """ }}}
-  """ Search and replace {{{
-    set gdefault                                " default s//g (global)
-    set incsearch                               " "live"-search
-  """ }}}
-  """ Matching {{{
-    set matchtime=2                             " time to blink match {}
-    set matchpairs+=<:>                         " for ci< or ci>
-    set showmatch                               " tmpjump to match-bracket
-  """ }}}
-  """ Wildmode/wildmenu command-line completion {{{
-    set wildignore+=*.bak,*.swp,*.swo
-    set wildignore+=*.a,*.o,*.so,*.pyc,*.class
-    set wildignore+=*.jpg,*.jpeg,*.gif,*.png,*.pdf
-    set wildignore+=*/.git*,*.tar,*.zip
-    set wildmenu
-    set wildmode=longest:full,list:full
-  """ }}}
-  """ Return to last edit position when opening files {{{
-    augroup LastPosition
-      autocmd! BufReadPost *
-        \ if line("'\"") > 0 && line("'\"") <= line("$") |
-        \     exe "normal! g`\"" |
-        \ endif
-    augroup END
-  """ }}}
-""" }}}
 """ Files {{{
   set autoread                                    " refresh if changed
   set confirm                                     " confirm changed files
   set noautowrite                                 " never autowrite
   set nobackup                                    " disable backups
-  """ Persistent undo. Requires Vim 7.3 {{{
-    if has('persistent_undo') && exists('&undodir')
-      set undodir=$HOME/.vim/undo/            " where to store undofiles
-      set undofile                            " enable undofile
-      set undolevels=500                      " max undos stored
-      set undoreload=10000                    " buffer stored undos
-    endif
-  """ }}}
   """ Swap files, unless vim is invoked using sudo {{{
   """ https://github.com/tejr/dotfiles/blob/master/vim/vimrc
     if !strlen($SUDO_USER)
@@ -207,6 +117,7 @@ endif
     endif
   """ }}}
 """ }}}
+
 """ Text formatting {{{
     set autoindent                                  " preserve indentation
     set backspace=indent,eol,start                  " smart backspace
@@ -232,10 +143,27 @@ endif
       endif
     """ }}}
 """ }}}
+
 """ Keybindings {{{
     """ General {{{
+
+        """ Workspaces {{{
+          nnoremap <C-a> <C-w>
+          nmap <C-a>\| <C-w>v
+          nmap <C-a>- <C-w>s
+
+          nmap <Esc>[1;3A <C-a>k
+          nmap <Esc>[1;3B <C-a>j
+          nmap <Esc>[1;3D <C-a>h
+          nmap <Esc>[1;3C <C-a>l
+        """ }}}
+
         " Remap <Leader>
         let g:mapleader=','
+
+
+        """v<CR>
+        """nnoremap <C-a>- <C-w>s<CR>
 
         " Quickly edit/source .vimrc
         noremap <Leader>ve :edit $HOME/.vimrc<CR>
@@ -259,35 +187,15 @@ endif
         nnoremap <expr> j v:count == 0 ? 'gj' : 'j'
 
         " Quickly switch buffers
+        nnoremap <Leader>d :bdelete<CR>
         nnoremap <Leader>n :bnext<CR>
         nnoremap <Leader>p :bprevious<CR>
         nnoremap <Leader>f :b#<CR>
-        nnoremap <Leader>1 :1b<CR>
-        nnoremap <Leader>2 :2b<CR>
-        nnoremap <Leader>3 :3b<CR>
-        nnoremap <Leader>4 :4b<CR>
-        nnoremap <Leader>5 :5b<CR>
-        nnoremap <Leader>6 :6b<CR>
-        nnoremap <Leader>7 :7b<CR>
-        nnoremap <Leader>8 :8b<CR>
-        nnoremap <Leader>9 :9b<CR>
-        nnoremap <Leader>0 :10b<CR>
 
         " Highlight last inserted text
         nnoremap gV '[V']
     """ }}}
     """ Functions and/or fancy keybinds {{{
-        """ Toggle syntax highlighting {{{
-            function! ToggleSyntaxHighlighthing()
-                if exists('g:syntax_on')
-                    syntax off
-                else
-                    syntax enable
-                endif
-            endfunction
-
-            nnoremap <Leader>s :call ToggleSyntaxHighlighthing()<CR>
-        """ }}}
         """ Highlight characters past 79, toggle with <Leader>h {{{
         """ You might want to override this function and its variables with
         """ your own in .vimrc.last which might set for example colorcolumn or
@@ -361,11 +269,6 @@ endif
         """ }}}
     """ }}}
     """ Plugins {{{
-        " Toggle tagbar (definitions, functions etc.)
-        if exists('g:plugs["tagbar"]')
-            nnoremap <F2> :TagbarToggle<CR>
-        endif
-
         " Toggle undo history tree
         nnoremap <F5> :UndotreeToggle<CR>
 
@@ -377,224 +280,11 @@ endif
         xmap ga <Plug>(EasyAlign)
         nmap ga <Plug>(EasyAlign)
     """ }}}
-""" Plugin settings {{{
-    """ Startify {{{
-        let g:startify_bookmarks = [
-            \ $HOME . '/.vimrc', $HOME . '/.vimrc.first',
-            \ $HOME . '/.vimrc.last', $HOME . '/.vimrc.plugins'
-            \ ]
-        let g:startify_custom_header = [
-            \ '   http://github.com/wouldgo/dots',
-            \ ''
-            \ ]
-        let g:startify_files_number = 5
-    """ }}}
-    """ CtrlP {{{
-        " Don't recalculate files on start (slow)
-        let g:ctrlp_clear_cache_on_exit = 0
-        let g:ctrlp_working_path_mode = 'ra'
 
-        " Don't split in Startify
-        let g:ctrlp_reuse_window = 'startify'
-    """ }}}
-    """ TagBar {{{
-        set tags=tags;/
+source $HOME/git/confs/dots/vim/plugin-settings
 
-        " Proportions
-        let g:tagbar_left = 0
-        let g:tagbar_width = 30
-
-        " Used in lightline.vim
-        let g:tagbar_status_func = 'TagbarStatusFunc'
-    """ }}}
-    """ Syntastic {{{
-        " Automatic checking for active, only when :SyntasticCheck for passive
-        " NOTE: override these in $HOME/.vimrc.first as needed!
-        " https://github.com/timss/vimconf/issues/9
-        let g:syntastic_mode_map = get(g:, 'syntastic_mode_map', {
-            \ 'mode': 'passive',
-            \ 'active_filetypes':
-                \ ['c', 'cpp', 'perl', 'python'] })
-
-        " Skip check on :wq, :x, :ZZ etc
-        let g:syntastic_check_on_wq = 0
-    """ }}}
-    """ Supertab {{{
-        " Complete based on context (compl-omni, compl-filename, ..)
-        let g:SuperTabDefaultCompletionType = 'context'
-
-        " Longest common match, e.g. 'b<Tab>' => 'bar' for 'barbar', 'barfoo'
-        let g:SuperTabLongestEnhanced = 1
-        let g:SuperTabLongestHighlight = 1
-    """ }}}
-    """ UltiSnips {{{
-        let g:UltiSnipsExpandTrigger='<Tab>'
-        let g:UltiSnipsJumpForwardTrigger='<Tab>'
-        let g:UltiSnipsJumpBackwardTrigger='<S-Tab>'
-    """ }}}
-    """ Automatically remove preview window after autocomplete {{{
-    """ (mainly for clang_complete)
-        augroup RemovePreview
-            autocmd!
-            autocmd CursorMovedI * if pumvisible() == 0 | pclose | endif
-            autocmd InsertLeave * if pumvisible() == 0 | pclose | endif
-        augroup END
-    """ }}}
-    """ Lightline {{{
-        let g:lightline = {
-            \ 'colorscheme': 'nord',
-            \ 'active': {
-            \     'left': [
-            \         ['mode', 'paste'],
-            \         ['readonly', 'fugitive'],
-            \         ['ctrlpmark', 'bufferline']
-            \     ],
-            \     'right': [
-            \         ['lineinfo'],
-            \         ['percent'],
-            \         ['fileformat'],
-            \         ['syntastic']
-            \     ]
-            \ },
-            \ 'component': {
-            \     'paste': '%{&paste?"!":""}'
-            \ },
-            \ 'component_function': {
-            \     'mode'         : 'LightlineMode',
-            \     'fugitive'     : 'LightlineFugitive',
-            \     'readonly'     : 'LightlineReadonly',
-            \     'ctrlpmark'    : 'LightlineCtrlPMark',
-            \     'bufferline'   : 'LightlineBufferline',
-            \     'fileformat'   : 'LightlineFileformat',
-            \     'fileencoding' : 'LightlineFileencoding',
-            \     'filetype'     : 'LightlineFiletype'
-            \ },
-            \ 'component_expand': {
-            \     'syntastic': 'SyntasticStatuslineFlag',
-            \ },
-            \ 'component_type': {
-            \     'syntastic': 'middle',
-            \ },
-            \ 'subseparator': {
-            \     'left': '|', 'right': '|'
-            \ }
-            \ }
-
-        " Ensure that each mode indicator is the same size and casing
-        let g:lightline.mode_map = {
-            \ 'n'      : ' N ',
-            \ 'i'      : ' I ',
-            \ 'R'      : ' R ',
-            \ 'v'      : ' V ',
-            \ 'V'      : 'V-L',
-            \ 'c'      : ' C ',
-            \ "\<C-v>" : 'V-B',
-            \ 's'      : ' S ',
-            \ 'S'      : 'S-L',
-            \ "\<C-s>" : 'S-B',
-            \ '?'      : '      ' }
-
-        function! LightlineMode()
-            let l:fname = expand('%:t')
-            return l:fname ==# '__Tagbar__' ? 'Tagbar' :
-                \ l:fname ==# 'ControlP' ? 'CtrlP' :
-                \ winwidth(0) > 60 ? lightline#mode() : ''
-        endfunction
-
-        function! LightlineFugitive()
-            try
-                if expand('%:t') !~? 'Tagbar' && exists('*fugitive#head')
-                    let l:branch = fugitive#head()
-                    return l:branch !=# '' ? '± '.l:branch : ''
-                endif
-            catch
-            endtry
-            return ''
-        endfunction
-
-        function! LightlineReadonly()
-            return &filetype !~? 'help' && &readonly ? '≠' : '' " or ⭤
-        endfunction
-
-        function! LightlineCtrlPMark()
-            if expand('%:t') =~# 'ControlP' && has_key(g:lightline, 'ctrlp_item')
-                call lightline#link('iR'[g:lightline.ctrlp_regex])
-                return lightline#concatenate([g:lightline.ctrlp_prev, g:lightline.ctrlp_item
-                    \ , g:lightline.ctrlp_next], 0)
-            else
-                return ''
-            endif
-        endfunction
-
-        " https://github.com/itchyny/lightline.vim/issues/36
-        function! LightlineBufferline()
-            call bufferline#refresh_status()
-            let b = g:bufferline_status_info.before
-            let c = g:bufferline_status_info.current
-            let a = g:bufferline_status_info.after
-            let alen = strlen(a)
-            let blen = strlen(b)
-            let clen = strlen(c)
-            let w = winwidth(0) * 4 / 11
-            if w < alen+blen+clen
-                let whalf = (w - strlen(c)) / 2
-                let aa = alen > whalf && blen > whalf ? a[:whalf] : alen + blen < w - clen || alen < whalf ? a : a[:(w - clen - blen)]
-                let bb = alen > whalf && blen > whalf ? b[-(whalf):] : alen + blen < w - clen || blen < whalf ? b : b[-(w - clen - alen):]
-                return (strlen(bb) < strlen(b) ? '...' : '') . bb . c . aa . (strlen(aa) < strlen(a) ? '...' : '')
-            else
-                return b . c . a
-            endif
-        endfunction
-
-        function! LightlineFileformat()
-            return winwidth(0) > 90 ? &fileformat : ''
-        endfunction
-
-        function! LightlineFileencoding()
-            return winwidth(0) > 80 ? (&fileencoding !=# '' ? &fileencoding : &encoding) : ''
-        endfunction
-
-        function! LightlineFiletype()
-            return winwidth(0) > 70 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
-        endfunction
-
-        let g:ctrlp_status_func = {
-            \ 'main': 'CtrlPStatusFunc_1',
-            \ 'prog': 'CtrlPStatusFunc_2',
-            \ }
-
-        function! CtrlPStatusFunc_1(focus, byfname, regex, prev, item, next, marked)
-            let g:lightline.ctrlp_regex = a:regex
-            let g:lightline.ctrlp_prev = a:prev
-            let g:lightline.ctrlp_item = a:item
-            let g:lightline.ctrlp_next = a:next
-            return lightline#statusline(0)
-        endfunction
-
-        function! CtrlPStatusFunc_2(str)
-            return lightline#statusline(0)
-        endfunction
-
-        function! TagbarStatusFunc(current, sort, fname, ...) abort
-            let g:lightline.fname = a:fname
-            return lightline#statusline(0)
-        endfunction
-
-        function! s:syntastic()
-            SyntasticCheck
-            call lightline#update()
-        endfunction
-
-        augroup AutoSyntastic
-            autocmd!
-            execute 'autocmd FileType ' .
-                \join(g:syntastic_mode_map['active_filetypes'], ',') .
-                \' autocmd BufWritePost <buffer> :call s:syntastic()'
-        augroup END
-    """ }}}
-""" }}}
 """ Local ending config, will overwrite anything above. Generally use this. {{{
-    if filereadable($HOME.'/.vimrc.last')
-        source $HOME/.vimrc.last
-    endif
+  if filereadable($HOME.'/.vimrc.last')
+    source $HOME/.vimrc.last
+  endif
 """ }}}
