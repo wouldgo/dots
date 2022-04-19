@@ -288,15 +288,15 @@ prompt_screen() {
 # - was there an error
 # - are there background jobs?
 prompt_status() {
-  local symbols
-  symbols=()
-  [[ $RETVAL -ne 0 ]] && symbols+="✖ $RETVAL"
-  [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="⚙"
+  local _symbols=()
+  local _jobs_count=$(jobs -l | wc -l)
+  [[ ${RETVAL} -ne 0 ]] && _symbols+="\u2716 ${RETVAL}"
+  [[ ${_jobs_count} -gt 0 ]] && _symbols+="\u2692 ${_jobs_count}"
 
-  if [[ -n "$symbols" && $RETVAL -ne 0 ]]; then
-    prompt_segment $__THEME_STATUS_ERROR_FG "${(j: :)symbols}" true
-  elif [[ -n "$symbols" ]]; then
-    prompt_segment $__THEME_STATUS_FG "${(j: :)symbols}" true
+  if [[ -n "${_symbols}" && ${RETVAL} -ne 0 ]]; then
+    prompt_segment $__THEME_STATUS_ERROR_FG "${(j: :)_symbols}" true
+  elif [[ -n "${_symbols}" ]]; then
+    prompt_segment $__THEME_STATUS_FG "${(j: :)_symbols}" true
   fi
 }
 
@@ -308,8 +308,8 @@ prompt_status() {
 build_prompt() {
   RETVAL=$?
   #prompt_context
+  #prompt_screen
   prompt_dir
-  prompt_screen
   prompt_kctx
   prompt_virtualenv
   prompt_nvm
