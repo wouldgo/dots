@@ -290,7 +290,7 @@ prompt_screen() {
 prompt_status() {
   local symbols
   symbols=()
-  [[ $RETVAL -ne 0 ]] && symbols+="✖"
+  [[ $RETVAL -ne 0 ]] && symbols+="✖ $RETVAL"
   [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="⚙"
 
   if [[ -n "$symbols" && $RETVAL -ne 0 ]]; then

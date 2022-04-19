@@ -1,19 +1,21 @@
-""" Automatically create needed files and folders on first run (*nix only)
-call system('mkdir -p $HOME/.vim/{autoload,bundle,swap,undo}')
-if !filereadable($HOME.'/.vimrc.plugins') | call system('touch $HOME/.vimrc.plugins') | endif
-if !filereadable($HOME.'/.vimrc.first') | call system('touch $HOME/.vimrc.first') | endif
-if !filereadable($HOME.'/.vimrc.last') | call system('touch $HOME/.vimrc.last') | endif
+""" Automatically create needed files and folders on first run (*nix only) {{{
+  call system('mkdir -p $HOME/.vim/{autoload,bundle,swap,undo}')
+  if !filereadable($HOME.'/.vimrc.plugins') | call system('touch $HOME/.vimrc.plugins') | endif
+  if !filereadable($HOME.'/.vimrc.first') | call system('touch $HOME/.vimrc.first') | endif
+  if !filereadable($HOME.'/.vimrc.last') | call system('touch $HOME/.vimrc.last') | endif
+""" }}}
 
-""" vim-plug plugin manager
-if empty(glob('~/.vim/autoload/plug.vim'))
-  let g:clone_details = 'https://github.com/junegunn/vim-plug.git $HOME/.vim/bundle/vim-plug'
-  silent call system('git clone --depth 1 '. g:clone_details)
-  if v:shell_error | silent call system('git clone ' . g:clone_details) | endif
-  silent !ln -s $HOME/.vim/bundle/vim-plug/plug.vim $HOME/.vim/autoload/plug.vim
-  augroup FirstPlugInstall
-    autocmd! VimEnter * PlugInstall --sync | source $MYVIMRC
-  augroup END
-endif
+""" vim-plug plugin manager {{{
+  if empty(glob('~/.vim/autoload/plug.vim'))
+    let g:clone_details = 'https://github.com/junegunn/vim-plug.git $HOME/.vim/bundle/vim-plug'
+    silent call system('git clone --depth 1 '. g:clone_details)
+    if v:shell_error | silent call system('git clone ' . g:clone_details) | endif
+    silent !ln -s $HOME/.vim/bundle/vim-plug/plug.vim $HOME/.vim/autoload/plug.vim
+    augroup FirstPlugInstall
+      autocmd! VimEnter * PlugInstall --sync | source $MYVIMRC
+    augroup END
+  endif
+""" }}}
 
 """ Plugins to disable
 """ https://github.com/timss/vimconf/issues/13
@@ -82,7 +84,7 @@ call plug#begin('~/.vim/bundle')
   " https://vi.stackexchange.com/q/13471/5070
   call filter(g:plugs, 'index(g:plugs_disabled, v:key) == -1')
 
-  " Initalize plugin system
+" Initalize plugin system
 call plug#end()
 
 """ Local leading config, only for prerequisites and will be overwritten
@@ -91,124 +93,119 @@ if filereadable($HOME.'/.vimrc.first')
 endif
 
 """ User interface {{{
-    """ Syntax highlighting {{{
-        filetype plugin indent on                   " detect file plugin+indent
-        syntax on                                   " syntax highlighting
-        color nord                               " colorscheme from plugin
-        """ Force behavior and filetypes, and by extension highlighting {{{
-        augroup FileTypeRules
-          autocmd!
-          autocmd BufNewFile,BufRead *.md set ft=markdown tw=79
-          autocmd BufNewFile,BufRead *.tex set ft=tex tw=79
-        augroup END
-        """ }}}
-        """ 256 colors for maximum {{{
-            if (&term =~ "xterm") || (&term =~ "screen")
-                set t_Co=256
-            endif
-        """ }}}
+  """ Syntax highlighting {{{
+    filetype plugin indent on                   " detect file plugin+indent
+    syntax on                                   " syntax highlighting
+    color nord                               " colorscheme from plugin
+    """ Force behavior and filetypes, and by extension highlighting {{{
+    augroup FileTypeRules
+      autocmd!
+      autocmd BufNewFile,BufRead *.md set ft=markdown tw=79
+      autocmd BufNewFile,BufRead *.tex set ft=tex tw=79
+    augroup END
     """ }}}
-    """ Interface general {{{
-        set cursorline                              " hilight cursor line
-        set more                                    " ---more--- like less
-        set number                                  " line numbers
-        set scrolloff=3                             " lines above/below cursor
-        set showcmd                                 " show cmds being typed
-        set title                                   " window title
-        set vb t_vb=                                " disable beep and flashing
-        """ Depending on your setup you may want to enforce UTF-8. {{{
-        """ Should generally be set in your environment LOCALE/$LANG
-            " set encoding=utf-8                    " default $LANG/latin1
-            " set fileencoding=utf-8                " default none
-        """ }}}
-        """ Gvim {{{
-            set guifont=DejaVu\ Sans\ Mono\ 9
-            set guioptions-=m                       " remove menubar
-            set guioptions-=T                       " remove toolbar
-            set guioptions-=r                       " remove right scrollbar
-        """ }}}
+    """ 256 colors for maximum {{{
+        if (&term =~ "xterm") || (&term =~ "screen")
+            set t_Co=256
+        endif
     """ }}}
+  """ }}}
+  """ Interface general {{{
+    set cursorline                              " hilight cursor line
+    set more                                    " ---more--- like less
+    set number                                  " line numbers
+    set scrolloff=3                             " lines above/below cursor
+    set showcmd                                 " show cmds being typed
+    set title                                   " window title
+    set vb t_vb=                                " disable beep and flashing
+    """ Depending on your setup you may want to enforce UTF-8. {{{
+      """ Should generally be set in your environment LOCALE/$LANG
+      set encoding=utf-8                    " default $LANG/latin1
+      set fileencoding=utf-8                " default none
+    """ }}}
+  """ }}}
 """ }}}
+
 """ General settings {{{
-    set completeopt=menu,preview,longest            " insert mode completion
-    set hidden                                      " buffer change, more undo
-    set history=9999                                " default 20
-    set laststatus=2                                " always show statusline
-    set linebreak                                   " don't cut words on wrap
-    set listchars=tab:>\                            " > to highlight <Tab>
-    set list                                        " displaying listchars
-    set mouse=                                      " disable mouse
-    set noshowmode                                  " hide mode cmd line
-    set noexrc                                      " don't use other .*rc(s)
-    set nostartofline                               " keep cursor column pos
-    set nowrap                                      " don't wrap lines
-    set numberwidth=5                               " 99999 lines
-    set shortmess+=I                                " disable startup message
-    set splitbelow                                  " splits go below w/focus
-    set splitright                                  " vsplits go right w/focus
-    set ttyfast                                     " for faster redraws etc
-    set ttymouse=xterm2                             " experimental
-    """ Folding {{{
-        set foldcolumn=0                            " hide folding column
-        set foldmethod=indent                       " folds using indent
-        set foldnestmax=10                          " max 10 nested folds
-        set foldlevelstart=99                       " folds open by default
-    """ }}}
-    """ Search and replace {{{
-        set gdefault                                " default s//g (global)
-        set incsearch                               " "live"-search
-    """ }}}
-    """ Matching {{{
-        set matchtime=2                             " time to blink match {}
-        set matchpairs+=<:>                         " for ci< or ci>
-        set showmatch                               " tmpjump to match-bracket
-    """ }}}
-    """ Wildmode/wildmenu command-line completion {{{
-        set wildignore+=*.bak,*.swp,*.swo
-        set wildignore+=*.a,*.o,*.so,*.pyc,*.class
-        set wildignore+=*.jpg,*.jpeg,*.gif,*.png,*.pdf
-        set wildignore+=*/.git*,*.tar,*.zip
-        set wildmenu
-        set wildmode=longest:full,list:full
-    """ }}}
-    """ Return to last edit position when opening files {{{
-        augroup LastPosition
-            autocmd! BufReadPost *
-                \ if line("'\"") > 0 && line("'\"") <= line("$") |
-                \     exe "normal! g`\"" |
-                \ endif
-        augroup END
-    """ }}}
+  set completeopt=menu,preview,longest            " insert mode completion
+  set hidden                                      " buffer change, more undo
+  set history=9999                                " default 20
+  set laststatus=2                                " always show statusline
+  set linebreak                                   " don't cut words on wrap
+  set listchars=tab:>\                            " > to highlight <Tab>
+  set list                                        " displaying listchars
+  set mouse=                                      " disable mouse
+  set noshowmode                                  " hide mode cmd line
+  set noexrc                                      " don't use other .*rc(s)
+  set nostartofline                               " keep cursor column pos
+  set nowrap                                      " don't wrap lines
+  set numberwidth=5                               " 99999 lines
+  set shortmess+=I                                " disable startup message
+  set splitbelow                                  " splits go below w/focus
+  set splitright                                  " vsplits go right w/focus
+  set ttyfast                                     " for faster redraws etc
+  set ttymouse=xterm2                             " experimental
+  """ Folding {{{
+    set foldcolumn=0                            " hide folding column
+    set foldmethod=indent                       " folds using indent
+    set foldnestmax=10                          " max 10 nested folds
+    set foldlevelstart=99                       " folds open by default
+  """ }}}
+  """ Search and replace {{{
+    set gdefault                                " default s//g (global)
+    set incsearch                               " "live"-search
+  """ }}}
+  """ Matching {{{
+    set matchtime=2                             " time to blink match {}
+    set matchpairs+=<:>                         " for ci< or ci>
+    set showmatch                               " tmpjump to match-bracket
+  """ }}}
+  """ Wildmode/wildmenu command-line completion {{{
+    set wildignore+=*.bak,*.swp,*.swo
+    set wildignore+=*.a,*.o,*.so,*.pyc,*.class
+    set wildignore+=*.jpg,*.jpeg,*.gif,*.png,*.pdf
+    set wildignore+=*/.git*,*.tar,*.zip
+    set wildmenu
+    set wildmode=longest:full,list:full
+  """ }}}
+  """ Return to last edit position when opening files {{{
+    augroup LastPosition
+      autocmd! BufReadPost *
+        \ if line("'\"") > 0 && line("'\"") <= line("$") |
+        \     exe "normal! g`\"" |
+        \ endif
+    augroup END
+  """ }}}
 """ }}}
 """ Files {{{
-    set autoread                                    " refresh if changed
-    set confirm                                     " confirm changed files
-    set noautowrite                                 " never autowrite
-    set nobackup                                    " disable backups
-    """ Persistent undo. Requires Vim 7.3 {{{
-        if has('persistent_undo') && exists('&undodir')
-            set undodir=$HOME/.vim/undo/            " where to store undofiles
-            set undofile                            " enable undofile
-            set undolevels=500                      " max undos stored
-            set undoreload=10000                    " buffer stored undos
-        endif
-    """ }}}
-    """ Swap files, unless vim is invoked using sudo {{{
-    """ https://github.com/tejr/dotfiles/blob/master/vim/vimrc
-        if !strlen($SUDO_USER)
-            set directory^=$HOME/.vim/swap//        " default cwd, // full path
-            set swapfile                            " enable swap files
-            set updatecount=50                      " update swp after 50chars
-            """ Don't swap tmp, mount or network dirs {{{
-                augroup SwapIgnore
-                    autocmd! BufNewFile,BufReadPre /tmp/*,/mnt/*,/media/*
-                        \ setlocal noswapfile
-                augroup END
-            """ }}}
-        else
-            set noswapfile                          " dont swap sudo'ed files
-        endif
-    """ }}}
+  set autoread                                    " refresh if changed
+  set confirm                                     " confirm changed files
+  set noautowrite                                 " never autowrite
+  set nobackup                                    " disable backups
+  """ Persistent undo. Requires Vim 7.3 {{{
+    if has('persistent_undo') && exists('&undodir')
+      set undodir=$HOME/.vim/undo/            " where to store undofiles
+      set undofile                            " enable undofile
+      set undolevels=500                      " max undos stored
+      set undoreload=10000                    " buffer stored undos
+    endif
+  """ }}}
+  """ Swap files, unless vim is invoked using sudo {{{
+  """ https://github.com/tejr/dotfiles/blob/master/vim/vimrc
+    if !strlen($SUDO_USER)
+      set directory^=$HOME/.vim/swap//        " default cwd, // full path
+      set swapfile                            " enable swap files
+      set updatecount=50                      " update swp after 50chars
+      """ Don't swap tmp, mount or network dirs {{{
+        augroup SwapIgnore
+          autocmd! BufNewFile,BufReadPre /tmp/*,/mnt/*,/media/*
+            \ setlocal noswapfile
+        augroup END
+      """ }}}
+    else
+      set noswapfile                          " dont swap sudo'ed files
+    endif
+  """ }}}
 """ }}}
 """ Text formatting {{{
     set autoindent                                  " preserve indentation
@@ -222,17 +219,17 @@ endif
     set smartcase                                   " sensitive with uppercase
     set smarttab                                    " tab to 0,4,8 etc.
     set softtabstop=2                               " "tab" feels like <tab>
-    set tabstop=2                                   " replace <TAB> w/4 spaces
+    set tabstop=2                                   " replace <TAB> w/2 spaces
     """ Only auto-comment newline for block comments {{{
-        augroup AutoBlockComment
-            autocmd! FileType c,cpp setlocal comments -=:// comments +=f://
-        augroup END
+      augroup AutoBlockComment
+        autocmd! FileType c,cpp setlocal comments -=:// comments +=f://
+      augroup END
     """ }}}
     """ Take comment leaders into account when joining lines, :h fo-table {{{
     """ http://ftp.vim.org/pub/vim/patches/7.3/7.3.541
-        if has('patch-7.3.541')
-            set formatoptions+=j
-        endif
+      if has('patch-7.3.541')
+        set formatoptions+=j
+      endif
     """ }}}
 """ }}}
 """ Keybindings {{{
@@ -387,7 +384,7 @@ endif
             \ $HOME . '/.vimrc.last', $HOME . '/.vimrc.plugins'
             \ ]
         let g:startify_custom_header = [
-            \ '   http://github.com/wouldgo/vimconf',
+            \ '   http://github.com/wouldgo/dots',
             \ ''
             \ ]
         let g:startify_files_number = 5
