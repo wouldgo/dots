@@ -258,9 +258,11 @@ prompt_kctx() {
   if [[ $(command -v kubectl) ]]; then
     local k8s_context=$(kubectl config view --minify --output "jsonpath={.current-context}{':'}{..namespace}" 2>/dev/null)
 
-    [[ $k8s_context =~ ^.*:$  ]] && k8s_context=${k8s_context%?}
+    if [[ -n $k8s_context ]]; then
+      [[ $k8s_context =~ ^.*:$  ]] && k8s_context=${k8s_context%?}
 
-    prompt_segment $__THEME_KCTX_FG $__THEME_KCTX_PREFIX" ${k8s_context}"
+      prompt_segment $__THEME_KCTX_FG $__THEME_KCTX_PREFIX" ${k8s_context}"
+    fi
   fi
 }
 
