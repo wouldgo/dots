@@ -59,37 +59,34 @@ __THEME_EXEC_TIME_FG=yellow
 # ------------------------------------------------------------------------------
 
 CURRENT_FG='NONE'
-OPEN_SEGMENT_SEPARATOR='\u27EA'
-CLOSE_SEGMENT_SEPARATOR='\u27EB'
 
 # Begin a segment
 # prompt_segment foreground_color=default text=none ignore_separators=false
 prompt_segment() {
   local __fg
   local __ignore_separators
+  local __separator='\u007C'
+
   [[ -n $1 ]] && __fg="%F{$1}" || __fg="%f"
   [[ -n $3 ]] && __ignore_separators=$3 || __ignore_separators=false
   if [[ ${CURRENT_FG} != 'NONE' && $1 != ${CURRENT_FG} ]]; then
 
     echo -n "%{%k%F{${CURRENT_FG}}%}%{$__fg%}"
     if [[ ${__ignore_separators} != true ]]; then
-      echo -n "${OPEN_SEGMENT_SEPARATOR}"
+      echo -n "${__separator}"
     fi
   else
 
     echo -n "%{%k%}%{$__fg%}"
     if [[ ${__ignore_separators} != true ]]; then
-      echo -n "${OPEN_SEGMENT_SEPARATOR}"
+      echo -n "${__separator}"
     fi
   fi
 
   CURRENT_FG=$1
   if [[ -n $2 ]]; then
 
-    echo -n "$2%F{${CURRENT_FG}}"
-    if [[ $__ignore_separators != true ]]; then
-      echo -n "${CLOSE_SEGMENT_SEPARATOR}"
-    fi
+    echo -n "$2"
   fi
 }
 
@@ -110,10 +107,8 @@ prompt_end() {
 # to be shown
 # ------------------------------------------------------------------------------
 
-# Context: user@hostname (who am I and where am I)
 context() {
-  local user="$(whoami)"
-  [[ "$user" != "$__THEME_CONTEXT_DEFAULT_USER" || -n "$__THEME_IS_SSH_CLIENT" ]] && echo -n "${user}@$__THEME_CONTEXT_HOSTNAME"
+  echo -n "${whoami}@${hostname}"
 }
 
 # Based on http://stackoverflow.com/a/32164707/3859566
