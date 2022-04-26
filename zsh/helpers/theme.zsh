@@ -65,7 +65,8 @@ CURRENT_FG='NONE'
 prompt_segment() {
   local __fg
   local __ignore_separators
-  local __separator='\u007C'
+  local __open_separator='\u27EA'
+  local __close_separator='\u27EB'
 
   [[ -n $1 ]] && __fg="%F{$1}" || __fg="%f"
   [[ -n $3 ]] && __ignore_separators=$3 || __ignore_separators=false
@@ -73,20 +74,23 @@ prompt_segment() {
 
     echo -n "%{%k%F{${CURRENT_FG}}%}%{$__fg%}"
     if [[ ${__ignore_separators} != true ]]; then
-      echo -n "${__separator}"
+      echo -n "${__open_separator}"
     fi
   else
 
     echo -n "%{%k%}%{$__fg%}"
     if [[ ${__ignore_separators} != true ]]; then
-      echo -n "${__separator}"
+      echo -n "${__open_separator}"
     fi
   fi
 
   CURRENT_FG=$1
   if [[ -n $2 ]]; then
 
-    echo -n "$2"
+    echo -n "$2%F{${CURRENT_FG}}"
+    if [[ $__ignore_separators != true ]]; then
+      echo -n "${__close_separator}"
+    fi
   fi
 }
 
