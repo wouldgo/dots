@@ -14,21 +14,27 @@ if lualine_loaded then
 
   require('lualine').setup {
     options = {
-      icons_enabled = true,
       theme = 'nord',
-      component_separators = { left = '⟪', right = '⟫'},
-      section_separators = { left = '⟪', right = '⟫'},
+      icons_enabled = false,
+      component_separators = {
+        left = '|',
+        right = '|'
+      },
+      section_separators = {
+        left = '|',
+        right = '|'
+      },
       disabled_filetypes = {},
       always_divide_middle = true,
-      globalstatus = false,
+      globalstatus = true,
     },
     sections = {
-      lualine_a = {'mode'},
-      lualine_b = {'branch', 'diff', 'diagnostics'},
-      lualine_c = {'filename'},
+      lualine_a = {'mode', 'buffers'},
+      lualine_b = {'diagnostics'},
+      lualine_c = {},
       lualine_x = {'encoding', 'fileformat', 'filetype'},
-      lualine_y = {'progress'},
-      lualine_z = {'location'}
+      lualine_y = {'filename'},
+      lualine_z = {'progress', 'location'}
     },
     inactive_sections = {
       lualine_a = {},
