@@ -16,17 +16,16 @@ end
 
 local packer = require "packer"
 
-local function use_config(name)
-  require("wouldgo." .. name)
-end
-
 packer.startup({function(use)
 	use "wbthomason/packer.nvim"
 
   use "shaunsingh/nord.nvim"
   use {
     "nvim-lualine/lualine.nvim",
-    requires = { "kyazdani42/nvim-web-devicons", opt = true }
+    requires = {
+      "kyazdani42/nvim-web-devicons",
+      opt = true
+    }
   }
 
 	if packer_bootstrap then

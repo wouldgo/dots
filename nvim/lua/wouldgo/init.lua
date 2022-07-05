@@ -1,4 +1,4 @@
 require('wouldgo.configurations')
 require('wouldgo.packer')
 
-require('wouldgo.nord')
+require('wouldgo.ui')

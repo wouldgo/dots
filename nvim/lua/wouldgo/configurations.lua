@@ -5,6 +5,7 @@ vim.opt.relativenumber = true
 
 vim.opt.hidden = true
 vim.opt.errorbells = false
+vim.opt.showmode = false
 
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
