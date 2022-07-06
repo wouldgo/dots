@@ -1,4 +1,4 @@
 require('wouldgo.configurations')
-require('wouldgo.packer')
+-- require('wouldgo.packer')
 
-require('wouldgo.ui')
+-- require('wouldgo.ui')
