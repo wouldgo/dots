@@ -39,7 +39,7 @@ local options = {
   timeoutlen = 100,                        -- time to wait for a mapped sequence to complete (in milliseconds)
 
 
-  cursorline = true,                       -- highlight the current line
+  cursorline = false,                      -- highlight the current line
   number = true,                           -- set numbered lines
   relativenumber = false,                  -- set relative numbered lines
   numberwidth = 2,                         -- set number column width to 2 {default 4}

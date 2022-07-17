@@ -1,14 +1,4 @@
-local nord_loaded, _ = pcall(require, 'nord')
 local lualine_loaded, _ = pcall(require, 'lualine')
-
-if nord_loaded then
-  vim.g.nord_contrast = true
-  vim.g.nord_borders = false
-  vim.g.nord_disable_background = false
-  vim.g.nord_italic = false
-
-  require('nord').set()
-end
 
 if lualine_loaded then
 
