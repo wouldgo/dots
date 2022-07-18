@@ -1,6 +1,6 @@
-local lualine_loaded, _ = pcall(require, 'telescope')
+local telescope_loaded, _ = pcall(require, 'telescope')
 
-if lualine_loaded then
+if telescope_loaded then
 
   require('telescope').setup{
     defaults = {
@@ -36,4 +36,8 @@ if lualine_loaded then
     }
   }
 
+  vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files)
+  vim.keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep)
+  vim.keymap.set('n', '<leader>fb', require('telescope.builtin').buffers)
+  vim.keymap.set('n', '<leader>fh', require('telescope.builtin').help_tags)
 end

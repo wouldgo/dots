@@ -30,10 +30,14 @@ packer.startup({function(use)
   use('nvim-treesitter/nvim-treesitter', {
     run = ':TSUpdate'
   })
-  
+
   use 'mbbill/undotree'
-  
-	if packer_bootstrap then
+
+  use {
+    'kyazdani42/nvim-tree.lua'
+  }
+
+  if packer_bootstrap then
 		packer.sync()
 	end
 end,
