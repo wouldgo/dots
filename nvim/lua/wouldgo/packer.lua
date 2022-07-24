@@ -18,11 +18,8 @@ local packer = require 'packer'
 
 packer.startup({function(use)
 	use('wbthomason/packer.nvim')
-
   use('shaunsingh/nord.nvim')
-
   use('nvim-lualine/lualine.nvim')
-
   use {
     'nvim-telescope/telescope.nvim',
     requires = { {'nvim-lua/plenary.nvim'} }
@@ -30,9 +27,8 @@ packer.startup({function(use)
   use('nvim-treesitter/nvim-treesitter', {
     run = ':TSUpdate'
   })
-
+  use 'neovim/nvim-lspconfig'
   use 'mbbill/undotree'
-
   use {
     'kyazdani42/nvim-tree.lua'
   }
