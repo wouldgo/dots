@@ -27,11 +27,11 @@ packer.startup({function(use)
   use('nvim-treesitter/nvim-treesitter', {
     run = ':TSUpdate'
   })
-  use 'neovim/nvim-lspconfig'
-  use 'mbbill/undotree'
-  use {
-    'kyazdani42/nvim-tree.lua'
-  }
+  use('neovim/nvim-lspconfig')
+  use('williamboman/mason.nvim')
+  use('williamboman/mason-lspconfig.nvim')
+  use('mbbill/undotree')
+  use('kyazdani42/nvim-tree.lua')
 
   if packer_bootstrap then
 		packer.sync()
