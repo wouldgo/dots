@@ -2,5 +2,4 @@
 
 my actual configurations
 
-
-has to be at ~/git/confs/dots
+has to be at ${HOME}/git/confs/dots

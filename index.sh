@@ -2,7 +2,7 @@
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
 
 echo "Preparing git folder" && \
-mkdir --parents --verbose ~/git/confs && \
+mkdir --parents --verbose "${HOME}/git/confs" && \
 
 echo "Updating system" && \
 if ! "${CURRENT_DIR}"/system/update-system.sh; then
@@ -27,7 +27,7 @@ if ! "${CURRENT_DIR}"/zsh/confs/user.sh; then
 fi
 
 echo "Creating zsh completion folder for ${USER}..." && \
-mkdir --parents --verbose ~/.zsh/completion && \
+mkdir --parents --verbose "${HOME}/.zsh/completion" && \
 
 echo "Preparing tmux configuration..." && \
 if ! "${CURRENT_DIR}"/tmux/confs/user.sh; then
@@ -63,3 +63,8 @@ zsh < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binsc
 
 echo "Installing nvm" && \
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+
+echo "Installing extra binaries..." && \
+if ! "${CURRENT_DIR}"/system/bins.sh; then
+  echo "Extra binaries for ${USER} are already set" 2>&1
+fi
