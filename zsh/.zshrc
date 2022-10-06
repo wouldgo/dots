@@ -19,17 +19,17 @@ for FILE in ${CONFS_FOLDER}/helpers/*.zsh; do
   source ${FILE}
 done
 
-source ${HOME}/.cargo/env
-source ${CONFS_FOLDER}/zsh_plugins.sh
+source "${HOME}/.cargo/env"
+source "${CONFS_FOLDER}/zsh_plugins.sh"
 
-ln -sf $(${CONFS_FOLDER}/antibody path ahmetb/kubectx)/completion/_kubectx.zsh ~/.zsh/completion/_kubectx.zsh
-ln -sf $(${CONFS_FOLDER}/antibody path ahmetb/kubectx)/completion/_kubens.zsh ~/.zsh/completion/_kubens.zsh
-ln -sf $(${CONFS_FOLDER}/antibody path johanhaleby/kubetail)/completion/kubetail.zsh ~/.zsh/completion/_kubetail.zsh
+ln -sf $(${CONFS_FOLDER}/antibody path ahmetb/kubectx)/completion/_kubectx.zsh "${HOME}/.zsh/completion/_kubectx.zsh"
+ln -sf $(${CONFS_FOLDER}/antibody path ahmetb/kubectx)/completion/_kubens.zsh "${HOME}/.zsh/completion/_kubens.zsh"
+ln -sf $(${CONFS_FOLDER}/antibody path johanhaleby/kubetail)/completion/kubetail.zsh "${HOME}/.zsh/completion/_kubetail.zsh"
 
 export PATH="${HOME}/.local/bin:$PATH"
 
 #Completion
-fpath+=( ~/.zsh/completion )
+fpath+=( "${HOME}/.zsh/completion" )
 autoload -Uz compinit && compinit -i
 autoload -Uz add-zsh-hook
 autoload -U select-word-style

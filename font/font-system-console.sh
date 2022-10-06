@@ -5,7 +5,7 @@
   exit 1;
 } && \
 
-cp -r ~/git/confs/dots/powerline-fonts/Terminus/PSF/*.psf.gz /usr/share/consolefonts && \
+cp -r "${HOME}"/git/confs/dots/powerline-fonts/Terminus/PSF/*.psf.gz /usr/share/consolefonts && \
 sed -i -re"s/(CODESET=.*)/# \1/g" /etc/default/console-setup && \
 sed -i -re"s/(FONTFACE=.*)/# \1/g" /etc/default/console-setup && \
 sed -i -re"s/(FONTSIZE=.*)/# \1/g" /etc/default/console-setup && \
