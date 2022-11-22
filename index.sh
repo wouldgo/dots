@@ -64,6 +64,13 @@ zsh < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binsc
 echo "Installing nvm" && \
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 
+echo "Installing miniforge" && \
+DIR=$(mktemp) && \
+wget -P "${DIR}" https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh && \
+chmod u+x "${DIR}/Miniforge3-Linux-x86_64.sh" && \
+bash "${DIR}/Miniforge3-Linux-x86_64.sh" && \
+rm -Rfv "${DIR}"
+
 echo "Installing extra binaries..." && \
 if ! "${CURRENT_DIR}"/system/bins.sh; then
   echo "Extra binaries for ${USER} are already set" 2>&1
