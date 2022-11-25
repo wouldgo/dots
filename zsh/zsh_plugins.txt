@@ -10,6 +10,8 @@ ohmyzsh/ohmyzsh path:plugins/kubectl
 ohmyzsh/ohmyzsh path:plugins/docker kind:fpath
 ohmyzsh/ohmyzsh path:plugins/cargo kind:fpath
 
+conda-incubator/conda-zsh-completion
+
 mttrs/zsh-git-prompt
 dgnest/zsh-gvm-plugin
 

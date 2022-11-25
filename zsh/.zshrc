@@ -14,7 +14,7 @@ export GVM_DIR="${HOME}/.gvm"
 
 #customizations
 eval `dircolors ${CONFS_FOLDER}/colors/nord-dircolors`
-for FILE in ${CONFS_FOLDER}/helpers/*.zsh; do
+for FILE in ${CONFS_FOLDER}/helpers/*.{zsh,sh}; do
 
   source ${FILE}
 done
@@ -40,8 +40,8 @@ bindkey '^I' first-tab
 add-zsh-hook chpwd load-nvmrc
 load-nvmrc
 
-add-zsh-hook chpwd load-virtualenv
-load-virtualenv
+#add-zsh-hook chpwd load-virtualenv
+#load-virtualenv
 
 add-zsh-hook chpwd load-gvmrc
 load-gvmrc

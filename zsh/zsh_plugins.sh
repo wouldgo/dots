@@ -13,6 +13,8 @@ source /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-oh
 fpath+=( /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-ohmyzsh-SLASH-ohmyzsh/plugins/kubectl )
 fpath+=( /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-ohmyzsh-SLASH-ohmyzsh/plugins/docker )
 fpath+=( /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-ohmyzsh-SLASH-ohmyzsh/plugins/cargo )
+source /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-conda-incubator-SLASH-conda-zsh-completion/conda-zsh-completion.plugin.zsh
+fpath+=( /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-conda-incubator-SLASH-conda-zsh-completion )
 source /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-mttrs-SLASH-zsh-git-prompt/git-prompt.plugin.zsh
 fpath+=( /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-mttrs-SLASH-zsh-git-prompt )
 source /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-dgnest-SLASH-zsh-gvm-plugin/zsh-gvm-plugin.zsh
