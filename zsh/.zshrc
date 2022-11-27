@@ -7,11 +7,6 @@ SAVEHIST=10000
 
 setopt +o nomatch
 
-export NVM_DIR="${HOME}/.nvm"
-export GVM_DIR="${HOME}/.gvm"
-[[ -s "${NVM_DIR}/nvm.sh" ]] && source "${NVM_DIR}/nvm.sh"
-[[ -s "${GVM_DIR}/scripts/gvm" ]] && source "${GVM_DIR}/scripts/gvm"
-
 #customizations
 eval `dircolors ${CONFS_FOLDER}/colors/nord-dircolors`
 for FILE in ${CONFS_FOLDER}/helpers/*.{zsh,sh}; do
@@ -19,7 +14,6 @@ for FILE in ${CONFS_FOLDER}/helpers/*.{zsh,sh}; do
   source ${FILE}
 done
 
-source "${HOME}/.cargo/env"
 source "${CONFS_FOLDER}/zsh_plugins.sh"
 
 ln -sf $(${CONFS_FOLDER}/antibody path ahmetb/kubectx)/completion/_kubectx.zsh "${HOME}/.zsh/completion/_kubectx.zsh"
@@ -34,17 +28,23 @@ autoload -Uz compinit && compinit -i
 autoload -Uz add-zsh-hook
 autoload -U select-word-style
 
-zle -N first-tab
-bindkey '^I' first-tab
+zle -N __first_tab
+bindkey '^I' __first_tab
 
-add-zsh-hook chpwd load-nvmrc
-load-nvmrc
+if [ $commands[nvm] ]; then
+  add-zsh-hook chpwd __load_nvmrc
+  __load_nvmrc
+fi
 
-#add-zsh-hook chpwd load-virtualenv
-#load-virtualenv
+if [ $commands[conda] ]; then
+  add-zsh-hook chpwd __load_conda
+  __load_conda
+fi
 
-add-zsh-hook chpwd load-gvmrc
-load-gvmrc
+if [ $commands[gvm] ]; then
+  add-zsh-hook chpwd __load_gvm
+  __load_gvm
+fi
 
 select-word-style bash
 

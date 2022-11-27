@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-first-tab() {
+__first_tab() {
   if [[ $#BUFFER == 0 ]]; then
     BUFFER="ls -al "
     CURSOR=7

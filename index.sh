@@ -68,7 +68,7 @@ echo "Installing miniforge" && \
 DIR=$(mktemp) && \
 wget -P "${DIR}" https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh && \
 chmod u+x "${DIR}/Miniforge3-Linux-x86_64.sh" && \
-bash "${DIR}/Miniforge3-Linux-x86_64.sh" && \
+bash "${DIR}/Miniforge3-Linux-x86_64.sh" -p "${HOME}/.miniforge3" -b -u && \
 rm -Rfv "${DIR}"
 
 echo "Installing extra binaries..." && \
