@@ -11,6 +11,8 @@ curl -sfL git.io/antibody | sh -s - -b "${CURRENT_DIR}/.." && \
 "${CURRENT_DIR}/../antibody-update-plugins.sh" && \
 ln -s "${CURRENT_DIR}/../.zshrc" "${HOME}/.zshrc"
 
+ln -s "${CURRENT_DIR}/../.condarc" "${HOME}/.condarc"
+
 # shellcheck source=./krew.sh
 source "${CURRENT_DIR}/krew.sh"
 
