@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-__load_nvmrc() {
+__load_nvm() {
   local NODE_VERSION="$(nvm version)"
   local NVMRC_PATH="$(nvm_find_nvmrc)"
 

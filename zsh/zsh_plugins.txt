@@ -15,6 +15,9 @@ conda-incubator/conda-zsh-completion
 mttrs/zsh-git-prompt
 dgnest/zsh-gvm-plugin
 
+#lukechilds/zsh-nvm
+#lukechilds/zsh-better-npm-completion
+
 johanhaleby/kubetail kind:path
 ahmetb/kubectx kind:path
 

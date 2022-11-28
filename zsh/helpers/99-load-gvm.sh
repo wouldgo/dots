@@ -16,8 +16,8 @@ function __load_gvm() {
 
     gvm install "go${_GO_VERSION}" -pb -b -B
     gvm use "go${_GO_VERSION}"
-  else
+  # else
 
-    gvm use "go${_GO_SYSTEM_VERSION}"
+  #   gvm use "go${_GO_SYSTEM_VERSION}"
   fi
 }
