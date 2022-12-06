@@ -4,7 +4,6 @@ ohmyzsh/ohmyzsh path:lib/key-bindings.zsh
 
 ohmyzsh/ohmyzsh path:plugins/git
 ohmyzsh/ohmyzsh path:plugins/docker kind:fpath
-ohmyzsh/ohmyzsh path:plugins/cargo kind:fpath
 
 conda-incubator/conda-zsh-completion
 
