@@ -3,10 +3,6 @@ ohmyzsh/ohmyzsh path:lib/grep.zsh
 ohmyzsh/ohmyzsh path:lib/key-bindings.zsh
 
 ohmyzsh/ohmyzsh path:plugins/git
-ohmyzsh/ohmyzsh path:plugins/nvm
-ohmyzsh/ohmyzsh path:plugins/node
-ohmyzsh/ohmyzsh path:plugins/npm
-ohmyzsh/ohmyzsh path:plugins/kubectl
 ohmyzsh/ohmyzsh path:plugins/docker kind:fpath
 ohmyzsh/ohmyzsh path:plugins/cargo kind:fpath
 
@@ -15,10 +11,14 @@ conda-incubator/conda-zsh-completion
 mttrs/zsh-git-prompt
 dgnest/zsh-gvm-plugin
 
-#lukechilds/zsh-nvm
-#lukechilds/zsh-better-npm-completion
+lukechilds/zsh-nvm
+lukechilds/zsh-better-npm-completion
 
 johanhaleby/kubetail kind:path
 ahmetb/kubectx kind:path
 
 StackExchange/blackbox
+
+### ohmyzsh/ohmyzsh path:plugins/nvm
+## ohmyzsh/ohmyzsh path:plugins/node
+## ohmyzsh/ohmyzsh path:plugins/npm

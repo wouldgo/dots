@@ -1,10 +1,13 @@
+#zmodload zsh/zprof
+
 CONFS_FOLDER="${HOME}/git/confs/dots/zsh"
 HISTFILE="${HOME}/.histfile"
+ZSH_CACHE_DIR="${HOME}/.zsh/_cache"
 
-ZSH_CACHE_DIR=/tmp
 HISTSIZE=1000
 SAVEHIST=10000
 
+mkdir -p "${ZSH_CACHE_DIR}"
 setopt +o nomatch
 
 #customizations
@@ -42,11 +45,6 @@ zstyle ':completion:*:*:kill:*:processes' command 'ps xo pid,user:10,cmd | grep 
 zle -N __first_tab
 bindkey '^I' __first_tab
 
-if [ $commands[nvm] ]; then
-  add-zsh-hook chpwd __load_nvm
-  __load_nvm
-fi
-
 if [ $commands[conda] ]; then
   add-zsh-hook chpwd __load_conda
   __load_conda
@@ -56,3 +54,5 @@ if [ $commands[gvm] ]; then
   add-zsh-hook chpwd __load_gvm
   __load_gvm
 fi
+
+#zprof
