@@ -34,16 +34,10 @@ if ! "${CURRENT_DIR}"/tmux/confs/user.sh; then
   echo "tmux configurations for ${USER} are already set" 2>&1
 fi
 
-echo "Preparing vim configuration..." && \
-if ! "${CURRENT_DIR}"/vim/confs/user.sh; then
-  echo "vim configurations for ${USER} are already set" 2>&1
-fi
-
-echo "Installing zsh tmux and vim..." && \
+echo "Installing zsh tmux..." && \
 sudo apt install -y \
     zsh \
-    tmux \
-    vim && \
+    tmux && \
 
 sudo chsh "${USER}" -s "$(command -v zsh)" && \
 

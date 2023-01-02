@@ -1,11 +1,5 @@
 #!/usr/bin/env zsh
 
-VIRTUAL_ENV_DISABLE_PROMPT=true
-
-# CONTEXT
-__THEME_CONTEXT_FG=default
-__THEME_CONTEXT_HOSTNAME=%m
-
 # STATUS
 __THEME_STATUS_FG=green
 __THEME_STATUS_ERROR_FG=red
@@ -27,8 +21,8 @@ __THEME_KCTX_FG=blue
 __THEME_KCTX_PREFIX="⎈"
 
 # VIRTUALENV
-__THEME_VIRTUALENV_FG=yellow
-__THEME_VIRTUALENV_PREFIX="🐍"
+__THEME_PYTHON_FG=yellow
+__THEME_PYTHON_PREFIX="🐍"
 
 # DIR
 __THEME_DIR_FG=white
@@ -68,26 +62,26 @@ prompt_segment() {
   local __open_separator='\u27EA'
   local __close_separator='\u27EB'
 
-  [[ -n $1 ]] && __fg="%F{$1}" || __fg="%f"
-  [[ -n $3 ]] && __ignore_separators=$3 || __ignore_separators=false
-  if [[ ${CURRENT_FG} != 'NONE' && $1 != ${CURRENT_FG} ]]; then
+  [[ -n ${1} ]] && __fg="%F{$1}" || __fg="%f"
+  [[ -n ${3} ]] && __ignore_separators=${3} || __ignore_separators=false
+  if [[ ${CURRENT_FG} != 'NONE' && ${1} != "${CURRENT_FG}" ]]; then
 
-    echo -n "%{%k%F{${CURRENT_FG}}%}%{$__fg%}"
+    echo -n "%{%k%F{${CURRENT_FG}}%}%{${__fg}%}"
     if [[ ${__ignore_separators} != true ]]; then
       echo -n "${__open_separator}"
     fi
   else
 
-    echo -n "%{%k%}%{$__fg%}"
+    echo -n "%{%k%}%{${__fg}%}"
     if [[ ${__ignore_separators} != true ]]; then
       echo -n "${__open_separator}"
     fi
   fi
 
-  CURRENT_FG=$1
-  if [[ -n $2 ]]; then
+  CURRENT_FG=${1}
+  if [[ -n ${2} ]]; then
 
-    echo -n "$2%F{${CURRENT_FG}}"
+    echo -n "${2}%F{${CURRENT_FG}}"
     if [[ $__ignore_separators != true ]]; then
       echo -n "${__close_separator}"
     fi
@@ -111,10 +105,6 @@ prompt_end() {
 # to be shown
 # ------------------------------------------------------------------------------
 
-context() {
-  echo -n "${whoami}@${hostname}"
-}
-
 # Based on http://stackoverflow.com/a/32164707/3859566
 function displaytime {
   local T=$1
@@ -122,26 +112,23 @@ function displaytime {
   local H=$((T/60/60%24))
   local M=$((T/60%60))
   local S=$((T%60))
-  [[ $D > 0 ]] && printf '%dd' $D
-  [[ $H > 0 ]] && printf '%dh' $H
-  [[ $M > 0 ]] && printf '%dm' $M
+  [[ $D -gt 0 ]] && printf '%dd' $D
+  [[ $H -gt 0 ]] && printf '%dh' $H
+  [[ $M -gt 0 ]] && printf '%dm' $M
   printf '%ds' $S
 }
 
 # Prompt previous command execution time
 preexec() {
-  cmd_timestamp=`date +%s`
+  cmd_timestamp=$(date +%s)
 }
 
 precmd() {
-  local stop=`date +%s`
+  local stop
+  stop=$(date +%s)
   local start=${cmd_timestamp:-$stop}
   let ___THEME_last_exec_duration=$stop-$start
   cmd_timestamp=''
-}
-
-prompt_context() {
-  prompt_segment $__THEME_CONTEXT_FG "$(context)"
 }
 
 prompt_cmd_exec_time() {
@@ -228,14 +215,8 @@ prompt_nvm() {
 
 # Go
 prompt_go() {
-  local current_dir="${1:-$(pwd)}"
-
-  if [[ -f "${current_dir}/go.mod" && $(command -v go) ]]; then
-
+  if [ ! -z ${__GO_PATH+x} ]; then
     prompt_segment $__THEME_GO_FG $__THEME_GO_PREFIX" $(go version  | grep --colour=never -oE '[[:digit:]]+.[[:digit:]]+' | head -n 1)"
-  elif [[ "${current_dir}" != '/' ]]; then
-
-    prompt_go $(dirname ${current_dir})
   fi
 }
 
@@ -265,15 +246,10 @@ prompt_kctx() {
   fi
 }
 
-# Virtualenv: current working virtualenv
-prompt_virtualenv() {
-  local virtualenv_path="$VIRTUAL_ENV"
-  if [[ -n $virtualenv_path && -n $VIRTUAL_ENV_DISABLE_PROMPT ]]; then
-    prompt_segment $__THEME_VIRTUALENV_FG $__THEME_VIRTUALENV_PREFIX" $(python --version | sed 's/Python\ //g') ($(basename $virtualenv_path))"
-  elif which pyenv &> /dev/null; then
-    if [[ "$(pyenv version | sed -e 's/ (set.*$//' | tr '\n' ' ' | sed 's/.$//')" != "system" ]]; then
-      prompt_segment $__THEME_VIRTUALENV_FG $__THEME_VIRTUALENV_PREFIX" $(pyenv version | sed -e 's/ (set.*$//' | tr '\n' ' ' | sed 's/.$//')"
-    fi
+# Python: current working python
+prompt_python() {
+  if [ ! -z ${__PYTHON_PATH+x} ]; then
+    prompt_segment $__THEME_PYTHON_FG $__THEME_PYTHON_PREFIX" $(python --version | sed 's/Python\ //g') ($(basename $__PYTHON_PATH))"
   fi
 }
 
@@ -308,14 +284,13 @@ prompt_status() {
 
 build_prompt() {
   RETVAL=$?
-  #prompt_context
   #prompt_screen
   prompt_dir
   prompt_kctx
-  prompt_virtualenv
+  prompt_python
   prompt_nvm
   prompt_go
-  prompt_rust
+  #prompt_rust
   prompt_git
   prompt_cmd_exec_time
   prompt_status

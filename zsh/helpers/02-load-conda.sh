@@ -21,7 +21,9 @@ function __load_conda () {
     fi
 
     conda activate "${PATH_TO_CONDA_ENV}"
+    export __PYTHON_PATH=${PATH_TO_CONDA_ENV}
   else
     conda deactivate
+    unset __PYTHON_PATH
   fi
 }

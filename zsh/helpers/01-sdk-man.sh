@@ -1,10 +1,16 @@
 #!/usr/bin/env bash
 
-SDKMAN_DIR="${HOME}/.sdkman"
-if [ -s "${SDKMAN_DIR}/bin/sdkman-init.sh" ]; then
+function __sdkman_bootstrap () {
+  local SDKMAN_DIR
+  SDKMAN_DIR="${HOME}/.sdkman"
 
-  # shellcheck source=/dev/null
-  source "${SDKMAN_DIR}/bin/sdkman-init.sh"
-fi
+  if [ -s "${SDKMAN_DIR}/bin/sdkman-init.sh" ]; then
 
-unset SDKMAN_DIR
+    # shellcheck source=/dev/null
+    source "${SDKMAN_DIR}/bin/sdkman-init.sh"
+  fi
+
+  unset SDKMAN_DIR
+}
+
+__sdkman_bootstrap "$@"

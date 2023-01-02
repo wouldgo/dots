@@ -16,8 +16,9 @@ function __load_gvm() {
 
     gvm install "go${_GO_VERSION}" -pb -b -B
     gvm use "go${_GO_VERSION}"
-  # else
-
-  #   gvm use "go${_GO_SYSTEM_VERSION}"
+    export __GO_PATH=${PATH_TO_GO_ROOT}
+  else
+    unset __GO_PATH
+    #gvm use "go${_GO_SYSTEM_VERSION}"
   fi
 }
