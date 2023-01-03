@@ -35,9 +35,14 @@ function nvim () {
   mv "${NVIM_HIDDEN_FOLDER}/nvim.appimage" "${NVIM_HIDDEN_FOLDER}/nvim"
 }
 
+function ripgrep () {
+  cargo install ripgrep
+}
+
 function do_it () {
   fzf;
   nvim;
+  ripgrep;
 }
 
 do_it "$@"

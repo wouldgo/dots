@@ -1,5 +1,3 @@
-# dots
+# Dots
 
-my actual configurations
-
-has to be at ${HOME}/git/confs/dots
+My actual configurations, has to be at `${HOME}/git/confs/dots`.

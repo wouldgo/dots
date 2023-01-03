@@ -21,6 +21,12 @@ packer.startup({function(use)
 
   use 'shaunsingh/nord.nvim'
   use 'nvim-lualine/lualine.nvim'
+  use {
+    'iamcco/markdown-preview.nvim',
+    run = function()
+      vim.fn['mkdp#util#install']()
+    end,
+  }
 
   use {
     'nvim-telescope/telescope.nvim',
