@@ -12,6 +12,7 @@ function __nvim_bootstrap () {
   fi
 
   alias vim=nvim
+  export EDITOR=nvim
 }
 
 __nvim_bootstrap "$@"
