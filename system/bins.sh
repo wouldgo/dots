@@ -42,7 +42,7 @@ function ripgrep () {
 function do_it () {
   fzf;
   nvim;
-  ripgrep;
+#  ripgrep;
 }
 
 do_it "$@"
