@@ -7,6 +7,8 @@ ohmyzsh/ohmyzsh path:plugins/docker kind:fpath
 
 conda-incubator/conda-zsh-completion
 
+thewtex/tmux-mem-cpu-load
+
 mttrs/zsh-git-prompt
 dgnest/zsh-gvm-plugin
 

@@ -29,41 +29,17 @@ fi
 echo "Creating zsh completion folder for ${USER}..." && \
 mkdir --parents --verbose "${HOME}/.zsh/completion" && \
 
-echo "Preparing tmux configuration..." && \
-if ! "${CURRENT_DIR}"/tmux/confs/user.sh; then
-  echo "tmux configurations for ${USER} are already set" 2>&1
-fi
-
 echo "Installing zsh tmux..." && \
 sudo apt install -y \
     zsh \
     tmux && \
 
+echo "Preparing tmux configuration..." && \
+if ! "${CURRENT_DIR}"/tmux/confs/user.sh; then
+  echo "tmux configurations for ${USER} are already set" 2>&1
+fi
+
 sudo chsh "${USER}" -s "$(command -v zsh)" && \
-
-echo "Installing rbenv..." && \
-curl -sL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash -
-
-echo "Installing rustup..." && \
-wget -O /tmp/rustup.sh https://sh.rustup.rs && \
-bash /tmp/rustup.sh -y &&
-rm -Rfv /tmp/rustup.sh
-
-echo "Installing sdkman" && \
-curl -s "https://get.sdkman.io" | bash && \
-
-echo "Installing gvm" && \
-zsh < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer) && \
-
-echo "Installing nvm" && \
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-
-echo "Installing miniforge" && \
-DIR=$(mktemp) && \
-wget -P "${DIR}" https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh && \
-chmod u+x "${DIR}/Miniforge3-Linux-x86_64.sh" && \
-bash "${DIR}/Miniforge3-Linux-x86_64.sh" -p "${HOME}/.miniforge3" -b -u && \
-rm -Rfv "${DIR}"
 
 echo "Installing extra binaries..." && \
 if ! "${CURRENT_DIR}"/system/bins.sh; then

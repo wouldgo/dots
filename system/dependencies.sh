@@ -18,8 +18,10 @@ sudo apt install -y \
   make \
   binutils \
   gcc \
+  cmake \
   python3-venv \
+  python3-pip \
   xsel && \
 
-sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1 # && \
-# sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 2
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \
+pip3 install ansible

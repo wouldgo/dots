@@ -2,9 +2,9 @@
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
 
-wget -O "${CURRENT_DIR}/gnome-terminal.sh" https://raw.githubusercontent.com/nordtheme/gnome-terminal/develop/src/nord.sh && \
-wget -O "${CURRENT_DIR}/gedit.xml" https://raw.githubusercontent.com/arcticicestudio/nord-gedit/develop/src/xml/nord.xml && \
-wget -O "${CURRENT_DIR}/nord-dircolors" https://raw.githubusercontent.com/nordtheme/dircolors/develop/src/dir_colors && \
+wget -O "${CURRENT_DIR}/gnome-terminal.sh" https://raw.githubusercontent.com/nordtheme/gnome-terminal/v0.1.0/src/sh/nord.sh&& \
+wget -O "${CURRENT_DIR}/gedit.xml" https://raw.githubusercontent.com/arcticicestudio/nord-gedit/v0.1.0/src/xml/nord.xml && \
+wget -O "${CURRENT_DIR}/nord-dircolors" https://raw.githubusercontent.com/nordtheme/dircolors/v0.2.0/src/dir_colors && \
 
 chmod u+x "${CURRENT_DIR}/gnome-terminal.sh" && \
 
