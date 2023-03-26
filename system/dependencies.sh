@@ -21,6 +21,7 @@ sudo apt install -y \
   cmake \
   python3-venv \
   python3-pip \
+  gettext \
   xsel && \
 
 sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \
