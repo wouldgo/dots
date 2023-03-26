@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-random-string() {
+function random-string () {
   local length
 
   length=${1:-64}
