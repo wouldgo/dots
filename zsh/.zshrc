@@ -12,9 +12,10 @@ setopt +o nomatch
 
 #customizations
 eval `dircolors ${CONFS_FOLDER}/colors/nord-dircolors`
-for FILE in ${CONFS_FOLDER}/helpers/*.{zsh,sh}; do
+for FILE in `ls ${CONFS_FOLDER}/helpers/*.{zsh,sh} | sort -g`; do
 
   source ${FILE}
+  #echo "${FILE} loaded."
 done
 
 source "${CONFS_FOLDER}/zsh_plugins.sh"

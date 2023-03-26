@@ -50,8 +50,6 @@ function rustup () {
 function sdkman () {
   echo "Installing sdkman" && \
   curl -s "https://get.sdkman.io" | bash
-  #shellcheck source=/dev/null
-  source "${HOME}/.sdkman/bin/sdkman-init.sh"
 }
 
 function gvm () {
