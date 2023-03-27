@@ -6,6 +6,7 @@ __first_tab() {
     CURSOR=7
     zle list-choices
   else
+    # zle expand-or-complete
     zle fzf-completion
   fi
 }
