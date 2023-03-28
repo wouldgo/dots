@@ -10,8 +10,6 @@ SAVEHIST=10000
 mkdir -p "${ZSH_CACHE_DIR}"
 setopt +o nomatch
 
-source "${CONFS_FOLDER}/zsh_plugins.sh"
-
 ln -sf $(${CONFS_FOLDER}/antibody path ahmetb/kubectx)/completion/_kubectx.zsh "${HOME}/.zsh/completion/_kubectx.zsh"
 ln -sf $(${CONFS_FOLDER}/antibody path ahmetb/kubectx)/completion/_kubens.zsh "${HOME}/.zsh/completion/_kubens.zsh"
 ln -sf $(${CONFS_FOLDER}/antibody path johanhaleby/kubetail)/completion/kubetail.zsh "${HOME}/.zsh/completion/_kubetail.zsh"
@@ -30,6 +28,7 @@ for FILE in `ls ${CONFS_FOLDER}/helpers/*.{zsh,sh} | sort -g`; do
   #echo "${FILE} loaded."
 done
 
+source "${CONFS_FOLDER}/zsh_plugins.sh"
 autoload -Uz add-zsh-hook
 autoload -U select-word-style
 
