@@ -290,7 +290,7 @@ build_prompt() {
   prompt_python
   prompt_nvm
   prompt_go
-  #prompt_rust
+  prompt_rust
   prompt_git
   prompt_cmd_exec_time
   prompt_status
