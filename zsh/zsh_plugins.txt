@@ -10,7 +10,6 @@ conda-incubator/conda-zsh-completion
 thewtex/tmux-mem-cpu-load
 
 mttrs/zsh-git-prompt
-dgnest/zsh-gvm-plugin
 
 lukechilds/zsh-nvm
 lukechilds/zsh-better-npm-completion

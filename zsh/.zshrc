@@ -18,7 +18,8 @@ export PATH="${HOME}/.local/bin:$PATH"
 
 #Completion
 fpath+=( "${HOME}/.zsh/completion" )
-autoload -Uz compinit && compinit -i
+autoload -U +X bashcompinit && bashcompinit
+autoload -U +X compinit && compinit
 
 #customizations
 eval `dircolors ${CONFS_FOLDER}/colors/nord-dircolors`
