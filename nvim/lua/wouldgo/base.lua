@@ -1,5 +1,5 @@
 local options = {
-  guifont = 'monospace:h18',               -- the font used in graphical neovim applications
+  guifont = 'Ubuntu Mono:h18',               -- the font used in graphical neovim applications
   updatetime = 50,
   errorbells = false,
   nu = true,

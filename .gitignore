@@ -1,3 +1,7 @@
+alacritty/nord.yaml
+
+nvim/lua/wouldgo/keybinds.lua
+
 tmux/tpm-master/
 zsh/antibody
 zsh/antigen.zsh

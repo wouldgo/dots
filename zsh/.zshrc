@@ -3,6 +3,7 @@
 CONFS_FOLDER="${HOME}/git/confs/dots/zsh"
 HISTFILE="${HOME}/.histfile"
 ZSH_CACHE_DIR="${HOME}/.zsh/_cache"
+ZSH_COMPLETION_FOLDER=${HOME}/.zsh/completion
 
 HISTSIZE=1000
 SAVEHIST=10000
@@ -10,14 +11,14 @@ SAVEHIST=10000
 mkdir -p "${ZSH_CACHE_DIR}"
 setopt +o nomatch
 
-ln -sf $(${CONFS_FOLDER}/antibody path ahmetb/kubectx)/completion/_kubectx.zsh "${HOME}/.zsh/completion/_kubectx.zsh"
-ln -sf $(${CONFS_FOLDER}/antibody path ahmetb/kubectx)/completion/_kubens.zsh "${HOME}/.zsh/completion/_kubens.zsh"
-ln -sf $(${CONFS_FOLDER}/antibody path johanhaleby/kubetail)/completion/kubetail.zsh "${HOME}/.zsh/completion/_kubetail.zsh"
+ln -sf $(${CONFS_FOLDER}/antibody path ahmetb/kubectx)/completion/_kubectx.zsh "${ZSH_COMPLETION_FOLDER}/_kubectx.zsh"
+ln -sf $(${CONFS_FOLDER}/antibody path ahmetb/kubectx)/completion/_kubens.zsh "${ZSH_COMPLETION_FOLDER}/_kubens.zsh"
+ln -sf $(${CONFS_FOLDER}/antibody path johanhaleby/kubetail)/completion/kubetail.zsh "${ZSH_COMPLETION_FOLDER}/_kubetail.zsh"
 
 export PATH="${HOME}/.local/bin:$PATH"
 
 #Completion
-fpath+=( "${HOME}/.zsh/completion" )
+fpath+=( "${ZSH_COMPLETION_FOLDER}" )
 autoload -U +X bashcompinit && bashcompinit
 autoload -U +X compinit && compinit
 

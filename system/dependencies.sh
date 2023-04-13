@@ -19,10 +19,14 @@ sudo apt install -y \
   binutils \
   gcc \
   cmake \
+  pkg-config \
   python3-venv \
   python3-pip \
   gettext \
-  xsel && \
+  xsel \
+  libfreetype6-dev \
+  libfontconfig1-dev \
+  libxcb-xfixes0-dev \
+  libxkbcommon-dev && \
 
-sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \
-pip3 install ansible
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1

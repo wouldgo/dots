@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+function git_config () {
+
+  git config --global pull.rebase true
+}
+
 function fzf () {
   local FZF_HIDDEN_FOLDER
   FZF_HIDDEN_FOLDER="${HOME}/.fzf"
@@ -87,7 +92,38 @@ function apple_keyboard () {
   sudo update-initramfs -u -k all
 }
 
+function ansible () {
+  pip3 install ansible
+}
+
+function alacritty () {
+  local FOLDER
+  local WITCH
+
+  FOLDER=${HOME}/git/alacritty
+  WITCH=$(loginctl show-session 2 -p Type | sed 's/^Type=//')
+
+  git clone https://github.com/alacritty/alacritty.git "${FOLDER}" && \
+  cd "${FOLDER}" && \
+  cargo build --release --no-default-features --features="${WITCH}"
+
+  if infocmp alacritty >/dev/null 2>&1; then
+    echo "alacritty terminfo is already installed"
+  else
+    sudo tic -xe alacritty,alacritty-direct "${FOLDER}/extra/alacritty.info"
+  fi
+
+  sudo cp "${FOLDER}/target/release/alacritty" /usr/local/bin && \
+  sudo cp "${FOLDER}/extra/logo/alacritty-term.svg" /usr/share/pixmaps/Alacritty.svg && \
+  sudo desktop-file-install "${FOLDER}/extra/linux/Alacritty.desktop" && \
+  sudo update-desktop-database && \
+
+  cp -v extra/completions/_alacritty "${ZSH_COMPLETION_FOLDER}/_alacritty.zsh"
+}
+
 function do_it () {
+  git_config;
+  ansible;
   fzf;
   nvim;
   rbenv;
@@ -99,6 +135,7 @@ function do_it () {
   kubectl;
 #  ripgrep;
   apple_keyboard;
+  alacritty;
 }
 
 do_it "$@"
