@@ -47,7 +47,13 @@ if lsp_loaded then
   cmp_mappings['<S-Tab>'] = nil
 
   lsp.setup_nvim_cmp({
-    mapping = cmp_mappings
+    mapping = cmp_mappings,
+    sources = {
+      {name = 'path'},
+      {name = 'nvim_lsp', keyword_length = 1},
+      {name = 'buffer', keyword_length = 3},
+      {name = 'luasnip', keyword_length = 2},
+    },
   })
 
   lsp.set_preferences({
