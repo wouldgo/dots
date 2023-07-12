@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 function git_config () {
-
-  git config --global pull.rebase true
+  git config \
+    --global pull.rebase true
 }
 
 function fzf () {
@@ -93,7 +93,8 @@ function apple_keyboard () {
 }
 
 function ansible () {
-  pip3 install ansible
+  pip3 install ansible && \
+  pip3 install ansible-lint
 }
 
 function alacritty () {
@@ -121,6 +122,19 @@ function alacritty () {
   cp -v extra/completions/_alacritty "${ZSH_COMPLETION_FOLDER}/_alacritty.zsh"
 }
 
+function websocat () {
+  cargo install \
+    --features=ssl \
+    websocat
+}
+
+function operator_sdk () {
+  curl -LO "https://github.com/operator-framework/operator-sdk/releases/latest/download/operator-sdk_linux_amd64" && \
+  mv -v operator-sdk_linux_amd64 operator-sdk && \
+  sudo install -o root -g root -m 0755 operator-sdk /usr/local/bin/operator-sdk && \
+  operator-sdk version
+}
+
 function do_it () {
   git_config;
   ansible;
@@ -133,9 +147,11 @@ function do_it () {
   nvm;
   miniforge;
   kubectl;
-#  ripgrep;
+  operator_sdk;
   apple_keyboard;
   alacritty;
+  ripgrep;
+  websocat;
 }
 
 do_it "$@"
