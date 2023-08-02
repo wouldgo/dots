@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 sudo apt install -y \
+  ttf-ancient-fonts \
   curl \
   libssl-dev \
   libreadline-dev \

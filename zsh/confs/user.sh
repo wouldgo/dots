@@ -13,8 +13,5 @@ ln -s "${CURRENT_DIR}/../.zshrc" "${HOME}/.zshrc"
 
 ln -s "${CURRENT_DIR}/../.condarc" "${HOME}/.condarc"
 
-# shellcheck source=./krew.sh
-source "${CURRENT_DIR}/krew.sh"
-
 # shellcheck source=./../colors/index.sh
 source "${CURRENT_DIR}/../colors/index.sh"
