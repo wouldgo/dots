@@ -1,39 +1,66 @@
 #!/usr/bin/env zsh
 
+__NORD0="#2E3440"
+__NORD1="#3B4252"
+__NORD2="#434C5E"
+__NORD3="#4C566A"
+
+__NORD4="#D8DEE9"
+__NORD5="#E5E9F0"
+__NORD6="#ECEFF4"
+
+__NORD7="#8FBCBB"
+__NORD8="#88C0D0"
+__NORD9="#81A1C1"
+__NORD10="#5E81AC"
+
+__NORD11="#BF616A"
+__NORD12="#D08770"
+__NORD13="#EBCB8B"
+__NORD14="#A3BE8C"
+__NORD15="#B48EAD"
+
 # Separators
-__OPEN_SEPARATOR='\u007C'
-__CLOSE_SEPARATOR='\u007C'
+__OPEN_SEPARATOR='\ue0b7'
+__CLOSE_SEPARATOR='\ue0b5'
 
 # STATUS
 __THEME_STATUS_FG=green
 __THEME_STATUS_ERROR_FG=red
 
 # NVM
-__THEME_NVM_FG=green
-__THEME_NVM_PREFIX="⬡"
+__THEME_NVM_FG=black
+__THEME_NVM_BG=green
+__THEME_NVM_PREFIX="\ue718"
 
 # Go
-__THEME_GO_FG=cyan
-__THEME_GO_PREFIX="go"
+__THEME_GO_FG=black
+__THEME_GO_BG=cyan
+__THEME_GO_PREFIX="\ue626"
 
 # Rust
-__THEME_RUST_FG=red
-__THEME_RUST_PREFIX="🦀"
+__THEME_RUST_FG=black
+__THEME_RUST_BG=red
+__THEME_RUST_PREFIX="\ue68b"
 
 # Kubernetes Context
-__THEME_KCTX_FG=blue
-__THEME_KCTX_PREFIX="⎈"
+__THEME_KCTX_FG=black
+__THEME_KCTX_BG=blue
+__THEME_KCTX_PREFIX="\ue007"
 
-# VIRTUALENV
-__THEME_PYTHON_FG=yellow
-__THEME_PYTHON_PREFIX="🐍"
+# PYTHON
+__THEME_PYTHON_FG=black
+__THEME_PYTHON_BG=yellow
+__THEME_PYTHON_PREFIX="\ue606"
 
 # DIR
 __THEME_DIR_FG=white
+__THEME_DIR_BG=${__NORD3}
 __THEME_DIR_EXTENDED=1
 
 # GIT
-__THEME_GIT_FG=white
+__THEME_GIT_FG=black
+__THEME_GIT_BG=${__NORD12}
 
 __THEME_GIT_BEHIND="⬇"
 __THEME_GIT_AHEAD="⬆"
@@ -51,54 +78,20 @@ __THEME_SCREEN_PREFIX="⬗"
 __THEME_EXEC_TIME_ELAPSED=5
 __THEME_EXEC_TIME_FG=yellow
 
-# ------------------------------------------------------------------------------
-# SEGMENT DRAWING
-# A few functions to make it easy and re-usable to draw segmented prompts
-# ------------------------------------------------------------------------------
-
-CURRENT_FG='NONE'
-
 # Begin a segment
-# prompt_segment foreground_color=default text=none ignore_separators=false
+# prompt_segment foreground_color=default text=none background_color=default
 prompt_segment() {
-  local __fg
-  local __ignore_separators
+  local __fg __bg
 
   [[ -n ${1} ]] && __fg="%F{$1}" || __fg="%f"
-  [[ -n ${3} ]] && __ignore_separators=${3} || __ignore_separators=false
-  if [[ ${CURRENT_FG} != 'NONE' && ${1} != "${CURRENT_FG}" ]]; then
+  [[ -n ${3} ]] && __bg="%K{$3}" || __bg="%k"
 
-    echo -n "%{%k%F{${CURRENT_FG}}%}%{${__fg}%}"
-    if [[ ${__ignore_separators} != true ]]; then
-      echo -n "${__OPEN_SEPARATOR}"
-    fi
-  else
-
-    echo -n "%{%k%}%{${__fg}%}"
-    if [[ ${__ignore_separators} != true ]]; then
-      echo -n "${__OPEN_SEPARATOR}"
-    fi
-  fi
-
-  CURRENT_FG=${1}
-  if [[ -n ${2} ]]; then
-
-    echo -n "${2}%F{${CURRENT_FG}}"
-    if [[ $__ignore_separators != true ]]; then
-      echo -n "${__CLOSE_SEPARATOR}"
-    fi
-  fi
+  echo -n "%{${__bg}%}%{${__fg}%}${__OPEN_SEPARATOR}${2}${__CLOSE_SEPARATOR}"
 }
 
 # End the prompt, closing any open segments
 prompt_end() {
-  if [[ -n ${CURRENT_FG} ]]; then
-    echo -n "%{%k%F{${CURRENT_FG}}%}"
-  else
-    echo -n "%{%k%}"
-  fi
-  echo -n "%{%f%}"
-  CURRENT_FG='NONE'
+  echo -n "%{%k%f%}"
 }
 
 # ------------------------------------------------------------------------------
@@ -180,7 +173,7 @@ prompt_git() {
   if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
     local git_status="$(__theme_git_status)"
 
-    prompt_segment $__THEME_GIT_FG $git_status
+    prompt_segment $__THEME_GIT_FG $git_status $__THEME_GIT_BG
   fi
 }
 
@@ -199,7 +192,7 @@ prompt_dir() {
     dir="${dir}%4(c:...:)%3c"
   fi
 
-  prompt_segment $__THEME_DIR_FG $dir
+  prompt_segment $__THEME_DIR_FG $dir $__THEME_DIR_BG
 }
 
 # nvm
@@ -211,14 +204,14 @@ prompt_nvm() {
       return
     fi
 
-    prompt_segment $__THEME_NVM_FG "${__THEME_NVM_PREFIX} ${nvm_prompt}"
+    prompt_segment $__THEME_NVM_FG "${__THEME_NVM_PREFIX} ${nvm_prompt}" $__THEME_NVM_BG
   fi
 }
 
 # Go
 prompt_go() {
   if [ ! -z ${__GO_PATH+x} ]; then
-    prompt_segment $__THEME_GO_FG $__THEME_GO_PREFIX" $(go version  | grep --colour=never -oE '[[:digit:]]+.[[:digit:]]+' | head -n 1)"
+    prompt_segment $__THEME_GO_FG $__THEME_GO_PREFIX" $(go version  | grep --colour=never -oE '[[:digit:]]+.[[:digit:]]+' | head -n 1)" $__THEME_GO_BG
   fi
 }
 
@@ -228,7 +221,7 @@ prompt_rust() {
 
   if [[ -f "${current_dir}/Cargo.toml" && $(command -v rustc) ]]; then
 
-    prompt_segment $__THEME_RUST_FG $__THEME_RUST_PREFIX" $(rustc -V version | cut -d' ' -f2)"
+    prompt_segment $__THEME_RUST_FG $__THEME_RUST_PREFIX" $(rustc -V version | cut -d' ' -f2)" $__THEME_RUST_BG
   elif [[ "${current_dir}" != '/' ]]; then
 
     prompt_rust $(dirname ${current_dir})
@@ -243,7 +236,7 @@ prompt_kctx() {
     if [[ -n $k8s_context ]]; then
       [[ $k8s_context =~ ^.*:$  ]] && k8s_context=${k8s_context%?}
 
-      prompt_segment $__THEME_KCTX_FG $__THEME_KCTX_PREFIX" ${k8s_context}"
+      prompt_segment $__THEME_KCTX_FG $__THEME_KCTX_PREFIX" ${k8s_context}" $__THEME_KCTX_BG
     fi
   fi
 }
@@ -251,7 +244,7 @@ prompt_kctx() {
 # Python: current working python
 prompt_python() {
   if [ ! -z ${__PYTHON_PATH+x} ]; then
-    prompt_segment $__THEME_PYTHON_FG $__THEME_PYTHON_PREFIX" $(python --version | sed 's/Python\ //g') ($(basename $__PYTHON_PATH))"
+    prompt_segment $__THEME_PYTHON_FG $__THEME_PYTHON_PREFIX" $(python --version | sed 's/Python\ //g') ($(basename $__PYTHON_PATH))" $__THEME_PYTHON_BG
   fi
 }
 
