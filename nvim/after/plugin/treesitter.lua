@@ -1,9 +1,9 @@
 --'nvim-treesitter.configs'
 
-local nvim_treesitter_configs_loaded, _ = pcall(require, 'nvim-treesitter.configs')
+local nvim_treesitter_configs_loaded, nvim_treesitter_configs = pcall(require, 'nvim-treesitter.configs')
 
 if nvim_treesitter_configs_loaded then
-  require('nvim-treesitter.configs').setup {
+  nvim_treesitter_configs.setup {
     -- A list of parser names, or 'all'
     ensure_installed = {
       'bash',

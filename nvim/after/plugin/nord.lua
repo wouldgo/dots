@@ -1,4 +1,4 @@
-local nord_loaded, nord = pcall(require, 'nord')
+local nord_loaded, _ = pcall(require, 'nord')
 
 if nord_loaded then
   vim.g.nord_contrast = true

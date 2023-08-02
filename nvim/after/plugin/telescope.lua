@@ -1,13 +1,12 @@
-local telescope_builtin_loaded, _ = pcall(require, 'telescope.builtin')
+local telescope_builtin_loaded, telescope_builtin = pcall(require, 'telescope.builtin')
 
 if telescope_builtin_loaded then
 
-  local builtin = require('telescope.builtin')
-  vim.keymap.set('n', '<leader>pf', builtin.find_files, {})
-  vim.keymap.set('n', '<C-p>', builtin.git_files, {})
+  vim.keymap.set('n', '<leader>pf', telescope_builtin.find_files, {})
+  vim.keymap.set('n', '<C-p>', telescope_builtin.git_files, {})
   vim.keymap.set('n', '<leader>ps', function()
-    builtin.grep_string({ search = vim.fn.input("Grep > ") })
+    telescope_builtin.grep_string({ search = vim.fn.input("Grep > ") })
   end)
-  vim.keymap.set('n', '<leader>vh', builtin.help_tags, {})
+  vim.keymap.set('n', '<leader>vh', telescope_builtin.help_tags, {})
 
 end

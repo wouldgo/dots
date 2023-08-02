@@ -1,8 +1,8 @@
-local lualine_loaded, _ = pcall(require, 'lualine')
+local lualine_loaded, lualine = pcall(require, 'lualine')
 
 if lualine_loaded then
 
-  require('lualine').setup {
+  lualine.setup {
     options = {
       theme = 'nord',
       icons_enabled = false,

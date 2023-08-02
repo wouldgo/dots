@@ -1,5 +1,8 @@
+local global_options = {
+  mapleader = ' ',
+}
+
 local options = {
-  guifont = 'Ubuntu Mono:h18',               -- the font used in graphical neovim applications
   updatetime = 50,
   errorbells = false,
   nu = true,
@@ -36,22 +39,26 @@ local options = {
   splitright = true,                       -- force all vertical splits to go to the right of current window
   swapfile = false,                        -- creates a swapfile
   termguicolors = true,                    -- set term gui colors (most terminals support this)
-  timeoutlen = 2000,                       -- time to wait for a mapped sequence to complete (in milliseconds)
+  timeoutlen = 5000,                       -- time to wait for a mapped sequence to complete (in milliseconds)
 
 
   cursorline = false,                      -- highlight the current line
   number = true,                           -- set numbered lines
-  relativenumber = true,                  -- set relative numbered lines
+  relativenumber = true,                   -- set relative numbered lines
   numberwidth = 2,                         -- set number column width to 2 {default 4}
   signcolumn = 'yes',                      -- always show the sign column, otherwise it would shift the text each time
   wrap = false,                            -- display lines as one long line
-  scrolloff = 4,                           -- is one of my fav
-  sidescrolloff = 4,
+  scrolloff = 2,                           -- ???
+  sidescrolloff = 2,
 }
 
 -- Don't pass messages to |ins-completion-menu|.
 vim.opt.shortmess:append 'c'
 vim.opt.isfname:append '@-@'
+
+for k, v in pairs(global_options) do
+  vim.g[k] = v
+end
 
 for k, v in pairs(options) do
   vim.opt[k] = v
