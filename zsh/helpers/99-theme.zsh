@@ -1,5 +1,9 @@
 #!/usr/bin/env zsh
 
+# Separators
+__OPEN_SEPARATOR='\u007C'
+__CLOSE_SEPARATOR='\u007C'
+
 # STATUS
 __THEME_STATUS_FG=green
 __THEME_STATUS_ERROR_FG=red
@@ -33,11 +37,11 @@ __THEME_GIT_FG=white
 
 __THEME_GIT_BEHIND="⬇"
 __THEME_GIT_AHEAD="⬆"
-__THEME_GIT_STAGED="%F{green}✚"
-__THEME_GIT_CONFLICTS="%F{red}✖"
-__THEME_GIT_CHANGED="%F{blue}✹"
-__THEME_GIT_UNTRACKED="%F{yellow}✭"
-__THEME_GIT_CLEAN="%F{green}✓"
+__THEME_GIT_STAGED="✚" #"%F{green}✚"
+__THEME_GIT_CONFLICTS="✖" #"%F{red}✖"
+__THEME_GIT_CHANGED="✹" #"%F{blue}✹"
+__THEME_GIT_UNTRACKED="✭" #"%F{yellow}✭"
+__THEME_GIT_CLEAN="✓" #"%F{green}✓"
 
 # SCREEN
 __THEME_SCREEN_FG=white
@@ -59,8 +63,6 @@ CURRENT_FG='NONE'
 prompt_segment() {
   local __fg
   local __ignore_separators
-  local __open_separator='\u27EA'
-  local __close_separator='\u27EB'
 
   [[ -n ${1} ]] && __fg="%F{$1}" || __fg="%f"
   [[ -n ${3} ]] && __ignore_separators=${3} || __ignore_separators=false
@@ -68,13 +70,13 @@ prompt_segment() {
 
     echo -n "%{%k%F{${CURRENT_FG}}%}%{${__fg}%}"
     if [[ ${__ignore_separators} != true ]]; then
-      echo -n "${__open_separator}"
+      echo -n "${__OPEN_SEPARATOR}"
     fi
   else
 
     echo -n "%{%k%}%{${__fg}%}"
     if [[ ${__ignore_separators} != true ]]; then
-      echo -n "${__open_separator}"
+      echo -n "${__OPEN_SEPARATOR}"
     fi
   fi
 
@@ -83,7 +85,7 @@ prompt_segment() {
 
     echo -n "${2}%F{${CURRENT_FG}}"
     if [[ $__ignore_separators != true ]]; then
-      echo -n "${__close_separator}"
+      echo -n "${__CLOSE_SEPARATOR}"
     fi
   fi
 }
