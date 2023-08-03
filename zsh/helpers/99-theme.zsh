@@ -21,12 +21,15 @@ __NORD14="#A3BE8C"
 __NORD15="#B48EAD"
 
 # Separators
-__OPEN_SEPARATOR='\ue0b7'
-__CLOSE_SEPARATOR='\ue0b5'
+__OPEN_SEPARATOR='\ue0b6'
+__CLOSE_SEPARATOR='\ue0b4'
 
 # STATUS
 __THEME_STATUS_FG=green
-__THEME_STATUS_ERROR_FG=red
+__THEME_STATUS_BG=black
+
+__THEME_STATUS_ERROR_FG=white
+__THEME_STATUS_ERROR_BG=red
 
 # NVM
 __THEME_NVM_FG=black
@@ -36,7 +39,7 @@ __THEME_NVM_PREFIX="\ue718"
 # Go
 __THEME_GO_FG=black
 __THEME_GO_BG=cyan
-__THEME_GO_PREFIX="\ue626"
+__THEME_GO_PREFIX="\ue627"
 
 # Rust
 __THEME_RUST_FG=black
@@ -46,7 +49,7 @@ __THEME_RUST_PREFIX="\ue68b"
 # Kubernetes Context
 __THEME_KCTX_FG=black
 __THEME_KCTX_BG=blue
-__THEME_KCTX_PREFIX="\ue007"
+__THEME_KCTX_PREFIX="󱃾"
 
 # PYTHON
 __THEME_PYTHON_FG=black
@@ -77,16 +80,33 @@ __THEME_SCREEN_PREFIX="⬗"
 # COMMAND EXECUTION TIME
 __THEME_EXEC_TIME_ELAPSED=5
 __THEME_EXEC_TIME_FG=yellow
+__THEME_EXEC_TIME_BG=black
 
 # Begin a segment
 # prompt_segment foreground_color=default text=none background_color=default
 prompt_segment() {
   local __fg __bg
+  local __separator_fg __separator_bg
 
-  [[ -n ${1} ]] && __fg="%F{$1}" || __fg="%f"
+  if [ -n ${1} ]; then
+    __fg="%F{$1}"
+
+    if [ -n ${3} ]; then
+      __separator_fg="%F{$3}"
+    else
+      __separator_fg="%f"
+    fi
+  else
+    __fg="%f"
+  fi
+
+  __separator_bg="%k"
+
   [[ -n ${3} ]] && __bg="%K{$3}" || __bg="%k"
 
-  echo -n "%{${__bg}%}%{${__fg}%}${__OPEN_SEPARATOR}${2}${__CLOSE_SEPARATOR}"
+  echo -n "%{${__separator_bg}%}%{${__separator_fg}%}${__OPEN_SEPARATOR}%{%k%f%}" #open separator style
+  echo -n "%{${__bg}%}%{${__fg}%}${2}%{%k%f%}" #content style
+  echo -n "%{${__separator_bg}%}%{${__separator_fg}%}${__CLOSE_SEPARATOR}%{%k%f%}" #close separator style
 }
 
 # End the prompt, closing any open segments
@@ -113,21 +133,10 @@ function displaytime {
   printf '%ds' $S
 }
 
-# Prompt previous command execution time
-preexec() {
-  cmd_timestamp=$(date +%s)
-}
-
-precmd() {
-  local stop
-  stop=$(date +%s)
-  local start=${cmd_timestamp:-$stop}
-  let ___THEME_last_exec_duration=$stop-$start
-  cmd_timestamp=''
-}
-
 prompt_cmd_exec_time() {
-  [ $___THEME_last_exec_duration -gt $__THEME_EXEC_TIME_ELAPSED ] && prompt_segment $__THEME_EXEC_TIME_FG "$(displaytime $___THEME_last_exec_duration)"
+  if [ $___THEME_last_exec_duration -gt $__THEME_EXEC_TIME_ELAPSED ]; then
+    prompt_segment $__THEME_EXEC_TIME_FG "$(displaytime $___THEME_last_exec_duration)" $__THEME_EXEC_TIME_BG
+  fi
 }
 
 # Git
@@ -266,9 +275,9 @@ prompt_status() {
   [[ ${_jobs_count} -gt 0 ]] && _symbols+="\u2692 ${_jobs_count}"
 
   if [[ -n "${_symbols}" && ${RETVAL} -ne 0 ]]; then
-    prompt_segment $__THEME_STATUS_ERROR_FG "${(j: :)_symbols}" true
+    prompt_segment $__THEME_STATUS_ERROR_FG "${(j: :)_symbols}" $__THEME_STATUS_ERROR_BG
   elif [[ -n "${_symbols}" ]]; then
-    prompt_segment $__THEME_STATUS_FG "${(j: :)_symbols}" true
+    prompt_segment $__THEME_STATUS_FG "${(j: :)_symbols}" $__THEME_STATUS_BG
   fi
 }
 
@@ -277,19 +286,63 @@ prompt_status() {
 # Entry point
 # ------------------------------------------------------------------------------
 
-build_prompt() {
+build_prompt_left() {
   RETVAL=$?
   #prompt_screen
   prompt_dir
-  prompt_kctx
-  prompt_python
-  prompt_nvm
   prompt_go
+  prompt_nvm
   prompt_rust
-  prompt_git
-  prompt_cmd_exec_time
+  prompt_python
   prompt_status
-  prompt_end
 }
 
-PROMPT='%{%f%b%k%}$(build_prompt)%{${fg_bold[default]}%} %(!.%F{red}# .%F{green}%f)%{$reset_color%}'
+build_prompt_right() {
+  prompt_cmd_exec_time
+  prompt_git
+  prompt_kctx
+  #prompt_end
+}
+
+# Prompt previous command execution time
+preexec() {
+  cmd_timestamp=$(date +%s)
+}
+
+precmd() {
+  local stop
+  stop=$(date +%s)
+  local start=${cmd_timestamp:-$stop}
+  let ___THEME_last_exec_duration=$stop-$start
+  cmd_timestamp=''
+
+  __THEME_L_PROMPT=$(build_prompt_left)
+  __THEME_R_PROMPT=$(build_prompt_right)
+}
+
+prompt_length() {
+  local -i x y=${#1} m
+  if (( y )); then
+    while (( ${${(%):-$1%$y(l.1.0)}[-1]} )); do
+      x=y
+      (( y *= 2 ))
+    done
+    while (( y > x + 1 )); do
+      (( m = x + (y - x) / 2 ))
+      (( ${${(%):-$1%$m(l.x.y)}[-1]} = m ))
+    done
+  fi
+  echo $x
+}
+
+padding () {
+  local L_VALUE=$(prompt_length $__THEME_L_PROMPT)
+  local R_VALUE=$(prompt_length $__THEME_R_PROMPT)
+
+  local PADDING=$(((COLUMNS - 1) - (L_VALUE + R_VALUE)))
+  for ((i=0;i<PADDING;i++)); do
+    print -n " "
+  done
+}
+
+PROMPT='%{%f%b%k%}$__THEME_L_PROMPT$(padding)$__THEME_R_PROMPT%{${fg_bold[default]}%} %(!.%F{red}# .%F{green}%f)%{$reset_color%}'
