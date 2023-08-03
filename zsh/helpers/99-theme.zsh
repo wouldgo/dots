@@ -287,7 +287,6 @@ prompt_status() {
 # ------------------------------------------------------------------------------
 
 build_prompt_left() {
-  RETVAL=$?
   #prompt_screen
   prompt_dir
   prompt_go
@@ -310,6 +309,7 @@ preexec() {
 }
 
 precmd() {
+  RETVAL=$?
   local stop
   stop=$(date +%s)
   local start=${cmd_timestamp:-$stop}
