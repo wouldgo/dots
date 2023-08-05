@@ -348,5 +348,5 @@ padding () {
 PROMPT='%{%f%b%k%}$__THEME_L_PROMPT$(padding)$__THEME_R_PROMPT%{${fg_bold[default]}%}%{$reset_color%}'
 RPROMPT=''
 
-T_PROMPT='%{%f%b%k%}$__THEME_L_PROMPT%{${fg_bold[default]}%}%{$reset_color%} '
+T_PROMPT='%{%f%b%k%}$__THEME_L_PROMPT %{${fg_bold[default]}%}%{$reset_color%}'
 T_RPROMPT=''
