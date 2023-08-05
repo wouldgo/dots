@@ -339,10 +339,14 @@ padding () {
   local L_VALUE=$(prompt_length $__THEME_L_PROMPT)
   local R_VALUE=$(prompt_length $__THEME_R_PROMPT)
 
-  local PADDING=$(((COLUMNS - 1) - (L_VALUE + R_VALUE)))
+  local PADDING=$(((COLUMNS) - (L_VALUE + R_VALUE)))
   for ((i=0;i<PADDING;i++)); do
     print -n " "
   done
 }
 
-PROMPT='%{%f%b%k%}$__THEME_L_PROMPT$(padding)$__THEME_R_PROMPT%{${fg_bold[default]}%} %(!.%F{red}# .%F{green}%f)%{$reset_color%}'
+PROMPT='%{%f%b%k%}$__THEME_L_PROMPT$(padding)$__THEME_R_PROMPT%{${fg_bold[default]}%}%{$reset_color%}'
+RPROMPT=''
+
+T_PROMPT='%{%f%b%k%}$__THEME_L_PROMPT%{${fg_bold[default]}%}%{$reset_color%} '
+T_RPROMPT=''
