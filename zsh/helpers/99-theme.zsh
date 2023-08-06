@@ -109,11 +109,6 @@ prompt_segment() {
   echo -n "%{${__separator_bg}%}%{${__separator_fg}%}${__CLOSE_SEPARATOR}%{%k%f%}" #close separator style
 }
 
-# End the prompt, closing any open segments
-prompt_end() {
-  echo -n "%{%k%f%}"
-}
-
 # ------------------------------------------------------------------------------
 # PROMPT COMPONENTS
 # Each component will draw itself, and hide itself if no information needs
@@ -170,8 +165,7 @@ __theme_git_status () {
       __status+="$__THEME_GIT_UNTRACKED $GIT_UNTRACKED"
     fi
 
-    if [ "$GIT_CHANGED" -eq "0" ] && [ "$GIT_CONFLICTS" -eq "0" ] && [ "$GIT_STAGED" -eq "0" ] && [ "$GIT_UNTRACKED" -eq "0" ]
-    then
+    if [ "$GIT_CHANGED" -eq "0" ] && [ "$GIT_CONFLICTS" -eq "0" ] && [ "$GIT_STAGED" -eq "0" ] && [ "$GIT_UNTRACKED" -eq "0" ]; then
       __status+="$__THEME_GIT_CLEAN"
     fi
     echo -n "${(j: :)__status}"
@@ -289,18 +283,17 @@ prompt_status() {
 build_prompt_left() {
   #prompt_screen
   prompt_dir
-  prompt_go
-  prompt_nvm
-  prompt_rust
-  prompt_python
+  prompt_git
+  prompt_cmd_exec_time
   prompt_status
 }
 
 build_prompt_right() {
-  prompt_cmd_exec_time
-  prompt_git
+  prompt_go
+  prompt_nvm
+  prompt_rust
+  prompt_python
   prompt_kctx
-  #prompt_end
 }
 
 # Prompt previous command execution time
