@@ -135,7 +135,7 @@ prompt_cmd_exec_time() {
 }
 
 # Git
-__theme_git_status () {
+__theme_git_status() {
   precmd_update_git_vars
   local __status=()
   if [ -n "$__CURRENT_GIT_STATUS" ]; then
@@ -275,6 +275,21 @@ prompt_status() {
   fi
 }
 
+prompt_length() {
+  local -i x y=${#1} m
+  if (( y )); then
+    while (( ${${(%):-$1%$y(l.1.0)}[-1]} )); do
+      x=y
+      (( y *= 2 ))
+    done
+    while (( y > x + 1 )); do
+      (( m = x + (y - x) / 2 ))
+      (( ${${(%):-$1%$m(l.x.y)}[-1]} = m ))
+    done
+  fi
+  echo $x
+}
+
 # ------------------------------------------------------------------------------
 # MAIN
 # Entry point
@@ -296,6 +311,23 @@ build_prompt_right() {
   prompt_kctx
 }
 
+padding() {
+  local L_VALUE=$(prompt_length $__THEME_L_PROMPT)
+  local R_VALUE=$(prompt_length $__THEME_R_PROMPT)
+  local NEW_LINE=$'\n'
+
+  if (( $(echo "${R_VALUE} == 0" | bc -l) )); then
+
+    echo $NEW_LINE ## TODO ????
+  else
+
+    local PADDING=$(((COLUMNS) - (L_VALUE + R_VALUE)))
+    for ((i=0;i<PADDING;i++)); do
+      echo -n " "
+    done
+  fi
+}
+
 # Prompt previous command execution time
 preexec() {
   cmd_timestamp=$(date +%s)
@@ -311,35 +343,16 @@ precmd() {
 
   __THEME_L_PROMPT=$(build_prompt_left)
   __THEME_R_PROMPT=$(build_prompt_right)
+  __THEME_PADDING=$(padding)
 }
 
-prompt_length() {
-  local -i x y=${#1} m
-  if (( y )); then
-    while (( ${${(%):-$1%$y(l.1.0)}[-1]} )); do
-      x=y
-      (( y *= 2 ))
-    done
-    while (( y > x + 1 )); do
-      (( m = x + (y - x) / 2 ))
-      (( ${${(%):-$1%$m(l.x.y)}[-1]} = m ))
-    done
-  fi
-  echo $x
+TRAPWINCH () {
+  #resize terminal
 }
 
-padding () {
-  local L_VALUE=$(prompt_length $__THEME_L_PROMPT)
-  local R_VALUE=$(prompt_length $__THEME_R_PROMPT)
 
-  local PADDING=$(((COLUMNS) - (L_VALUE + R_VALUE)))
-  for ((i=0;i<PADDING;i++)); do
-    print -n " "
-  done
-}
-
-PROMPT='%{%f%b%k%}$__THEME_L_PROMPT$(padding)$__THEME_R_PROMPT%{${fg_bold[default]}%}%{$reset_color%}'
+PROMPT='$__THEME_L_PROMPT$__THEME_PADDING$__THEME_R_PROMPT' #'%{%f%b%k%}$__THEME_L_PROMPT$(padding)$__THEME_R_PROMPT%{${fg_bold[default]}%}%{$reset_color%}'
 RPROMPT=''
 
-T_PROMPT='%{%f%b%k%}$__THEME_L_PROMPT %{${fg_bold[default]}%}%{$reset_color%}'
+T_PROMPT='$__THEME_L_PROMPT' #'%{%f%b%k%}$__THEME_L_PROMPT %{${fg_bold[default]}%}%{$reset_color%}'
 T_RPROMPT=''
