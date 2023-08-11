@@ -129,8 +129,8 @@ function displaytime {
 }
 
 prompt_cmd_exec_time() {
-  if [ $___THEME_last_exec_duration -gt $__THEME_EXEC_TIME_ELAPSED ]; then
-    prompt_segment $__THEME_EXEC_TIME_FG "$(displaytime $___THEME_last_exec_duration)" $__THEME_EXEC_TIME_BG
+  if [ $__THEME_LAST_EXEC_DURATION -gt $__THEME_EXEC_TIME_ELAPSED ]; then
+    prompt_segment $__THEME_EXEC_TIME_FG "$(displaytime $__THEME_LAST_EXEC_DURATION)" $__THEME_EXEC_TIME_BG
   fi
 }
 
@@ -312,47 +312,44 @@ build_prompt_right() {
 }
 
 padding() {
-  local L_VALUE=$(prompt_length $__THEME_L_PROMPT)
-  local R_VALUE=$(prompt_length $__THEME_R_PROMPT)
-  local NEW_LINE=$'\n'
+  if [ $__THEME_R_VALUE -ne 0 ]; then
+    local PADDING=$(((COLUMNS) - (__THEME_L_VALUE + __THEME_R_VALUE)))
 
-  if (( $(echo "${R_VALUE} == 0" | bc -l) )); then
-
-    echo $NEW_LINE ## TODO ????
-  else
-
-    local PADDING=$(((COLUMNS) - (L_VALUE + R_VALUE)))
     for ((i=0;i<PADDING;i++)); do
       echo -n " "
     done
   fi
 }
 
-# Prompt previous command execution time
 preexec() {
-  cmd_timestamp=$(date +%s)
+  __THEME_CMD_TIMESTAMP=$(date +%s)
 }
 
 precmd() {
   RETVAL=$?
   local stop
   stop=$(date +%s)
-  local start=${cmd_timestamp:-$stop}
-  let ___THEME_last_exec_duration=$stop-$start
-  cmd_timestamp=''
+  local start=${__THEME_CMD_TIMESTAMP:-$stop}
+  let __THEME_LAST_EXEC_DURATION=$stop-$start
+  __THEME_CMD_TIMESTAMP=''
 
   __THEME_L_PROMPT=$(build_prompt_left)
+  __THEME_L_VALUE=$(prompt_length $__THEME_L_PROMPT)
   __THEME_R_PROMPT=$(build_prompt_right)
+  __THEME_R_VALUE=$(prompt_length $__THEME_R_PROMPT)
   __THEME_PADDING=$(padding)
 }
 
-TRAPWINCH () {
-  #resize terminal
+TRAPWINCH () { ## terminal resize
+  clear
+
+  __THEME_PADDING=$(padding)
+  zle .reset-prompt
 }
 
-
-PROMPT='$__THEME_L_PROMPT$__THEME_PADDING$__THEME_R_PROMPT' #'%{%f%b%k%}$__THEME_L_PROMPT$(padding)$__THEME_R_PROMPT%{${fg_bold[default]}%}%{$reset_color%}'
+NEW_LINE=$'\n'
+PROMPT='$__THEME_L_PROMPT$__THEME_PADDING$__THEME_R_PROMPT$NEW_LINE'
 RPROMPT=''
 
-T_PROMPT='$__THEME_L_PROMPT' #'%{%f%b%k%}$__THEME_L_PROMPT %{${fg_bold[default]}%}%{$reset_color%}'
+T_PROMPT='$__THEME_L_PROMPT'
 T_RPROMPT=''
