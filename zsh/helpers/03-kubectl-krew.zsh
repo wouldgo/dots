@@ -2,9 +2,9 @@
 
 function __kubectl_krew_boostrap () {
   if [ $commands[kubectl-krew] ]; then
-    if [ ! -f "${HOME}/.zsh/completion/_kubectl_krew.zsh" ]; then
+    if [ ! -f "${HOME}/.zsh/completion/_kubectl-krew.zsh" ]; then
 
-      kubectl krew completion zsh | tee "${HOME}/.zsh/completion/_kubectl_krew.zsh" >/dev/null
+      kubectl krew completion zsh | tee "${HOME}/.zsh/completion/_kubectl-krew.zsh" >/dev/null
     fi
 
   fi
