@@ -137,9 +137,26 @@ prompt_cmd_exec_time() {
 # Git
 __theme_git_status() {
   precmd_update_git_vars
+  local RMD=$( git rev-parse --git-path 'rebase-merge/' )
+  local RaD=$( git rev-parse --git-path 'rebase-apply/' )
+
   local __status=()
   if [ -n "$__CURRENT_GIT_STATUS" ]; then
     __status+=($GIT_BRANCH)
+
+    if [ -e "${RMD}" ]; then
+      local N=$( cat "${RMD}msgnum" )
+      local L=$( cat "${RMD}end" )
+
+      __status+="[${N}▤${L}]"
+    fi
+
+    if [ -e "${RaD}" ]; then
+      local N=$( cat "${RaD}next" )
+      local L=$( cat "${RaD}last" )
+
+      __status+="[${N}▤${L}]"
+    fi
 
     if [ "$GIT_AHEAD" -ne "0" ]; then
       __status+="$__THEME_GIT_AHEAD $GIT_AHEAD"
