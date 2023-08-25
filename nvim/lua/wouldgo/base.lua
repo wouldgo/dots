@@ -1,5 +1,6 @@
 local global_options = {
   mapleader = ' ',
+  maplocalleader = ' ',
 }
 
 local options = {
