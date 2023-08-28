@@ -148,7 +148,7 @@ __theme_git_status() {
       local N=$( cat "${RMD}msgnum" )
       local L=$( cat "${RMD}end" )
 
-      __status+="[${N}▤${L}]"
+      __status+="[${N}÷${L}]"
     fi
 
     if [ -e "${RaD}" ]; then
