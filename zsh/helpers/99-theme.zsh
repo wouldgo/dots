@@ -155,7 +155,7 @@ __theme_git_status() {
       local N=$( cat "${RaD}next" )
       local L=$( cat "${RaD}last" )
 
-      __status+="[${N}▤${L}]"
+      __status+="[${N}÷${L}]"
     fi
 
     if [ "$GIT_AHEAD" -ne "0" ]; then
