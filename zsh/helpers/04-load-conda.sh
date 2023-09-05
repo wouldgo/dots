@@ -23,13 +23,13 @@ function __load_conda () {
     fi
 
     if [ -z "${HAS_ELMS}" ]; then
-      echo "ASD ${HAS_ELMS}"
-      # echo "Creating env ${PATH_TO_CONDA_ENV} reflecting ${PATH_TO_REQUIREMENTS_FILE}"
-      # conda create -p "${PATH_TO_CONDA_ENV}" --file "${PATH_TO_REQUIREMENTS_FILE}"
+      echo "Creating env ${PATH_TO_CONDA_ENV} reflecting ${PATH_TO_REQUIREMENTS_FILE}"
+      conda create -p "${PATH_TO_CONDA_ENV}" --file "${PATH_TO_REQUIREMENTS_FILE}"
     fi
 
     conda activate "${PATH_TO_CONDA_ENV}"
     export __PYTHON_PATH=${PATH_TO_CONDA_ENV}
+    touch "${PATH_TO_CONDA_ENV}/.keep"
   else
     conda deactivate
     unset __PYTHON_PATH
