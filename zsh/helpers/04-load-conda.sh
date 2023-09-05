@@ -15,12 +15,17 @@ function __load_conda () {
 
     local HAS_ELMS
 
-    HAS_ELMS=$(find "${PATH_TO_CONDA_ENV}" -maxdepth 1 -type f)
+    HAS_ELMS=$(find "${PATH_TO_CONDA_ENV}" -maxdepth 1 -not -name ".keep")
 
-    if [ ! -d "${PATH_TO_CONDA_ENV}" ] || [ -z "${HAS_ELMS+set}" ]; then
-      echo "Creating env ${PATH_TO_CONDA_ENV} reflecting ${PATH_TO_REQUIREMENTS_FILE}"
+    if [ ! -d "${PATH_TO_CONDA_ENV}" ];  then
+      echo "Creating directory ${PATH_TO_CONDA_ENV}"
       mkdir -p "${PATH_TO_CONDA_ENV}"
-      conda create -p "${PATH_TO_CONDA_ENV}" --file "${PATH_TO_REQUIREMENTS_FILE}"
+    fi
+
+    if [ -z "${HAS_ELMS}" ]; then
+      echo "ASD ${HAS_ELMS}"
+      # echo "Creating env ${PATH_TO_CONDA_ENV} reflecting ${PATH_TO_REQUIREMENTS_FILE}"
+      # conda create -p "${PATH_TO_CONDA_ENV}" --file "${PATH_TO_REQUIREMENTS_FILE}"
     fi
 
     conda activate "${PATH_TO_CONDA_ENV}"
