@@ -358,10 +358,14 @@ precmd() {
 }
 
 TRAPWINCH () { ## terminal resize
-  clear
-
   __THEME_PADDING=$(padding)
+  local saved_prompt=$PROMPT
+  local saved_rprompt=$RPROMPT
+  PROMPT=$T_PROMPT
+  RPROMPT=$T_RPROMPT
   zle .reset-prompt
+  PROMPT=$saved_prompt
+  RPROMPT=$saved_rprompt
 }
 
 NEW_LINE=$'\n'
