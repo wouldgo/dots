@@ -59,7 +59,9 @@ function sdkman () {
 
 function gvm () {
   echo "Installing gvm" && \
-  zsh < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)
+  zsh < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer) && \
+
+  gvm install go1.20 -pb -b --prefer-binary; gvm use go1.20 --default
 }
 
 function nvm () {

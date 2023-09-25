@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-#gvm install go<version> -pb -b -B; gvm use go<version> --default"
+#gvm install go<version> -pb -b; gvm use go<version> --default"
 function __load_gvm() {
   local _GOMOD_FILE
   local _GO_SYSTEM_VERSION
@@ -14,7 +14,7 @@ function __load_gvm() {
   if [ "${PATH_TO_GO_ROOT}" != "/" ]; then
     _GO_VERSION="$(grep -oP '^go\W+(.*)$' "${PATH_TO_GO_ROOT}/${_GOMOD_FILE}" | sed -e 's/go //')"
 
-    gvm install "go${_GO_VERSION}" -pb -b --prefer-binary
+    gvm install "go${_GO_VERSION}" -pb -b
     gvm use "go${_GO_VERSION}"
     export __GO_PATH=${PATH_TO_GO_ROOT}
   else
