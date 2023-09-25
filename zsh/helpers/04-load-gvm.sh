@@ -14,7 +14,7 @@ function __load_gvm() {
   if [ "${PATH_TO_GO_ROOT}" != "/" ]; then
     _GO_VERSION="$(grep -oP '^go\W+(.*)$' "${PATH_TO_GO_ROOT}/${_GOMOD_FILE}" | sed -e 's/go //')"
 
-    gvm install "go${_GO_VERSION}" -pb -b -B
+    gvm install "go${_GO_VERSION}" -pb -b --prefer-binary
     gvm use "go${_GO_VERSION}"
     export __GO_PATH=${PATH_TO_GO_ROOT}
   else
