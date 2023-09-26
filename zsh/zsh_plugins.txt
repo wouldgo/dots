@@ -5,13 +5,10 @@ ohmyzsh/ohmyzsh path:lib/key-bindings.zsh
 ohmyzsh/ohmyzsh path:plugins/git
 ohmyzsh/ohmyzsh path:plugins/docker kind:fpath
 
-conda-incubator/conda-zsh-completion
-
 thewtex/tmux-mem-cpu-load
 
 mttrs/zsh-git-prompt
 
-lukechilds/zsh-nvm
 lukechilds/zsh-better-npm-completion
 
 johanhaleby/kubetail kind:path

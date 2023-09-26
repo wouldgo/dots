@@ -24,6 +24,18 @@ function fzf () {
     --no-fish
 }
 
+function rtx-cli () {
+  local TMP_DIR
+
+  TMP_DIR=$(mktemp -d)
+
+  gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys 0x29DDE9E0
+  curl https://rtx.pub/install.sh.sig | gpg --decrypt > "${TMP_DIR}/install.sh"
+  sh "${TMP_DIR}/install.sh"
+  rm -Rf "${TMP_DIR}"
+}
+
+
 function nvim () {
   local NVIM_HIDDEN_FOLDER
   NVIM_HIDDEN_FOLDER="${HOME}/.nvim"
@@ -40,33 +52,11 @@ function nvim () {
   mv "${NVIM_HIDDEN_FOLDER}/nvim.appimage" "${NVIM_HIDDEN_FOLDER}/nvim"
 }
 
-function rbenv () {
-  echo "Installing rbenv..." && \
-  curl -sL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash -
-}
-
 function rustup () {
   echo "Installing rustup..." && \
   wget -O /tmp/rustup.sh https://sh.rustup.rs && \
   bash /tmp/rustup.sh -y &&
   rm -Rfv /tmp/rustup.sh
-}
-
-function sdkman () {
-  echo "Installing sdkman" && \
-  curl -s "https://get.sdkman.io" | bash
-}
-
-function gvm () {
-  echo "Installing gvm" && \
-  zsh < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer) && \
-
-  gvm install go1.20 -pb -b --prefer-binary; gvm use go1.20 --default
-}
-
-function nvm () {
-  echo "Installing nvm" && \
-  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 }
 
 function miniforge () {
@@ -148,23 +138,20 @@ function krew () {
 }
 
 function do_it () {
-  git_config;
-  ansible;
-  fzf;
-  nvim;
-  rbenv;
-  rustup;
-  sdkman;
-  gvm;
-  nvm;
-  miniforge;
-  kubectl;
-  operator_sdk;
-  krew;
-  apple_keyboard;
-  alacritty;
-  ripgrep;
-  websocat;
+  # git_config;
+  # ansible;
+  # fzf;
+  # nvim;
+  # rustup;
+  # miniforge;
+  # kubectl;
+  # operator_sdk;
+  # krew;
+  # apple_keyboard;
+  # alacritty;
+  # ripgrep;
+  # websocat;
+  rtx-cli;
 }
 
 do_it "$@"

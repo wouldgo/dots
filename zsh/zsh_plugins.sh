@@ -10,8 +10,6 @@ source /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-th
 fpath+=( /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-thewtex-SLASH-tmux-mem-cpu-load )
 source /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-mttrs-SLASH-zsh-git-prompt/git-prompt.plugin.zsh
 fpath+=( /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-mttrs-SLASH-zsh-git-prompt )
-source /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-lukechilds-SLASH-zsh-nvm/zsh-nvm.plugin.zsh
-fpath+=( /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-lukechilds-SLASH-zsh-nvm )
 source /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-lukechilds-SLASH-zsh-better-npm-completion/zsh-better-npm-completion.plugin.zsh
 fpath+=( /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-lukechilds-SLASH-zsh-better-npm-completion )
 export PATH="/home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-johanhaleby-SLASH-kubetail:$PATH"

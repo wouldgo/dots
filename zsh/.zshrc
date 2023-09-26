@@ -44,15 +44,15 @@ zstyle -e ':completion:*:default' list-colors 'reply=("${PREFIX:+=(#bi)($PREFIX:
 zle -N __first_tab
 bindkey '^I' __first_tab
 
-if [ $commands[conda] ]; then
-  add-zsh-hook chpwd __load_conda
-  __load_conda
-fi
 
-if [ $commands[gvm] ]; then
-  add-zsh-hook chpwd __load_gvm
-  __load_gvm
-fi
+
+add-zsh-hook chpwd __load_node
+add-zsh-hook chpwd __load_go
+add-zsh-hook chpwd __load_python
+
+__load_node
+__load_go
+__load_python
 
 zle-line-init() {
   emulate -L zsh

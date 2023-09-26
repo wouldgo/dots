@@ -217,21 +217,15 @@ prompt_dir() {
 
 # nvm
 prompt_nvm() {
-  if [[ (-f $(nvm_find_nvmrc)) ]]; then
-    local nvm_prompt=$(nvm current 2>/dev/null)
-
-    if [[ "${nvm_prompt}x" == "x" || "${nvm_prompt}" == "system" ]]; then
-      return
-    fi
-
-    prompt_segment $__THEME_NVM_FG "${__THEME_NVM_PREFIX} ${nvm_prompt}" $__THEME_NVM_BG
+  if [ ! -z ${__NODE_PATH+x} ]; then
+    prompt_segment $__THEME_NVM_FG "$__THEME_NVM_PREFIX $__NODE_VERSION" $__THEME_NVM_BG
   fi
 }
 
 # Go
 prompt_go() {
   if [ ! -z ${__GO_PATH+x} ]; then
-    prompt_segment $__THEME_GO_FG $__THEME_GO_PREFIX" $(go version  | grep --colour=never -oE '[[:digit:]]+.[[:digit:]]+' | head -n 1)" $__THEME_GO_BG
+    prompt_segment $__THEME_GO_FG "$__THEME_GO_PREFIX $__GO_VERSION" $__THEME_GO_BG
   fi
 }
 

@@ -39,7 +39,10 @@ if ! "${CURRENT_DIR}"/tmux/confs/user.sh; then
   echo "tmux configurations for ${USER} are already set" 2>&1
 fi
 
-sudo chsh "${USER}" -s "$(command -v zsh)" && \
+sudo chsh "${USER}" -s "$(command -v zsh)"
+
+echo "Preparing rtx config.toml" && \
+ln -sf "${CURRENT_DIR}/system/rtx_config.toml" "${HOME}/.config/rtx/config.toml"
 
 echo "Installing extra binaries..." && \
 if ! "${CURRENT_DIR}"/system/bins.sh; then

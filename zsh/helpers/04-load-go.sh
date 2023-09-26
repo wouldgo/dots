@@ -1,24 +1,27 @@
 #!/usr/bin/env bash
 
-#gvm install go<version> -pb -b; gvm use go<version> --default"
-function __load_gvm() {
+function __load_go() {
   local _GOMOD_FILE
-  local _GO_SYSTEM_VERSION
   local PATH_TO_GO_ROOT
+
   local _GO_VERSION
+  local _ACTUAL_GO_VERSION
 
   _GOMOD_FILE="go.mod"
-  _GO_SYSTEM_VERSION="$(go version  | grep --colour=never -oE '[[:digit:]]+.[[:digit:]]+' | head -n 1)"
   PATH_TO_GO_ROOT=$(_find_file_upwards ${_GOMOD_FILE})
 
   if [ "${PATH_TO_GO_ROOT}" != "/" ]; then
     _GO_VERSION="$(grep -oP '^go\W+(.*)$' "${PATH_TO_GO_ROOT}/${_GOMOD_FILE}" | sed -e 's/go //')"
+    _ACTUAL_GO_VERSION="$(rtx exec go -- go version | grep --colour=never -oE '[[:digit:]]+.[[:digit:]]+' | head -n 1)"
 
-    gvm install "go${_GO_VERSION}" -pb -b
-    gvm use "go${_GO_VERSION}"
+    if [ "$_GO_VERSION" != "$_ACTUAL_GO_VERSION" ]; then
+
+      rtx use "go@${_GO_VERSION}"
+    fi
     export __GO_PATH=${PATH_TO_GO_ROOT}
+    export __GO_VERSION=${_GO_VERSION}
   else
     unset __GO_PATH
-    #gvm use "go${_GO_SYSTEM_VERSION}"
+    unset __GO_VERSION
   fi
 }
