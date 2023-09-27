@@ -1,4 +1,4 @@
-zmodload zsh/zprof
+#zmodload zsh/zprof
 
 CONFS_FOLDER="${HOME}/git/confs/dots/zsh"
 HISTFILE="${HOME}/.histfile"
@@ -83,4 +83,4 @@ zle-line-init() {
 
 zle -N zle-line-init
 
-zprof
+#zprof
