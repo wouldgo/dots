@@ -258,7 +258,7 @@ prompt_kctx() {
 # Python: current working python
 prompt_python() {
   if [ ! -z ${__PYTHON_PATH+x} ]; then
-    prompt_segment $__THEME_PYTHON_FG $__THEME_PYTHON_PREFIX" $(python --version | sed 's/Python\ //g') ($(basename $__PYTHON_PATH))" $__THEME_PYTHON_BG
+    prompt_segment $__THEME_PYTHON_FG $__THEME_PYTHON_PREFIX" $__PYTHON_VERSION" $__THEME_PYTHON_BG
   fi
 }
 

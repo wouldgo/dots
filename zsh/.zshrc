@@ -1,4 +1,4 @@
-#zmodload zsh/zprof
+zmodload zsh/zprof
 
 CONFS_FOLDER="${HOME}/git/confs/dots/zsh"
 HISTFILE="${HOME}/.histfile"
@@ -44,8 +44,6 @@ zstyle -e ':completion:*:default' list-colors 'reply=("${PREFIX:+=(#bi)($PREFIX:
 zle -N __first_tab
 bindkey '^I' __first_tab
 
-
-
 add-zsh-hook chpwd __load_node
 add-zsh-hook chpwd __load_go
 add-zsh-hook chpwd __load_python
@@ -85,4 +83,4 @@ zle-line-init() {
 
 zle -N zle-line-init
 
-#zprof
+zprof

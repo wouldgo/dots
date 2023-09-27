@@ -4,8 +4,6 @@ source /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-oh
 source /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-ohmyzsh-SLASH-ohmyzsh/plugins/git/git.plugin.zsh
 fpath+=( /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-ohmyzsh-SLASH-ohmyzsh/plugins/git )
 fpath+=( /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-ohmyzsh-SLASH-ohmyzsh/plugins/docker )
-source /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-conda-incubator-SLASH-conda-zsh-completion/conda-zsh-completion.plugin.zsh
-fpath+=( /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-conda-incubator-SLASH-conda-zsh-completion )
 source /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-thewtex-SLASH-tmux-mem-cpu-load/tmux-mem-cpu-load.plugin.zsh
 fpath+=( /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-thewtex-SLASH-tmux-mem-cpu-load )
 source /home/dario/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-mttrs-SLASH-zsh-git-prompt/git-prompt.plugin.zsh
