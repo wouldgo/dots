@@ -5,10 +5,12 @@ java = '21.0.0'
 maven = '3.9.4'
 operator-sdk = "1.31.0"
 python = "latest"
+jq = "latest"
 
 [plugins]
 maven = 'https://github.com/halcyon/asdf-maven'
 operator-sdk = 'https://github.com/Medium/asdf-operator-sdk'
+jq = 'https://github.com/lsanwick/asdf-jq'
 
 [settings]
 trusted_config_paths = [
