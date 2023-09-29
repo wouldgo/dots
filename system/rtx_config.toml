@@ -6,6 +6,7 @@ maven = '3.9.4'
 operator-sdk = "1.31.0"
 python = "latest"
 jq = "latest"
+youtube-dl = "latest"
 
 [plugins]
 maven = 'https://github.com/halcyon/asdf-maven'
