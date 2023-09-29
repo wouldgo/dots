@@ -45,7 +45,6 @@ function __load_python () {
 
     if [ "${PATH_TO_REQUIREMENTS_FILE}" != '/' ]; then
 
-      echo "INSTALL";
       "${PIP_EXEC}" install -r "${PATH_TO_REQUIREMENTS_FILE}/${_REQUIREMENTS_FILE}";
     fi
 
