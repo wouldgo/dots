@@ -1,5 +1,5 @@
 [tools]
-node = '20'
+node = 'latest'
 go = '1.21.1'
 java = '21.0.0'
 maven = '3.9.4'
