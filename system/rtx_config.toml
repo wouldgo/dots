@@ -1,17 +1,15 @@
 [tools]
 node = 'latest'
 go = '1.21.1'
+operator-sdk = "1.31.0"
+ripgrep = "latest"
+websocat = "latest"
 java = '21.0.0'
 maven = '3.9.4'
-operator-sdk = "1.31.0"
 python = "latest"
-jq = "latest"
 youtube-dl = "latest"
-
-[plugins]
-maven = 'https://github.com/halcyon/asdf-maven'
-operator-sdk = 'https://github.com/Medium/asdf-operator-sdk'
-jq = 'https://github.com/lsanwick/asdf-jq'
+linkerd = "latest"
+jq = "latest"
 
 [settings]
 trusted_config_paths = [

@@ -59,23 +59,10 @@ function rustup () {
   rm -Rfv /tmp/rustup.sh
 }
 
-function miniforge () {
-  echo "Installing miniforge" && \
-  DIR=$(mktemp) && \
-  wget -P "${DIR}" https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh && \
-  chmod u+x "${DIR}/Miniforge3-Linux-x86_64.sh" && \
-  bash "${DIR}/Miniforge3-Linux-x86_64.sh" -p "${HOME}/.miniforge3" -b -u && \
-  rm -Rfv "${DIR}"
-}
-
 function kubectl () {
   curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
   sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
   kubectl version --client
-}
-
-function ripgrep () {
-  cargo install ripgrep
 }
 
 function apple_keyboard () {
@@ -114,19 +101,6 @@ function alacritty () {
   cp -v extra/completions/_alacritty "${ZSH_COMPLETION_FOLDER}/_alacritty.zsh"
 }
 
-function websocat () {
-  cargo install \
-    --features=ssl \
-    websocat
-}
-
-function operator_sdk () {
-  curl -LO "https://github.com/operator-framework/operator-sdk/releases/latest/download/operator-sdk_linux_amd64" && \
-  mv -v operator-sdk_linux_amd64 operator-sdk && \
-  sudo install -o root -g root -m 0755 operator-sdk /usr/local/bin/operator-sdk && \
-  operator-sdk version
-}
-
 function krew () {
   cd "$(mktemp -d)" && \
   OS="$(uname | tr '[:upper:]' '[:lower:]')" && \
@@ -143,13 +117,10 @@ function do_it () {
   # fzf;
   # nvim;
   # rustup;
-  # miniforge;
   # kubectl;
-  # operator_sdk;
   # krew;
   # apple_keyboard;
   # alacritty;
-  # ripgrep;
   # websocat;
   rtx-cli;
 }

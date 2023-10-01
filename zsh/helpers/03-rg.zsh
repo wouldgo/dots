@@ -1,12 +1,13 @@
 #!/usr/bin/env zsh
 
 function __rg_bootstrap () {
-  local COMPLETION_FOLDER
+  if [ "$(rtx which rg)" ]; then
+    local RG_COMMAND=$(rtx which rg)
 
-  COMPLETION_FOLDER="${HOME}/.zsh/completion"
-  if [ $commands[rg] ] && [ ! -f "${COMPLETION_FOLDER}/_rg.zsh" ]; then
-    (cd "${COMPLETION_FOLDER}"; curl -LOk https://raw.githubusercontent.com/BurntSushi/ripgrep/master/complete/_rg) && \
-    mv "${COMPLETION_FOLDER}/_rg" "${COMPLETION_FOLDER}/_rg.zsh"
+    if [ ! -f "${ZSH_COMPLETION_FOLDER}/_rg.zsh" ]; then
+      (cd "${ZSH_COMPLETION_FOLDER}"; curl -LOk https://raw.githubusercontent.com/BurntSushi/ripgrep/master/complete/_rg) && \
+      mv "${ZSH_COMPLETION_FOLDER}/_rg" "${ZSH_COMPLETION_FOLDER}/_rg.zsh"
+    fi
   fi
 }
 
