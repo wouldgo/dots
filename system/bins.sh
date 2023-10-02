@@ -112,17 +112,17 @@ function krew () {
 }
 
 function do_it () {
-  # git_config;
-  # ansible;
-  # fzf;
-  # nvim;
-  # rustup;
-  # kubectl;
-  # krew;
-  # apple_keyboard;
-  # alacritty;
-  # websocat;
+  git_config;
   rtx-cli;
+  alacritty;
+  fzf;
+  nvim;
+  rustup;
+  kubectl;
+  krew;
+  websocat;
+  ansible;
+  apple_keyboard;
 }
 
 do_it "$@"
