@@ -2,8 +2,8 @@
 
 function __kubectl_boostrap () {
   if [ $commands[kubectl] ]; then
-    if [ ! -f "${HOME}/.zsh/completion/_kubectl.zsh" ]; then
-      kubectl completion zsh | tee "${HOME}/.zsh/completion/_kubectl.zsh" >/dev/null
+    if [ ! -f "${ZSH_COMPLETION_FOLDER}/_kubectl.zsh" ]; then
+      kubectl completion zsh | tee "${ZSH_COMPLETION_FOLDER}/_kubectl.zsh" >/dev/null
     fi
 
     alias k=kubectl

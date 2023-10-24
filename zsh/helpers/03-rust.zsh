@@ -2,12 +2,12 @@
 
 function __rust_bootstrap () {
   if [ $commands[rustup] ]; then
-    if [ ! -f "${HOME}/.zsh/completion/_rustup.zsh" ]; then
-      rustup completions zsh | tee "${HOME}/.zsh/completion/_rustup.zsh" >/dev/null
+    if [ ! -f "${ZSH_COMPLETION_FOLDER}/_rustup.zsh" ]; then
+      rustup completions zsh | tee "${ZSH_COMPLETION_FOLDER}/_rustup.zsh" >/dev/null
     fi
 
-    if [ $commands[cargo] ] && [ ! -f "${HOME}/.zsh/completion/_cargo.zsh" ]; then
-      rustup completions zsh cargo | tee "${HOME}/.zsh/completion/_cargo.zsh" >/dev/null
+    if [ $commands[cargo] ] && [ ! -f "${ZSH_COMPLETION_FOLDER}/_cargo.zsh" ]; then
+      rustup completions zsh cargo | tee "${ZSH_COMPLETION_FOLDER}/_cargo.zsh" >/dev/null
     fi
   fi
 }
