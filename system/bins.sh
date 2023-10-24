@@ -35,40 +35,11 @@ function rtx-cli () {
   rm -Rf "${TMP_DIR}"
 }
 
-
-function nvim () {
-  local NVIM_HIDDEN_FOLDER
-  NVIM_HIDDEN_FOLDER="${HOME}/.nvim"
-
-  if [ -e "${NVIM_HIDDEN_FOLDER}" ]; then
-
-    echo "nvim already installed" 2>&1
-    return
-  fi
-
-  mkdir -p "${NVIM_HIDDEN_FOLDER}" && \
-  (cd "${NVIM_HIDDEN_FOLDER}"; curl -LOk https://github.com/neovim/neovim/releases/latest/download/nvim.appimage) && \
-  chmod u+x "${NVIM_HIDDEN_FOLDER}/nvim.appimage" && \
-  mv "${NVIM_HIDDEN_FOLDER}/nvim.appimage" "${NVIM_HIDDEN_FOLDER}/nvim"
-}
-
 function rustup () {
   echo "Installing rustup..." && \
   wget -O /tmp/rustup.sh https://sh.rustup.rs && \
   bash /tmp/rustup.sh -y &&
   rm -Rfv /tmp/rustup.sh
-}
-
-function kubectl () {
-  curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
-  sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
-  kubectl version --client
-}
-
-function apple_keyboard () {
-  echo "Apple keyboard workaround" && \
-  echo options hid_apple fnmode=2 | sudo tee -a /etc/modprobe.d/hid_apple.conf && \
-  sudo update-initramfs -u -k all
 }
 
 function ansible () {
@@ -101,6 +72,34 @@ function alacritty () {
   cp -v extra/completions/_alacritty "${ZSH_COMPLETION_FOLDER}/_alacritty.zsh"
 }
 
+function apple_keyboard () {
+  echo "Apple keyboard workaround" && \
+  echo options hid_apple fnmode=2 | sudo tee -a /etc/modprobe.d/hid_apple.conf && \
+  sudo update-initramfs -u -k all
+}
+
+function nvim () {
+  local NVIM_HIDDEN_FOLDER
+  NVIM_HIDDEN_FOLDER="${HOME}/.nvim"
+
+  if [ -e "${NVIM_HIDDEN_FOLDER}" ]; then
+
+    echo "nvim already installed" 2>&1
+    return
+  fi
+
+  mkdir -p "${NVIM_HIDDEN_FOLDER}" && \
+  (cd "${NVIM_HIDDEN_FOLDER}"; curl -LOk https://github.com/neovim/neovim/releases/latest/download/nvim.appimage) && \
+  chmod u+x "${NVIM_HIDDEN_FOLDER}/nvim.appimage" && \
+  mv "${NVIM_HIDDEN_FOLDER}/nvim.appimage" "${NVIM_HIDDEN_FOLDER}/nvim"
+}
+
+function kubectl () {
+  curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
+  sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
+  kubectl version --client
+}
+
 function krew () {
   cd "$(mktemp -d)" && \
   OS="$(uname | tr '[:upper:]' '[:lower:]')" && \
@@ -114,15 +113,14 @@ function krew () {
 function do_it () {
   git_config;
   rtx-cli;
-  alacritty;
   fzf;
-  nvim;
   rustup;
-  kubectl;
-  krew;
-  websocat;
   ansible;
+  alacritty;
   apple_keyboard;
+  #nvim;
+  #kubectl;
+  #krew;
 }
 
 do_it "$@"

@@ -276,8 +276,8 @@ prompt_screen() {
 prompt_status() {
   local _symbols=()
   local _jobs_count=$(jobs -l | wc -l)
-  [[ ${RETVAL} -ne 0 ]] && _symbols+="\u2716 ${RETVAL}"
-  [[ ${_jobs_count} -gt 0 ]] && _symbols+="\u2692 ${_jobs_count}"
+  [[ ${RETVAL} -ne 0 ]] && _symbols+="\uea76 ${RETVAL}"
+  [[ ${_jobs_count} -gt 0 ]] && _symbols+="\uf021 ${_jobs_count}"
 
   if [[ -n "${_symbols}" && ${RETVAL} -ne 0 ]]; then
     prompt_segment $__THEME_STATUS_ERROR_FG "${(j: :)_symbols}" $__THEME_STATUS_ERROR_BG

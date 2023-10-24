@@ -42,6 +42,7 @@ fi
 sudo chsh "${USER}" -s "$(command -v zsh)"
 
 echo "Preparing rtx config.toml" && \
+mkdir --parents "${HOME}/.config/rtx" && \
 ln -sf "${CURRENT_DIR}/system/rtx_config.toml" "${HOME}/.config/rtx/config.toml"
 
 echo "Installing extra binaries..." && \

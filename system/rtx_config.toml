@@ -10,6 +10,9 @@ python = "latest"
 youtube-dl = "latest"
 linkerd = "latest"
 jq = "latest"
+kubectl = "latest"
+krew = "latest"
+neovim = "latest"
 
 [settings]
 trusted_config_paths = [

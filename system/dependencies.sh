@@ -28,6 +28,7 @@ sudo apt install -y \
   libfreetype6-dev \
   libfontconfig1-dev \
   libxcb-xfixes0-dev \
-  libxkbcommon-dev && \
+  libxkbcommon-dev \
+  unzip && \
 
 sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
