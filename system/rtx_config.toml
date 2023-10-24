@@ -1,7 +1,7 @@
 [tools]
 node = 'latest'
-go = '1.21.1'
-operator-sdk = "1.31.0"
+go = 'latest'
+operator-sdk = "latest"
 ripgrep = "latest"
 websocat = "latest"
 java = '21.0.0'
@@ -13,6 +13,7 @@ jq = "latest"
 kubectl = "latest"
 krew = "latest"
 neovim = "latest"
+kustomize = "latest"
 
 [settings]
 trusted_config_paths = [
