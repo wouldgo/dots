@@ -4,6 +4,12 @@ CONFS_FOLDER="${HOME}/git/confs/dots/zsh"
 HISTFILE="${HOME}/.histfile"
 ZSH_CACHE_DIR="${HOME}/.zsh/_cache"
 ZSH_COMPLETION_FOLDER=${HOME}/.zsh/completion
+KERNEL_RELEASE=$(uname --kernel-release)
+WINDOWS_SUBSYSTEM_LINUX='WSL'
+IS_WSL="NO"
+if [[ $KERNEL_RELEASE == *"${WINDOWS_SUBSYSTEM_LINUX}"* ]]; then
+  IS_WSL="YES"
+fi
 
 HISTSIZE=1000
 SAVEHIST=10000
