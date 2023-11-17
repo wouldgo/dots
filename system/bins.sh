@@ -1,8 +1,21 @@
 #!/usr/bin/env bash
 
+ENABLE_APPLE_KEYBOARD="NO"
+
+KERNEL_RELEASE=$(uname --kernel-release)
+WINDOWS_SUBSYSTEM_LINUX='WSL'
+IS_WSL="NO"
+if [[ $KERNEL_RELEASE == *"${WINDOWS_SUBSYSTEM_LINUX}"* ]]; then
+  IS_WSL="YES"
+fi
+
 function git_config () {
   git config \
     --global pull.rebase true
+  git config \
+    --global user.name "wouldgo"
+  git config \
+    --global user.email would84@gmail.com
 }
 
 function fzf () {
@@ -78,49 +91,20 @@ function apple_keyboard () {
   sudo update-initramfs -u -k all
 }
 
-function nvim () {
-  local NVIM_HIDDEN_FOLDER
-  NVIM_HIDDEN_FOLDER="${HOME}/.nvim"
-
-  if [ -e "${NVIM_HIDDEN_FOLDER}" ]; then
-
-    echo "nvim already installed" 2>&1
-    return
-  fi
-
-  mkdir -p "${NVIM_HIDDEN_FOLDER}" && \
-  (cd "${NVIM_HIDDEN_FOLDER}"; curl -LOk https://github.com/neovim/neovim/releases/latest/download/nvim.appimage) && \
-  chmod u+x "${NVIM_HIDDEN_FOLDER}/nvim.appimage" && \
-  mv "${NVIM_HIDDEN_FOLDER}/nvim.appimage" "${NVIM_HIDDEN_FOLDER}/nvim"
-}
-
-function kubectl () {
-  curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
-  sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
-  kubectl version --client
-}
-
-function krew () {
-  cd "$(mktemp -d)" && \
-  OS="$(uname | tr '[:upper:]' '[:lower:]')" && \
-  ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" && \
-  KREW="krew-${OS}_${ARCH}" && \
-  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" && \
-  tar zxvf "${KREW}.tar.gz" && \
-  ./"${KREW}" install krew
-}
-
 function do_it () {
   git_config;
   rtx-cli;
   fzf;
   rustup;
   ansible;
-  alacritty;
-  apple_keyboard;
-  #nvim;
-  #kubectl;
-  #krew;
+
+  if [ "${IS_WSL}" == "NO" ]; then
+    alacritty;
+
+    if [ "${ENABLE_APPLE_KEYBOARD}" == "YES" ]; then
+      apple_keyboard;
+    fi
+  fi
 }
 
 do_it "$@"
