@@ -2,6 +2,7 @@
 
 sudo apt install -y \
   ttf-ancient-fonts \
+  wget \
   curl \
   libssl-dev \
   libreadline-dev \
@@ -29,6 +30,13 @@ sudo apt install -y \
   libfontconfig1-dev \
   libxcb-xfixes0-dev \
   libxkbcommon-dev \
-  unzip && \
+  unzip \
+  zip \
+  kpartx \
+  binfmt-support \
+  qemu \
+  qemu-user-static \
+  e2fsprogs \
+  dosfstools && \
 
 sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
