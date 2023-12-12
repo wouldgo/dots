@@ -32,6 +32,7 @@ sudo apt install -y \
   libxkbcommon-dev \
   unzip \
   zip \
+  pavucontrol \
   kpartx \
   binfmt-support \
   qemu \

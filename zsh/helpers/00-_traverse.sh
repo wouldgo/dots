@@ -1,26 +1,17 @@
 #!/usr/bin/env bash
 
 _find_file_upwards() {
-  local DIR
-  local FOUND
-  local TO_FIND
+  local DIR="${PWD}"
+  local TO_FIND="${1}"
 
-  DIR="${PWD}"
-  FOUND='false'
-  TO_FIND="${1}"
+  while [ "$DIR" != "/" ]; do
+    if find "$DIR" -maxdepth 1 -type f -exec basename {} \; | grep -q "^${TO_FIND}$"; then
+      break
+    fi
+    DIR=$(dirname "$DIR")
+  done
 
-  while
-    while IFS= read -r A_FILE_INTO_FOLDER; do
-      if [ "${TO_FIND}" == "$(basename "${A_FILE_INTO_FOLDER}")" ] ; then
-
-        FOUND='true'
-      fi
-    done < <(find "${DIR}"/ -maxdepth 1 -type f)
-
-    [ "$DIR" != "/" ] && [ "${FOUND}" == 'false' ]
-  do DIR=$(dirname "${DIR}"); done
-
-  echo "${DIR}"
+  echo "$DIR"
 }
 
 #> /dev/null 2>&1
