@@ -1,11 +1,11 @@
 [tools]
-node = 'latest'
-go = 'latest'
+node = "latest"
+go = "latest"
 operator-sdk = "latest"
 ripgrep = "latest"
 websocat = "latest"
 java = "17"
-maven = '3.9.4'
+maven = "3.9.4"
 python = "latest"
 youtube-dl = "latest"
 linkerd = "latest"

@@ -5,7 +5,7 @@ _find_file_upwards() {
   local TO_FIND="${1}"
 
   while [ "$DIR" != "/" ]; do
-    if find "$DIR" -maxdepth 1 -type f -exec basename {} \; | grep -q "^${TO_FIND}$"; then
+    if find "$DIR" -maxdepth 1 -type f | grep -q "/${TO_FIND}$"; then
       break
     fi
     DIR=$(dirname "$DIR")
