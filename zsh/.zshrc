@@ -14,6 +14,8 @@ fi
 HISTSIZE=1000
 SAVEHIST=10000
 
+setopt HIST_IGNORE_ALL_DUPS
+
 mkdir -p "${ZSH_CACHE_DIR}"
 setopt +o nomatch
 

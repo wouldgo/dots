@@ -349,6 +349,20 @@ precmd() {
   __THEME_R_PROMPT=$(build_prompt_right)
   __THEME_R_VALUE=$(prompt_length $__THEME_R_PROMPT)
   __THEME_PADDING=$(padding)
+
+  if [[ (
+      ${RETVAL} == 0   || #OK
+      ${RETVAL} == 130 || #SIGINT
+      ${RETVAL} == 143    #SIGTERM
+    ) && -n ${__THEME_LASTHISTORY//[[:space:]\n]/} && -n ${HISTFILE} ]] ; then
+    print -sr -- ${=${__THEME_LASTHISTORY%%'\n'}}
+  fi
+}
+
+zshaddhistory() {
+  __THEME_LASTHISTORY=${1//\\$'\n'/}
+
+  return 1
 }
 
 TRAPWINCH () { ## terminal resize
