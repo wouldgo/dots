@@ -15,6 +15,7 @@ krew = "latest"
 neovim = "latest"
 kustomize = "latest"
 packer = "1.9.4"
+cilium-cli = "latest"
 
 [settings]
 trusted_config_paths = [
