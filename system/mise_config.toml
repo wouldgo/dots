@@ -1,0 +1,40 @@
+[tools]
+node = "latest"
+go = "latest"
+operator-sdk = "latest"
+ripgrep = "latest"
+websocat = "latest"
+java = "17"
+maven = "3.9.4"
+python = "latest"
+youtube-dl = "latest"
+linkerd = "latest"
+jq = "latest"
+kubectl = "latest"
+krew = "latest"
+neovim = "latest"
+kustomize = "latest"
+packer = "1.9.4"
+cilium-cli = "latest"
+cilium-hubble = "latest"
+
+[plugins]
+operator-sdk = "https://github.com/Medium/asdf-operator-sdk"
+ripgrep = "https://gitlab.com/wt0f/asdf-ripgrep"
+websocat = "https://github.com/bdellegrazie/asdf-websocat"
+maven = "https://github.com/halcyon/asdf-maven"
+youtube-dl = "https://github.com/iul1an/asdf-youtube-dl"
+linkerd = "https://github.com/kforsthoevel/asdf-linkerd"
+jq = "https://github.com/lsanwick/asdf-jq"
+kubectl = "https://github.com/asdf-community/asdf-kubectl"
+krew = "https://github.com/bjw-s/asdf-krew"
+neovim = "https://github.com/richin13/asdf-neovim"
+kustomize = "https://github.com/Banno/asdf-kustomize"
+packer = "https://github.com/asdf-community/asdf-hashicorp"
+cilium-cli = "https://github.com/carnei-ro/asdf-cilium-cli.git"
+cilium-hubble = "https://github.com/NitriKx/asdf-cilium-hubble.git"
+
+[settings]
+trusted_config_paths = [
+  '$ENV{HOME}/./config/mise/config.toml',
+]

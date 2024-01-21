@@ -13,11 +13,11 @@ function __load_node() {
 
     if [ "${PATH_TO_NVMRC}" != "/" ]; then
       _NODE_VERSION="$(cat "${PATH_TO_NVMRC}/${_NVMRC_FILE}")"
-      _ACTUAL_NODE_VERSION=$(rtx exec node -- node --version | sed 's/^v//')
+      _ACTUAL_NODE_VERSION=$(mise exec node -- node --version | sed 's/^v//')
 
       if [ "$_NODE_VERSION" != "$_ACTUAL_NODE_VERSION" ]; then
 
-        rtx use "node@${_NODE_VERSION}"
+        mise use "node@${_NODE_VERSION}"
       fi
 
       export __NODE_PATH=${PATH_TO_NVMRC}

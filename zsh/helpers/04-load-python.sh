@@ -26,14 +26,14 @@ function __load_python () {
 
     if [ "${PATH_TO_PYRC_FILE}" != '/' ]; then
       _PYTHON_VERSION="$(cat "${PATH_TO_PYRC_FILE}/${_PYRC_VERSION_FILE}")"
-      _ACTUAL_PYTHON_VERSION=$(rtx exec python -- python --version | sed 's/^Python\ //')
+      _ACTUAL_PYTHON_VERSION=$(mise exec python -- python --version | sed 's/^Python\ //')
 
       if [ "$_PYTHON_VERSION" != "$_ACTUAL_PYTHON_VERSION" ]; then
-        rtx use "python@${_PYTHON_VERSION}"
+        mise use "python@${_PYTHON_VERSION}"
       fi
 
-      PYTHON_EXEC=$(rtx which python)
-      PIP_EXEC=$(rtx which pip)
+      PYTHON_EXEC=$(mise which python)
+      PIP_EXEC=$(mise which pip)
 
       if [ ! -d "${PATH_TO_PYRC_FILE}/${_DOT_VENV_DIRECTORY}" ];  then
 

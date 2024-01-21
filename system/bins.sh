@@ -37,13 +37,13 @@ function fzf () {
     --no-fish
 }
 
-function rtx-cli () {
+function mise-cli () {
   local TMP_DIR
 
   TMP_DIR=$(mktemp -d)
 
-  gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys 0x29DDE9E0
-  curl https://rtx.pub/install.sh.sig | gpg --decrypt > "${TMP_DIR}/install.sh"
+  gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys 0x7413A06D
+  curl https://mise.jdx.dev/install.sh.sig | gpg --decrypt > "${TMP_DIR}/install.sh"
   sh "${TMP_DIR}/install.sh"
   rm -Rf "${TMP_DIR}"
 }
@@ -93,7 +93,7 @@ function apple_keyboard () {
 
 function do_it () {
   git_config;
-  rtx-cli;
+  mise-cli;
   fzf;
   rustup;
   ansible;

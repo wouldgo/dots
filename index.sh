@@ -41,9 +41,9 @@ fi
 
 sudo chsh "${USER}" -s "$(command -v zsh)"
 
-echo "Preparing rtx config.toml" && \
-mkdir --parents "${HOME}/.config/rtx" && \
-ln -sf "${CURRENT_DIR}/system/rtx_config.toml" "${HOME}/.config/rtx/config.toml"
+echo "Preparing mise config.toml" && \
+mkdir --parents "${HOME}/.config/mise" && \
+ln -sf "${CURRENT_DIR}/system/mise_config.toml" "${HOME}/.config/mise/config.toml"
 
 echo "Installing extra binaries..." && \
 if ! "${CURRENT_DIR}"/system/bins.sh; then
