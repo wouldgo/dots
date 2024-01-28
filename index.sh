@@ -15,11 +15,11 @@ if ! "${CURRENT_DIR}"/system/dependencies.sh; then
   exit 1;
 fi
 
-echo "Removing workspace shortcuts" && \
-if ! "${CURRENT_DIR}"/system/disable-workspace-keys.sh; then
-  echo "Something went wrong" 2>&1
-  exit 1;
-fi
+# echo "Removing workspace shortcuts" && \
+# if ! "${CURRENT_DIR}"/system/disable-workspace-keys.sh; then
+#   echo "Something went wrong" 2>&1
+#   exit 1;
+# fi
 
 echo "Preparing shell configuration..." && \
 if ! "${CURRENT_DIR}"/zsh/confs/user.sh; then

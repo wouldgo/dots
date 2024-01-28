@@ -1,0 +1,52 @@
+import = ["/home/dario/.nord.toml"]
+
+[colors]
+draw_bold_text_with_bright_colors = true
+
+[cursor]
+blink_interval = 1000
+
+[cursor.style]
+blinking = "Always"
+
+[env]
+TERM = "xterm-256color"
+
+[font]
+size = 18.0
+
+[font.bold]
+family = "UbuntuMono Nerd Font Mono"
+style = "Bold"
+
+[font.bold_italic]
+family = "UbuntuMono Nerd Font Mono"
+style = "Bold Italic"
+
+[font.italic]
+family = "UbuntuMono Nerd Font Mono"
+style = "Italic"
+
+[font.normal]
+family = "UbuntuMono Nerd Font Mono"
+style = "Regular"
+
+[[keyboard.bindings]]
+action = "SpawnNewInstance"
+key = "N"
+mods = "Shift|Control"
+
+[[keyboard.bindings]]
+chars = "\r"
+key = "NumpadEnter"
+
+[window]
+decorations = "full"
+dynamic_title = true
+opacity = 1
+startup_mode = "Windowed"
+title = ""
+
+[window.padding]
+x = 2
+y = 2

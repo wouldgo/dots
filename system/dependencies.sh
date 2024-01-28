@@ -35,7 +35,7 @@ sudo apt install -y \
   pavucontrol \
   kpartx \
   binfmt-support \
-  qemu \
+  qemu-kvm \
   qemu-user-static \
   e2fsprogs \
   dosfstools && \

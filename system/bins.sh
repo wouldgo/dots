@@ -15,7 +15,7 @@ function git_config () {
   git config \
     --global user.name "wouldgo"
   git config \
-    --global user.email would84@gmail.com
+    --global user.email wouldgo84@gmail.com
 }
 
 function fzf () {
@@ -55,9 +55,15 @@ function rustup () {
   rm -Rfv /tmp/rustup.sh
 }
 
+function apple_keyboard () {
+  echo "Apple keyboard workaround" && \
+  echo options hid_apple fnmode=2 | sudo tee -a /etc/modprobe.d/hid_apple.conf && \
+  sudo update-initramfs -u -k all
+}
+
 function ansible () {
-  pip3 install ansible && \
-  pip3 install ansible-lint
+  pip install ansible && \
+  pip install ansible-lint
 }
 
 function alacritty () {
@@ -83,12 +89,7 @@ function alacritty () {
   sudo update-desktop-database && \
 
   cp -v extra/completions/_alacritty "${ZSH_COMPLETION_FOLDER}/_alacritty.zsh"
-}
-
-function apple_keyboard () {
-  echo "Apple keyboard workaround" && \
-  echo options hid_apple fnmode=2 | sudo tee -a /etc/modprobe.d/hid_apple.conf && \
-  sudo update-initramfs -u -k all
+  rm -Rf "${FOLDER}"
 }
 
 function do_it () {
@@ -96,10 +97,9 @@ function do_it () {
   mise-cli;
   fzf;
   rustup;
-  ansible;
 
   if [ "${IS_WSL}" == "NO" ]; then
-    alacritty;
+  #   #alacritty;
 
     if [ "${ENABLE_APPLE_KEYBOARD}" == "YES" ]; then
       apple_keyboard;
@@ -108,3 +108,4 @@ function do_it () {
 }
 
 do_it "$@"
+
