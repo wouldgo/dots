@@ -13,7 +13,7 @@ function __load_go() {
 
     if [ "${PATH_TO_GO_ROOT}" != "/" ]; then
       _GO_VERSION="$(grep -oP '^go\W+(.*)$' "${PATH_TO_GO_ROOT}/${_GOMOD_FILE}" | sed -e 's/go //')"
-      _ACTUAL_GO_VERSION="$(mise exec go -- go version | grep --colour=never -oE '[[:digit:]]+.[[:digit:]]+' | head -n 1)"
+      _ACTUAL_GO_VERSION="$(mise exec go -- go version | grep --colour=never -oE '[[:digit:]]+.[[:digit:]]+.[[:digit:]]*' | head -n 1)"
 
       if [ "$_GO_VERSION" != "$_ACTUAL_GO_VERSION" ]; then
 

@@ -17,6 +17,8 @@ kustomize = "latest"
 packer = "1.9.4"
 cilium-cli = "latest"
 cilium-hubble = "latest"
+minikube = "latest"
+yq = "latest"
 
 [plugins]
 operator-sdk = "https://github.com/Medium/asdf-operator-sdk"

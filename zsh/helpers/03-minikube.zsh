@@ -1,9 +1,12 @@
 #!/usr/bin/env zsh
 
 function __minikube_bootstrap () {
-  if [ $commands[minikube] ]; then
+
+  if [ "$(mise which minikube)" ]; then
+    local MINIKUBE_BIN=$(mise which minikube)
+
     if [ ! -f "${ZSH_COMPLETION_FOLDER}/_minikube.zsh" ]; then
-      minikube completion zsh | tee "${ZSH_COMPLETION_FOLDER}/_minikube.zsh" >/dev/null
+      "${MINIKUBE_BIN}" completion zsh | tee "${ZSH_COMPLETION_FOLDER}/_minikube.zsh" >/dev/null
     fi
   fi
 }
