@@ -1,6 +1,4 @@
-alacritty/nord.yaml
-
-nvim/lua/wouldgo/keybinds.lua
+alacritty/dracula.toml
 
 tmux/tpm-master/
 zsh/antibody
