@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function __ng_bootstrap () {
-  if [ "$(mise which ng > /dev/null 2>&1)" ]; then
+  if [ "$(mise which -q ng 2> /dev/null)" ]; then
     local NG_COMMAND=$(mise which ng)
 
     source <(${NG_COMMAND} completion script)

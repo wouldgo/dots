@@ -1,12 +1,14 @@
 #!/usr/bin/env zsh
 
 function __kubectl_boostrap () {
-  if [ $commands[kubectl] ]; then
-    if [ ! -f "${ZSH_COMPLETION_FOLDER}/_kubectl.zsh" ]; then
-      kubectl completion zsh | tee "${ZSH_COMPLETION_FOLDER}/_kubectl.zsh" >/dev/null
-    fi
+  if [ "$(mise which -q kubectl 2> /dev/null)" ]; then
+    local KUBECTL_BIN=$(mise which kubectl)
 
-    alias k=kubectl
+    alias k="$KUBECTL_BIN"
+
+    if [ ! -f "${ZSH_COMPLETION_FOLDER}/_kubectl.zsh" ]; then
+      "${$KUBECTL_BIN}" completion zsh | tee "${ZSH_COMPLETION_FOLDER}/_kubectl.zsh" >/dev/null
+    fi
   fi
 }
 

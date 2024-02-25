@@ -1,12 +1,10 @@
 #!/usr/bin/env zsh
 
 function __kubectl_krew_boostrap () {
-  if [ $commands[kubectl-krew] ]; then
-    if [ ! -f "${ZSH_COMPLETION_FOLDER}/_kubectl-krew.zsh" ]; then
+  if [ "$(mise which -q krew 2> /dev/null)" ] && [ ! -f "${ZSH_COMPLETION_FOLDER}/_kubectl-krew.zsh" ]; then
+    local KREW_BIN=$(mise which helm)
 
-      kubectl krew completion zsh | tee "${ZSH_COMPLETION_FOLDER}/_kubectl-krew.zsh" >/dev/null
-    fi
-
+    "${KREW_BIN}" completion zsh | tee "${ZSH_COMPLETION_FOLDER}/_kubectl-krew.zsh" >/dev/null
   fi
 }
 

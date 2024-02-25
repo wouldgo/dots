@@ -19,6 +19,8 @@ cilium-cli = "latest"
 cilium-hubble = "latest"
 minikube = "latest"
 yq = "latest"
+eza = "latest"
+helm = "latest"
 
 [plugins]
 operator-sdk = "https://github.com/Medium/asdf-operator-sdk"

@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 function __rg_bootstrap () {
-  if [ "$(mise which rg)" ]; then
+  if [ "$(mise which -q rg 2> /dev/null)" ]; then
     local RG_COMMAND=$(mise which rg)
 
     if [ ! -f "${ZSH_COMPLETION_FOLDER}/_rg.zsh" ]; then

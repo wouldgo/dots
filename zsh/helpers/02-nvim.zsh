@@ -1,18 +1,12 @@
 #!/usr/bin/env zsh
 
 function __nvim_bootstrap () {
-  local NVIM_PATH
-  NVIM_PATH="${HOME}/.nvim"
+  if [ "$(mise which -q nvim 2> /dev/null)" ]; then
+    local NVIM_BIN=$(mise which nvim)
 
-  if [ -d ${NVIM_PATH} ]; then
-    path=(
-      "${NVIM_PATH}"
-      $path)
-    export PATH
+    alias vim="$NVIM_BIN"
+    export EDITOR=$NVIM_BIN
   fi
-
-  alias vim=nvim
-  export EDITOR=nvim
 }
 
 __nvim_bootstrap "$@"
