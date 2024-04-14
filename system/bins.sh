@@ -16,6 +16,8 @@ function git_config () {
     --global user.name "wouldgo"
   git config \
     --global user.email wouldgo84@gmail.com
+  git config \
+    --global rerere.enabled true
 }
 
 function fzf () {
@@ -108,4 +110,3 @@ function do_it () {
 }
 
 do_it "$@"
-

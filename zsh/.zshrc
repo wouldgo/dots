@@ -31,7 +31,7 @@ autoload -U +X bashcompinit && bashcompinit
 autoload -U +X compinit && compinit
 
 #customizations
-eval `dircolors ${CONFS_FOLDER}/colors/dracula-dircolors`
+eval `dircolors ${CONFS_FOLDER}/colors/gruvbox.dircolors`
 for FILE in `ls ${CONFS_FOLDER}/helpers/*.{zsh,sh} | sort -g`; do
 
   source ${FILE}

@@ -43,3 +43,4 @@ cilium-hubble = "https://github.com/NitriKx/asdf-cilium-hubble.git"
 trusted_config_paths = [
   '$ENV{HOME}/./config/mise/config.toml',
 ]
+experimental = true
