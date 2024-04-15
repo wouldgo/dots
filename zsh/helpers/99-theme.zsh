@@ -1,5 +1,13 @@
 #!/usr/bin/env zsh
 
+__THEME_RED='#cc241d'
+__THEME_GREEN='#98971a'
+__THEME_YELLOW='#d79921'
+__THEME_BLUE='#458588'
+__THEME_PURPLE='#b16286'
+__THEME_AQUA='#689d6a'
+__THEME_ORANGE='#d65d0e'
+
 # Separators
 __OPEN_SEPARATOR='\ue0b6'
 __CLOSE_SEPARATOR='\ue0b4'
@@ -18,7 +26,7 @@ __THEME_NVM_PREFIX="\ue718"
 
 # Go
 __THEME_GO_FG=black
-__THEME_GO_BG=cyan
+__THEME_GO_BG=blue
 __THEME_GO_PREFIX="\ue627"
 
 # Rust
@@ -28,17 +36,17 @@ __THEME_RUST_PREFIX="\ue68b"
 
 # Kubernetes Context
 __THEME_KCTX_FG=black
-__THEME_KCTX_BG=blue
+__THEME_KCTX_BG=cyan
 __THEME_KCTX_PREFIX="󱃾"
 
 # PYTHON
 __THEME_PYTHON_FG=black
-__THEME_PYTHON_BG=yellow
+__THEME_PYTHON_BG=${__THEME_AQUA}
 __THEME_PYTHON_PREFIX="\ue606"
 
 # DIR
 __THEME_DIR_FG=black
-__THEME_DIR_BG=green
+__THEME_DIR_BG=${__THEME_ORANGE}
 __THEME_DIR_EXTENDED=1
 
 # GIT
