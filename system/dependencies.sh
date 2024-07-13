@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 sudo apt install -y \
+  zsh \
   ttf-ancient-fonts \
   wget \
   curl \

@@ -7,7 +7,7 @@ function __kubectl_boostrap () {
     alias k="$KUBECTL_BIN"
 
     if [ ! -f "${ZSH_COMPLETION_FOLDER}/_kubectl.zsh" ]; then
-      "${$KUBECTL_BIN}" completion zsh | tee "${ZSH_COMPLETION_FOLDER}/_kubectl.zsh" >/dev/null
+      "${KUBECTL_BIN}" completion zsh | tee "${ZSH_COMPLETION_FOLDER}/_kubectl.zsh" > /dev/null
     fi
   fi
 }

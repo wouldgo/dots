@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function __load_node() {
-  if [ "${IS_WSL}" == "NO" ]; then
+  if [ "${IS_WSL}" ]; then
     local _NVMRC_FILE
     local PATH_TO_NVMRC
 

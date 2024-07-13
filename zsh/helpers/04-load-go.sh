@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function __load_go() {
-  if [ "${IS_WSL}" == "NO" ]; then
+  if [ "${IS_WSL}" ]; then
     local _GOMOD_FILE
     local PATH_TO_GO_ROOT
 

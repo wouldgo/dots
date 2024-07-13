@@ -22,6 +22,9 @@ yq = "latest"
 eza = "latest"
 helm = "latest"
 terraform = "latest"
+usage = "latest"
+kubectx = "latest"
+zoxide = "latest"
 
 [plugins]
 operator-sdk = "https://github.com/Medium/asdf-operator-sdk"

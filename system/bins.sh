@@ -4,9 +4,9 @@ ENABLE_APPLE_KEYBOARD="NO"
 
 KERNEL_RELEASE=$(uname --kernel-release)
 WINDOWS_SUBSYSTEM_LINUX='WSL'
-IS_WSL="NO"
+IS_WSL=0
 if [[ $KERNEL_RELEASE == *"${WINDOWS_SUBSYSTEM_LINUX}"* ]]; then
-  IS_WSL="YES"
+  IS_WSL=1
 fi
 
 function git_config () {
@@ -73,7 +73,7 @@ function alacritty () {
   local WITCH
 
   FOLDER=${HOME}/git/alacritty
-  WITCH=$(loginctl show-session 2 -p Type | sed 's/^Type=//')
+  WITCH=$(loginctl show-session $(loginctl | grep "$USER" | awk '{print $1}') -p Type | sed 's/^Type=//')
 
   git clone https://github.com/alacritty/alacritty.git "${FOLDER}" && \
   cd "${FOLDER}" && \
@@ -90,18 +90,18 @@ function alacritty () {
   sudo desktop-file-install "${FOLDER}/extra/linux/Alacritty.desktop" && \
   sudo update-desktop-database && \
 
-  cp -v extra/completions/_alacritty "${ZSH_COMPLETION_FOLDER}/_alacritty.zsh"
-  rm -Rf "${FOLDER}"
+  cp -v "${FOLDER}/extra/completions/_alacritty" "${ZSH_COMPLETION_FOLDER}/_alacritty.zsh"
 }
 
 function do_it () {
   git_config;
   mise-cli;
+  ansible;
   fzf;
   rustup;
 
-  if [ "${IS_WSL}" == "NO" ]; then
-  #   #alacritty;
+  if [ ${IS_WSL} ]; then
+    alacritty;
 
     if [ "${ENABLE_APPLE_KEYBOARD}" == "YES" ]; then
       apple_keyboard;

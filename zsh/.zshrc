@@ -6,9 +6,9 @@ ZSH_CACHE_DIR="${HOME}/.zsh/_cache"
 ZSH_COMPLETION_FOLDER=${HOME}/.zsh/completion
 KERNEL_RELEASE=$(uname --kernel-release)
 WINDOWS_SUBSYSTEM_LINUX='WSL'
-IS_WSL="NO"
+IS_WSL=0
 if [[ $KERNEL_RELEASE == *"${WINDOWS_SUBSYSTEM_LINUX}"* ]]; then
-  IS_WSL="YES"
+  IS_WSL=1
 fi
 
 HISTSIZE=1000

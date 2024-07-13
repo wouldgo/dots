@@ -3,7 +3,7 @@
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 function __load_python () {
-  if [ "${IS_WSL}" == "NO" ]; then
+  if [ "${IS_WSL}" ]; then
     local _REQUIREMENTS_FILE
     local _PYRC_VERSION_FILE
     local _DOT_VENV_DIRECTORY
