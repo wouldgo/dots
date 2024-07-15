@@ -30,6 +30,10 @@ function do_it () {
   ln -sf "${CURRENT_DIR}/system/mise_config.toml" "${HOME}/.config/mise/config.toml"
 
   "${CURRENT_DIR}/zsh/colors/index.sh"
+  "${CURRENT_DIR}/alacritty/confs/user.sh"
+
+  mkdir --parents "${HOME}/.omp"
+  curl -s https://ohmyposh.dev/install.sh | bash -s -- -d "${HOME}/.omp"
 }
 
 do_it "$@"

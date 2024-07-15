@@ -1,6 +1,7 @@
 #zmodload zsh/zprof
 
-CONFS_FOLDER="${HOME}/git/dots/zsh"
+DOTS_FOLDER="${HOME}/git/dots"
+CONFS_FOLDER="${DOTS_FOLDER}/zsh"
 HISTSIZE=5000
 SAVEHIST=$HISTSIZE
 HISTFILE="${HOME}/.zsh_history"
@@ -52,6 +53,8 @@ autoload -U +X bashcompinit && bashcompinit
 autoload -Uz compinit && compinit
 
 zinit cdreplay -q
+
+eval "$(${HOME}/.omp/oh-my-posh init zsh --config ${DOTS_FOLDER}/omp.yaml )"
 
 autoload -Uz add-zsh-hook
 
