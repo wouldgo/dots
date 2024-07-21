@@ -25,6 +25,7 @@ terraform = "latest"
 usage = "latest"
 kubectx = "latest"
 zoxide = "latest"
+tmux = "latest"
 
 [plugins]
 operator-sdk = "https://github.com/Medium/asdf-operator-sdk"

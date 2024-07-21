@@ -34,6 +34,11 @@ function do_it () {
 
   mkdir --parents "${HOME}/.omp"
   curl -s https://ohmyposh.dev/install.sh | bash -s -- -d "${HOME}/.omp"
+
+  git clone https://github.com/tmux-plugins/tpm.git "${HOME}/.tmux/plugins/tmux"
+
+  #link tmux.conf
+  "${HOME}/.tmux/plugins/tpm/bin/install_plugins"
 }
 
 do_it "$@"

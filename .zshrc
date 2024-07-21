@@ -54,8 +54,6 @@ autoload -Uz compinit && compinit
 
 zinit cdreplay -q
 
-eval "$(${HOME}/.omp/oh-my-posh init zsh --config ${DOTS_FOLDER}/omp.yaml )"
-
 autoload -Uz add-zsh-hook
 
 compdef __pnpm_completion pnpm
