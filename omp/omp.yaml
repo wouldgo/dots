@@ -1,0 +1,95 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
+final_space: true
+version: 2
+console_title_template: '{{ .AbsolutePWD }}{{if .Root}} :: root{{end}} :: {{.Shell}}'
+blocks:
+  -
+    type: prompt
+    alignment: left
+    segments:
+      -
+        type: path
+        style: plain
+        foreground: '#d65d0e'
+        background: transparent
+        template: '{{ .Path }}'
+        properties:
+          style: full
+      -
+        type: git
+        style: plain
+        foreground: green
+        background: transparent
+        template: " {{ .Ref }}{{ if .Working.Changed }} :: {{ if gt .Behind 0 }}⇣ {{ .Behind }}{{ end }}{{ if gt .Ahead 0 }}⇡ {{ .Ahead }}{{ end }}{{ if gt .Working.Unmerged 0 }} {{ .Working.Unmerged }}{{ end }}{{ if gt .Working.Deleted 0 }}✖ {{ .Working.Deleted }}{{ end }}{{ if gt .Working.Added 0 }}✚ {{ .Working.Added }}{{ end }}{{ if gt .Working.Modified 0 }}✹ {{ .Working.Modified }}{{ end }}{{ if gt .Working.Untracked 0 }}✭ {{ .Working.Untracked }}{{ end }}{{ end }}"
+        properties:
+          fetch_status: true
+          fetch_upstream_icon: true
+          source: cli
+      -
+        type: status
+        style: plain
+        background: transparent
+        foreground_templates:
+          - "{{if .Error }}red{{end}}"
+        template: '{{if gt .Code 0}}  {{ .Code }}{{end}}'
+      -
+        type: executiontime
+        style: plain
+        foreground: yellow
+        background: transparent
+        template: ' {{ .FormattedMs }}'
+        properties:
+          threshold: 5000
+  -
+    type: prompt
+    alignment: right
+    segments:
+      -
+        type: go
+        style: plain
+        foreground: cyan
+        background: transparent
+        template: " \ue627 {{ .Full }}"
+      -
+        type: node
+        style: plain
+        foreground: green
+        background: transparent
+        template: " \ue718 {{ .Full }}"
+      -
+        type: python
+        style: plain
+        foreground: '#689d6a'
+        background: transparent
+        template: " \ue606 {{ .Full }}"
+      -
+        type: rust
+        style: plain
+        foreground: red
+        background: transparent
+        template: " \ue68b {{ .Full }}"
+      -
+        type: java
+        style: plain
+        foreground: white
+        background: transparent
+        template: " \ue738 {{ .Full }}"
+      -
+        type: kubectl
+        style: plain
+        foreground: black
+        background: cyan
+        template: " 󱃾 {{.Context}}{{if .Namespace}}:{{.Namespace}}{{end}} "
+  -
+    type: prompt
+    alignment: left
+    newline: true
+    segments:
+      -
+        type: os
+        style: plain
+        foreground: white
+        background: transparent
+        template: "{{ if .WSL }}WSL at {{ end }}{{.Icon}} "
+# transient_prompt:
+# secondary_prompt:
