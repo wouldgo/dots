@@ -16,27 +16,31 @@ function do_it () {
     exit 1;
   fi
 
-  "${CURRENT_DIR}/system/bins.sh"
+  echo "Installing mandatory binaries" && \
+  if ! "${CURRENT_DIR}/system/bins.sh"; then
+    echo "Something went wrong" 2>&1
+    exit 1;
+  fi
 
-  chsh "${USER}" -s "$(command -v zsh)"
-
-  ln -s "${CURRENT_DIR}/zsh/.zshrc" "${HOME}/.zshrc"
+  echo "Configuring zsh" && \
+  if ! "${CURRENT_DIR}/zsh/index.sh"; then
+    echo "Something went wrong" 2>&1
+    exit 1;
+  fi
 
   echo "Preparing mise config.toml" && \
   mkdir --parents "${HOME}/.config/mise" && \
   ln -sf "${CURRENT_DIR}/system/mise_config.toml" "${HOME}/.config/mise/config.toml"
 
-  "${CURRENT_DIR}/zsh/colors/index.sh"
-  "${CURRENT_DIR}/alacritty/confs/user.sh"
+  if ! "${CURRENT_DIR}/alacritty/index.sh"; then
+    echo "Something went wrong" 2>&1
+    exit 1;
+  fi
 
-  mkdir --parents "${HOME}/.omp"
-  curl -s https://ohmyposh.dev/install.sh | bash -s -- -d "${HOME}/.omp"
-  git clone https://github.com/tmux-plugins/tpm.git "${HOME}/.tmux/plugins/tmux"
-
-  ln -s "${CURRENT_DIR}/tmux/.tmux.conf" "${HOME}/.tmux.conf"
-  "${HOME}/.tmux/plugins/tpm/bin/install_plugins"
-
-  "${HOME}/.omp/oh-my-posh" font install 'UbuntuMono'
+  if ! "${CURRENT_DIR}/tmux/index.sh"; then
+    echo "Something went wrong" 2>&1
+    exit 1;
+  fi
 }
 
 do_it "$@"

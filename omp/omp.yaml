@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
 final_space: true
 version: 2
-console_title_template: '{{ .AbsolutePWD }}{{if .Root}} :: root{{end}} :: {{.Shell}}'
+console_title_template: '{{ .AbsolutePWD }}{{if .Root}}::root{{end}}::{{.Shell}}'
 blocks:
   -
     type: prompt
@@ -20,7 +20,7 @@ blocks:
         style: plain
         foreground: green
         background: transparent
-        template: " {{ .Ref }}{{ if .Working.Changed }} :: {{ if gt .Behind 0 }}⇣ {{ .Behind }}{{ end }}{{ if gt .Ahead 0 }}⇡ {{ .Ahead }}{{ end }}{{ if gt .Working.Unmerged 0 }} {{ .Working.Unmerged }}{{ end }}{{ if gt .Working.Deleted 0 }}✖ {{ .Working.Deleted }}{{ end }}{{ if gt .Working.Added 0 }}✚ {{ .Working.Added }}{{ end }}{{ if gt .Working.Modified 0 }}✹ {{ .Working.Modified }}{{ end }}{{ if gt .Working.Untracked 0 }}✭ {{ .Working.Untracked }}{{ end }}{{ end }}"
+        template: " {{ .Ref }}{{ if .Working.Changed }}::{{ if gt .Behind 0 }}⇣ {{ .Behind }}{{ end }}{{ if gt .Ahead 0 }}⇡ {{ .Ahead }}{{ end }}{{ if gt .Working.Unmerged 0 }} {{ .Working.Unmerged }}{{ end }}{{ if gt .Working.Deleted 0 }}✖ {{ .Working.Deleted }}{{ end }}{{ if gt .Working.Added 0 }}✚ {{ .Working.Added }}{{ end }}{{ if gt .Working.Modified 0 }}✹ {{ .Working.Modified }}{{ end }}{{ if gt .Working.Untracked 0 }}✭ {{ .Working.Untracked }}{{ end }}{{ end }}"
         properties:
           fetch_status: true
           fetch_upstream_icon: true
@@ -90,6 +90,6 @@ blocks:
         style: plain
         foreground: white
         background: transparent
-        template: "{{ if .WSL }}WSL at {{ end }}{{.Icon}} "
+        template: "\uF17C{{ if .WSL }} ::\uE62A{{ end }}"
 # transient_prompt:
 # secondary_prompt:
