@@ -86,10 +86,18 @@ blocks:
     newline: true
     segments:
       -
-        type: os
+        type: text
         style: plain
         foreground: white
         background: transparent
-        template: "\uF17C{{ if .WSL }} ::\uE62A{{ end }}"
-# transient_prompt:
-# secondary_prompt:
+        template: "❱"
+secondary_prompt:
+  foreground: white
+  background: transparent
+  template: '❱❱ '
+transient_prompt:
+  background: transparent
+  foreground_templates:
+    - "{{if gt .Code 0}}red{{end}}"
+    - "{{if eq .Code 0}}white{{end}}"
+  template: "❱ a "
