@@ -1,7 +1,5 @@
 alacritty/gruvbox_dark.toml
 
 tmux/tpm-master/
-zsh/antibody
-zsh/zsh_plugins.sh
 zsh/colors/*
 !zsh/colors/index.sh

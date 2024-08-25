@@ -46,7 +46,6 @@ zinit snippet OMZP::kubectx
 
 zinit snippet https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/lib/history.zsh
 zinit snippet https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/lib/grep.zsh
-zinit snippet https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/lib/key-bindings.zsh
 
 # completions
 fpath+=( "${ZSH_COMPLETION_FOLDER}" )
