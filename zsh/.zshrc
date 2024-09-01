@@ -31,21 +31,8 @@ for FILE in `ls ${CONFS_FOLDER}/helpers/*.{zsh,sh} | sort -g`; do
   #echo "${FILE} loaded."
 done
 
-zinit light zsh-users/zsh-syntax-highlighting
-zinit light zsh-users/zsh-completions
-zinit light zsh-users/zsh-autosuggestions
-zinit light Aloxaf/fzf-tab
-zinit light BreakingPitt/zsh-packer
-zinit light StackExchange/blackbox
-
-zinit snippet OMZP::ansible
-zinit snippet OMZP::command-not-found
-zinit snippet OMZP::git
-zinit snippet OMZP::sudo
-zinit snippet OMZP::kubectx
-
-zinit snippet https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/lib/history.zsh
-zinit snippet https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/lib/grep.zsh
+source "${CONFS_FOLDER}/zinit/light.sh"
+source "${CONFS_FOLDER}/zinit/snippet.sh"
 
 # completions
 fpath+=( "${ZSH_COMPLETION_FOLDER}" )
