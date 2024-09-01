@@ -16,22 +16,22 @@ blocks:
         properties:
           style: full
       -
-        type: git
-        style: plain
-        foreground: green
-        background: transparent
-        template: " {{ .Ref }}{{ if .Working.Changed }}::{{ if gt .Behind 0 }}⇣ {{ .Behind }}{{ end }}{{ if gt .Ahead 0 }}⇡ {{ .Ahead }}{{ end }}{{ if gt .Working.Unmerged 0 }} {{ .Working.Unmerged }}{{ end }}{{ if gt .Working.Deleted 0 }}✖ {{ .Working.Deleted }}{{ end }}{{ if gt .Working.Added 0 }}✚ {{ .Working.Added }}{{ end }}{{ if gt .Working.Modified 0 }}✹ {{ .Working.Modified }}{{ end }}{{ if gt .Working.Untracked 0 }}✭ {{ .Working.Untracked }}{{ end }}{{ end }}"
-        properties:
-          fetch_status: true
-          fetch_upstream_icon: true
-          source: cli
-      -
         type: status
         style: plain
         background: transparent
         foreground_templates:
           - "{{if .Error }}red{{end}}"
-        template: '{{if gt .Code 0}}  {{ .Code }}{{end}}'
+        template: '{{if gt .Code 0}} {{ .Code }}{{end}}'
+      -
+        type: git
+        style: plain
+        foreground: blue
+        background: transparent
+        template: " {{ .HEAD }}{{ if .Working.Changed }} {{ if gt .Behind 0 }}⇣ {{ .Behind }}{{ end }}{{ if gt .Ahead 0 }}⇡ {{ .Ahead }}{{ end }}{{ if gt .Working.Unmerged 0 }} {{ .Working.Unmerged }}{{ end }}{{ if gt .Working.Deleted 0 }}✖ {{ .Working.Deleted }}{{ end }}{{ if gt .Working.Added 0 }}✚ {{ .Working.Added }}{{ end }}{{ if gt .Working.Modified 0 }}✹ {{ .Working.Modified }}{{ end }}{{ if gt .Working.Untracked 0 }}✭ {{ .Working.Untracked }}{{ end }}{{ end }}"
+        properties:
+          fetch_status: true
+          fetch_upstream_icon: true
+          source: cli
       -
         type: executiontime
         style: plain
