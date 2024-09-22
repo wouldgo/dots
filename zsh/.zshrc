@@ -28,11 +28,19 @@ eval `dircolors ${CONFS_FOLDER}/colors/gruvbox.dircolors`
 for FILE in `ls ${CONFS_FOLDER}/helpers/*.{zsh,sh} | sort -g`; do
 
   source ${FILE}
-  #echo "${FILE} loaded."
+  #echo "helper ${FILE} loaded."
 done
 
-source "${CONFS_FOLDER}/zinit/light.sh"
-source "${CONFS_FOLDER}/zinit/snippet.sh"
+for FILE in `ls ${CONFS_FOLDER}/zinit/_setup/*.sh | sort -g`; do
+  source ${FILE}
+  echo "zinit setup ${FILE} loaded"
+done
+
+for FILE in `ls ${CONFS_FOLDER}/zinit/config/*.zsh | sort -g`; do
+
+  source ${FILE}
+  echo "zinit config ${FILE} loaded."
+done
 
 # completions
 fpath+=( "${ZSH_COMPLETION_FOLDER}" )
@@ -42,8 +50,6 @@ autoload -Uz compinit && compinit
 zinit cdreplay -q
 
 autoload -Uz add-zsh-hook
-
-compdef __pnpm_completion pnpm
 
 # completion styling
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
