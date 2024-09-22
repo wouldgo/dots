@@ -33,13 +33,13 @@ done
 
 for FILE in `ls ${CONFS_FOLDER}/zinit/_setup/*.sh | sort -g`; do
   source ${FILE}
-  echo "zinit setup ${FILE} loaded"
+  #echo "zinit setup ${FILE} loaded"
 done
 
 for FILE in `ls ${CONFS_FOLDER}/zinit/config/*.zsh | sort -g`; do
 
   source ${FILE}
-  echo "zinit config ${FILE} loaded."
+  #echo "zinit config ${FILE} loaded."
 done
 
 # completions
