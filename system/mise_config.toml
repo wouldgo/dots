@@ -26,6 +26,7 @@ usage = "latest"
 kubectx = "latest"
 zoxide = "latest"
 tmux = "latest"
+opentofu = "latest"
 
 [plugins]
 operator-sdk = "https://github.com/Medium/asdf-operator-sdk"
