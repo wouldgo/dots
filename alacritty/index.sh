@@ -8,6 +8,9 @@ function do_it () {
 
   ln -s "${CURRENT_DIR}/gruvbox_dark.toml" "${HOME}/.gruvbox_dark.toml"
   ln -s "${CURRENT_DIR}/alacritty.toml" "${HOME}/.alacritty.toml"
+
+  ln -s "${CURRENT_DIR}/gruvbox_dark.toml" "%APPDATA%\alacritty\.gruvbox_dark.toml"
+  ln -s "${CURRENT_DIR}/alacritty.toml" "%APPDATA%\alacritty\alacritty.toml"
 }
 
 do_it "$@"

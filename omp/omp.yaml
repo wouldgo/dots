@@ -77,9 +77,9 @@ blocks:
       -
         type: kubectl
         style: plain
-        foreground: black
-        background: cyan
-        template: " 󱃾 {{.Context}}{{if .Namespace}}:{{.Namespace}}{{end}} "
+        foreground: darkGray
+        background: transparent
+        template: " \uf4b7 {{.Context}}{{if .Namespace}}:{{.Namespace}}{{end}}"
   -
     type: prompt
     alignment: left

@@ -6,3 +6,5 @@ function do_it () {
 
   wget -O "${CURRENT_DIR}/gruvbox.dircolors" https://raw.githubusercontent.com/twisty/dotfiles/master/gruvbox.dircolors
 }
+
+do_it "$@"

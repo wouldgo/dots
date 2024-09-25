@@ -41,10 +41,10 @@ chars = "\r"
 key = "NumpadEnter"
 
 [window]
-decorations = "full"
+decorations = "Full"
 dynamic_title = true
 opacity = 1
-startup_mode = "Windowed"
+startup_mode = "Fullscreen"
 title = ""
 
 [window.padding]
