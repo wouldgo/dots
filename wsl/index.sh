@@ -4,11 +4,11 @@ function do_it () {
 
   CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
 
-  cat "-- ORIGINAL --"
+  echo "-- ORIGINAL --"
   printf "\r\n"
   cat "/etc/wsl.conf"
   printf "\r\n"
-  cat "-- OWN --"
+  echo "-- OWN --"
   printf "\r\n"
   cat "${CURRENT_DIR}/wsl.conf"
 
