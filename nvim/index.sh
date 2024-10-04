@@ -7,7 +7,7 @@ function do_it () {
   CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
   NVIM_HOME="${HOME}/.config/nvim"
 
-  ln -s "${CURRENT_DIR}" "${NVIM_HOME}"
+  ln -fs "${CURRENT_DIR}" "${NVIM_HOME}"
 }
 
 do_it "$@"
