@@ -46,40 +46,52 @@ blocks:
     segments:
       -
         type: go
-        style: plain
-        foreground: cyan
-        background: transparent
-        template: " \ue627 {{ .Full }}"
+        style: diamond
+        leading_diamond: "\ue0b6"
+        trailing_diamond: "\ue0b4"
+        foreground: black
+        background: cyan
+        template: "\ue627 {{ .Full }}"
       -
         type: node
-        style: plain
-        foreground: green
-        background: transparent
-        template: " \ue718 {{ .Full }}"
+        style: diamond
+        leading_diamond: "\ue0b6"
+        trailing_diamond: "\ue0b4"
+        foreground: black
+        background: green
+        template: "\ue718 {{ .Full }}"
       -
         type: python
-        style: plain
-        foreground: '#689d6a'
-        background: transparent
-        template: " \ue606 {{ .Full }}"
+        style: diamond
+        leading_diamond: "\ue0b6"
+        trailing_diamond: "\ue0b4"
+        foreground: black
+        background: '#689d6a'
+        template: "\ue606 {{ .Full }}"
       -
         type: rust
-        style: plain
-        foreground: red
-        background: transparent
-        template: " \ue68b {{ .Full }}"
+        style: diamond
+        leading_diamond: "\ue0b6"
+        trailing_diamond: "\ue0b4"
+        foreground: black
+        background: red
+        template: "\ue68b {{ .Full }}"
       -
         type: java
-        style: plain
-        foreground: white
-        background: transparent
-        template: " \ue738 {{ .Full }}"
+        style: diamond
+        leading_diamond: "\ue0b6"
+        trailing_diamond: "\ue0b4"
+        foreground: black
+        background: yellow
+        template: "\ue738 {{ .Full }}"
       -
         type: kubectl
-        style: plain
-        foreground: darkGray
-        background: transparent
-        template: " \uf4b7 {{.Context}}{{if .Namespace}}:{{.Namespace}}{{end}}"
+        style: diamond
+        leading_diamond: "\ue0b6"
+        trailing_diamond: "\ue0b4"
+        foreground: black
+        background: blue
+        template: "\uf4b7 {{.Context}}{{if .Namespace}}:{{.Namespace}}{{end}}"
   -
     type: prompt
     alignment: left
