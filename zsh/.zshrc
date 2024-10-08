@@ -36,10 +36,10 @@ for FILE in `ls ${CONFS_FOLDER}/zinit/_setup/*.sh | sort -g`; do
   #echo "zinit setup ${FILE} loaded"
 done
 
-for FILE in `ls ${CONFS_FOLDER}/zinit/config/*.zsh | sort -g`; do
+for FILE in `ls ${CONFS_FOLDER}/keybindings/*.zsh | sort -g`; do
 
   source ${FILE}
-  #echo "zinit config ${FILE} loaded."
+  #echo "config ${FILE} loaded."
 done
 
 # completions

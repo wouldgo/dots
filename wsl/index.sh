@@ -11,6 +11,7 @@ function do_it () {
   echo "-- OWN --"
   printf "\r\n"
   cat "${CURRENT_DIR}/wsl.conf"
+  printf "\r\n"
 
   read -rp "Continue? (Y/N): " confirm && [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]] || exit 1
 
