@@ -27,7 +27,7 @@ blocks:
         style: plain
         foreground: blue
         background: transparent
-        template: " {{ .HEAD }}\u007C{{ if .Working.Changed }}{{ if gt .Behind 0 }}\ueb6e{{ .Behind }} {{ end }}{{ if gt .Ahead 0 }}\ueb71{{ .Ahead }} {{ end }}{{ if gt .Working.Unmerged 0 }}\uebd9{{ .Working.Unmerged }} {{ end }}{{ if gt .Working.Deleted 0 }}\uea81{{ .Working.Deleted }} {{ end }}{{ if gt .Working.Added 0 }}\uea7f{{ .Working.Added }} {{ end }}{{ if gt .Working.Modified 0 }}\uea73{{ .Working.Modified }} {{ end }}{{ if gt .Working.Untracked 0 }}\uea7f{{ .Working.Untracked }} {{ end }}{{ end }}"
+        template: " {{ .HEAD }}{{ if .Working.Changed }}\u007C{{ if gt .Behind 0 }}\uea9d {{ .Behind }}\u007C{{ end }}{{ if gt .Ahead 0 }}\ueaa0 {{ .Ahead }}\u007C{{ end }}{{ if gt .Working.Unmerged 0 }}\uebd9 {{ .Working.Unmerged }}\u007C{{ end }}{{ if gt .Working.Deleted 0 }}\uea81 {{ .Working.Deleted }}\u007C{{ end }}{{ if gt .Working.Added 0 }}\uea7f {{ .Working.Added }}\u007C{{ end }}{{ if gt .Working.Modified 0 }}\uea73 {{ .Working.Modified }}\u007C{{ end }}{{ if gt .Working.Untracked 0 }}\uea6a {{ .Working.Untracked }}\u007C{{ end }}{{ end }}"
         properties:
           fetch_status: true
           fetch_upstream_icon: true
