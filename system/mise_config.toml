@@ -1,6 +1,6 @@
 [tools]
 node = "latest"
-go = "latest"
+go = "1.22.3"
 operator-sdk = "latest"
 ripgrep = "latest"
 websocat = "latest"
