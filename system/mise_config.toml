@@ -28,6 +28,7 @@ zoxide = "latest"
 tmux = "latest"
 opentofu = "latest"
 bat = "latest"
+"cargo:binsider" = "latest"
 
 [plugins]
 operator-sdk = "https://github.com/Medium/asdf-operator-sdk"
