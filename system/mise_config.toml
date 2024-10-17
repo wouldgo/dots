@@ -1,6 +1,6 @@
 [tools]
 node = "latest"
-go = "1.22.3"
+go = "latest"
 operator-sdk = "latest"
 ripgrep = "latest"
 websocat = "latest"
@@ -28,7 +28,6 @@ zoxide = "latest"
 tmux = "latest"
 opentofu = "latest"
 bat = "latest"
-"cargo:binsider" = "latest"
 
 [plugins]
 operator-sdk = "https://github.com/Medium/asdf-operator-sdk"
