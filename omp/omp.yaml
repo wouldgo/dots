@@ -1,115 +1,120 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
+version: 3
 final_space: true
-version: 2
-console_title_template: '{{ .AbsolutePWD }}{{if .Root}}::root{{end}}::{{.Shell}}'
+console_title_template: "{{ .AbsolutePWD }}{{if .Root}}::root{{end}}::{{.Shell}}"
 blocks:
-  -
-    type: prompt
-    alignment: left
-    segments:
-      -
-        type: path
-        style: plain
-        foreground: '#d65d0e'
-        background: transparent
-        template: '{{ .Path }}'
-        properties:
-          style: full
-      -
-        type: status
-        style: plain
-        background: transparent
-        foreground_templates:
-          - "{{if .Error }}red{{end}}"
-        template: '{{if gt .Code 0}} {{ .Code }}{{end}}'
-      -
-        type: git
-        style: plain
-        foreground: blue
-        background: transparent
-        template: " {{ .HEAD }}{{ if .Working.Changed }}\u007C{{ if gt .Behind 0 }}\uea9d {{ .Behind }}\u007C{{ end }}{{ if gt .Ahead 0 }}\ueaa0 {{ .Ahead }}\u007C{{ end }}{{ if gt .Working.Unmerged 0 }}\uebd9 {{ .Working.Unmerged }}\u007C{{ end }}{{ if gt .Working.Deleted 0 }}\uea81 {{ .Working.Deleted }}\u007C{{ end }}{{ if gt .Working.Added 0 }}\uea7f {{ .Working.Added }}\u007C{{ end }}{{ if gt .Working.Modified 0 }}\uea73 {{ .Working.Modified }}\u007C{{ end }}{{ if gt .Working.Untracked 0 }}\uea6a {{ .Working.Untracked }}\u007C{{ end }}{{ end }}"
-        properties:
-          fetch_status: true
-          fetch_upstream_icon: true
-          source: cli
-      -
-        type: executiontime
-        style: plain
-        foreground: yellow
-        background: transparent
-        template: ' {{ .FormattedMs }}'
-        properties:
-          threshold: 5000
-  -
-    type: prompt
-    alignment: right
-    segments:
-      -
-        type: go
-        style: diamond
-        leading_diamond: "\ue0b6"
-        trailing_diamond: "\ue0b4"
-        foreground: black
-        background: cyan
-        template: "\ue627 {{ .Full }}"
-      -
-        type: node
-        style: diamond
-        leading_diamond: "\ue0b6"
-        trailing_diamond: "\ue0b4"
-        foreground: black
-        background: green
-        template: "\ue718 {{ .Full }}"
-      -
-        type: python
-        style: diamond
-        leading_diamond: "\ue0b6"
-        trailing_diamond: "\ue0b4"
-        foreground: black
-        background: '#689d6a'
-        template: "\ue606 {{ .Full }}"
-      -
-        type: rust
-        style: diamond
-        leading_diamond: "\ue0b6"
-        trailing_diamond: "\ue0b4"
-        foreground: black
-        background: red
-        template: "\ue68b {{ .Full }}"
-      -
-        type: java
-        style: diamond
-        leading_diamond: "\ue0b6"
-        trailing_diamond: "\ue0b4"
-        foreground: black
-        background: yellow
-        template: "\ue738 {{ .Full }}"
-      -
-        type: kubectl
-        style: diamond
-        leading_diamond: "\ue0b6"
-        trailing_diamond: "\ue0b4"
-        foreground: black
-        background: blue
-        template: "\uf4b7 {{.Context}}{{if .Namespace}}:{{.Namespace}}{{end}}"
-  -
-    type: prompt
-    alignment: left
-    newline: true
-    segments:
-      -
-        type: text
-        style: plain
-        foreground: white
-        background: transparent
-        template: "❱"
+- type: prompt
+  alignment: left
+  segments:
+  - properties:
+      cache_duration: none
+      style: full
+    template: "{{ .Path }}"
+    foreground: "#d65d0e"
+    background: transparent
+    type: path
+    style: plain
+  - properties:
+      cache_duration: none
+    template: "{{if gt .Code 0}} {{ .Code }}{{end}}"
+    background: transparent
+    type: status
+    style: plain
+    foreground_templates:
+    - "{{if .Error }}red{{end}}"
+  - properties:
+      cache_duration: none
+      fetch_status: true
+      fetch_upstream_icon: true
+      source: cli
+    template: " {{ .HEAD }}{{ if .Working.Changed }}|{{ if gt .Behind 0 }}\uea9d {{ .Behind }}|{{ end }}{{ if gt .Ahead 0 }}\ueaa0 {{ .Ahead }}|{{ end }}{{ if gt .Working.Unmerged 0 }}\uebd9 {{ .Working.Unmerged }}|{{ end }}{{ if gt .Working.Deleted 0 }}\uea81 {{ .Working.Deleted }}|{{ end }}{{ if gt .Working.Added 0 }}\uea7f {{ .Working.Added }}|{{ end }}{{ if gt .Working.Modified 0 }}\uea73 {{ .Working.Modified }}|{{ end }}{{ if gt .Working.Untracked 0 }}\uea6a {{ .Working.Untracked }}|{{ end }}{{ end }}"
+    foreground: blue
+    background: transparent
+    type: git
+    style: plain
+  - properties:
+      cache_duration: none
+      threshold: 5000
+    template: " {{ .FormattedMs }}"
+    foreground: yellow
+    background: transparent
+    type: executiontime
+    style: plain
+- type: prompt
+  alignment: right
+  segments:
+  - properties:
+      cache_duration: none
+    leading_diamond: 
+    trailing_diamond: 
+    template:  {{ .Full }}
+    foreground: black
+    background: cyan
+    type: go
+    style: diamond
+  - properties:
+      cache_duration: none
+    leading_diamond: 
+    trailing_diamond: 
+    template:  {{ .Full }}
+    foreground: black
+    background: green
+    type: node
+    style: diamond
+  - properties:
+      cache_duration: none
+    leading_diamond: 
+    trailing_diamond: 
+    template:  {{ .Full }}
+    foreground: black
+    background: "#689d6a"
+    type: python
+    style: diamond
+  - properties:
+      cache_duration: none
+    leading_diamond: 
+    trailing_diamond: 
+    template:  {{ .Full }}
+    foreground: black
+    background: red
+    type: rust
+    style: diamond
+  - properties:
+      cache_duration: none
+    leading_diamond: 
+    trailing_diamond: 
+    template:  {{ .Full }}
+    foreground: black
+    background: yellow
+    type: java
+    style: diamond
+  - properties:
+      cache_duration: none
+    leading_diamond: 
+    trailing_diamond: 
+    template:  {{.Context}}{{if .Namespace}}:{{.Namespace}}{{end}}
+    foreground: black
+    background: blue
+    type: kubectl
+    style: diamond
+- type: prompt
+  alignment: left
+  segments:
+  - properties:
+      cache_duration: none
+    template: ❱
+    foreground: white
+    background: transparent
+    type: text
+    style: plain
+  newline: true
 secondary_prompt:
-  foreground: white
+  template: "❱❱ "
   background: transparent
-  template: '❱❱ '
+  foreground: white
 transient_prompt:
+  template: "❱ "
   background: transparent
   foreground_templates:
-    - "{{if gt .Code 0}}red{{end}}"
-    - "{{if eq .Code 0}}white{{end}}"
-  template: "❱ "
+  - "{{if gt .Code 0}}red{{end}}"
+  - "{{if eq .Code 0}}white{{end}}"

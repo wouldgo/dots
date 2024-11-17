@@ -5,16 +5,16 @@ function do_it () {
 
   CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
 
-  echo "Updating system" && \
-  if ! "${CURRENT_DIR}"/system/update-system.sh; then
-    echo "Something went wrong" 2>&1
-  fi
+  # echo "Updating system" && \
+  # if ! "${CURRENT_DIR}"/system/update-system.sh; then
+  #   echo "Something went wrong" 2>&1
+  # fi
 
-  echo "Installing dependencies" && \
-  if ! "${CURRENT_DIR}"/system/dependencies.sh; then
-    echo "Something went wrong" 2>&1
-    exit 1;
-  fi
+  # echo "Installing dependencies" && \
+  # if ! "${CURRENT_DIR}"/system/dependencies.sh; then
+  #   echo "Something went wrong" 2>&1
+  #   exit 1;
+  # fi
 
   echo "Installing mandatory binaries" && \
   if ! "${CURRENT_DIR}/system/bins.sh"; then

@@ -20,6 +20,17 @@ function git_config () {
     --global rerere.enabled true
 }
 
+function mise-cli () {
+  local TMP_DIR
+
+  TMP_DIR=$(mktemp -d)
+
+  gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys 0x7413A06D
+  curl https://mise.jdx.dev/install.sh.sig | gpg --decrypt > "${TMP_DIR}/install.sh"
+  sh "${TMP_DIR}/install.sh"
+  rm -Rf "${TMP_DIR}"
+}
+
 function fzf () {
   local FZF_HIDDEN_FOLDER
   FZF_HIDDEN_FOLDER="${HOME}/.fzf"
@@ -39,22 +50,9 @@ function fzf () {
     --no-fish
 }
 
-function mise-cli () {
-  local TMP_DIR
-
-  TMP_DIR=$(mktemp -d)
-
-  gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys 0x7413A06D
-  curl https://mise.jdx.dev/install.sh.sig | gpg --decrypt > "${TMP_DIR}/install.sh"
-  sh "${TMP_DIR}/install.sh"
-  rm -Rf "${TMP_DIR}"
-}
-
 function rustup () {
   echo "Installing rustup..." && \
-  wget -O /tmp/rustup.sh https://sh.rustup.rs && \
-  bash /tmp/rustup.sh -y &&
-  rm -Rfv /tmp/rustup.sh
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 }
 
 function apple_keyboard () {
@@ -96,12 +94,12 @@ function alacritty () {
 function do_it () {
   git_config;
   mise-cli;
-  ansible;
   fzf;
   rustup;
+  # ansible;
 
   if [ ${IS_WSL} ]; then
-    alacritty;
+    # alacritty;
 
     if [ "${ENABLE_APPLE_KEYBOARD}" == "YES" ]; then
       apple_keyboard;
