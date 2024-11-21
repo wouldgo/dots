@@ -10,7 +10,7 @@ blocks:
       cache_duration: none
       style: full
     template: "{{ .Path }}"
-    foreground: "#d65d0e"
+    foreground: lightYellow
     background: transparent
     type: path
     style: plain
@@ -28,7 +28,7 @@ blocks:
       fetch_upstream_icon: true
       source: cli
     template: " {{ .HEAD }}{{ if .Working.Changed }}|{{ if gt .Behind 0 }}\uea9d {{ .Behind }}|{{ end }}{{ if gt .Ahead 0 }}\ueaa0 {{ .Ahead }}|{{ end }}{{ if gt .Working.Unmerged 0 }}\uebd9 {{ .Working.Unmerged }}|{{ end }}{{ if gt .Working.Deleted 0 }}\uea81 {{ .Working.Deleted }}|{{ end }}{{ if gt .Working.Added 0 }}\uea7f {{ .Working.Added }}|{{ end }}{{ if gt .Working.Modified 0 }}\uea73 {{ .Working.Modified }}|{{ end }}{{ if gt .Working.Untracked 0 }}\uea6a {{ .Working.Untracked }}|{{ end }}{{ end }}"
-    foreground: blue
+    foreground: lightBlue
     background: transparent
     type: git
     style: plain
@@ -49,7 +49,7 @@ blocks:
     trailing_diamond: 
     template:  {{ .Full }}
     foreground: black
-    background: cyan
+    background: lightBlue
     type: go
     style: diamond
   - properties:
@@ -67,7 +67,7 @@ blocks:
     trailing_diamond: 
     template:  {{ .Full }}
     foreground: black
-    background: "#689d6a"
+    background: yellow
     type: python
     style: diamond
   - properties:
@@ -76,7 +76,7 @@ blocks:
     trailing_diamond: 
     template:  {{ .Full }}
     foreground: black
-    background: red
+    background: lightRed
     type: rust
     style: diamond
   - properties:
@@ -85,7 +85,7 @@ blocks:
     trailing_diamond: 
     template:  {{ .Full }}
     foreground: black
-    background: yellow
+    background: white
     type: java
     style: diamond
   - properties:
