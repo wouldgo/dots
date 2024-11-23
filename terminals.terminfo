@@ -1,0 +1,29 @@
+# run to add to term db: tic -x terminals.terminfo
+alacritty|alacritty terminal emulator,
+  khome=\E[H,     #home
+  kend=\E[F,      #end
+  kUP5=\E[1;5A,   #control-up
+  kDN5=\E[1;5B,   #control-down
+  kRIT=\E[1;5C,   #control-right
+  kLFT=\E[1;5D,   #control-left
+  arit=\E[1;3C,   #alt-right
+  alft=\E[1;3D,   #alt-left
+  use=xterm-256color,
+
+tmux|tmux terminal multiplexer,
+  khome=\E[1~,
+  kend=\E[4~,
+  kUP5=\E[1;5A,
+  kDN5=\E[1;5B,
+  kRIT=\E[1;5C,
+  kLFT=\E[1;5D,
+  use=xterm, use=screen,
+
+tmux-256color|tmux with 256 colors,
+  khome=\E[1~,
+  kend=\E[4~,
+  kUP5=\E[1;5A,
+  kDN5=\E[1;5B,
+  kRIT=\E[1;5C,
+  kLFT=\E[1;5D,
+  use=xterm-256color, use=tmux,

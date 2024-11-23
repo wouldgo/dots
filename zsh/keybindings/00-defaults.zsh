@@ -1,11 +1,14 @@
+HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=default,fg=green,bold'
+HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='bg=default,fg=red,bold'
+
 ### THANKS TO https://wiki.archlinux.org/title/Zsh#Key_bindings
 
 # create a zkbd compatible hash;
 # to add other keys to this hash, see: man 5 terminfo
 typeset -g -A key
 
-key[Home]="^[[H"
-key[End]="^[[F"
+key[Home]="${terminfo[khome]}"
+key[End]="${terminfo[kend]}"
 key[Backspace]="${terminfo[kbs]}"
 key[Delete]="${terminfo[kdch1]}"
 key[Up]="${terminfo[kcuu1]}"
@@ -14,10 +17,12 @@ key[Left]="${terminfo[kcub1]}"
 key[Right]="${terminfo[kcuf1]}"
 key[PageUp]="${terminfo[kpp]}"
 key[PageDown]="${terminfo[knp]}"
-key[Control-Right]="^[[1;5C"
-key[Control-Left]="^[[1;5D"
-key[Alt-Right]="^[[1;3C"
-key[Alt-Left]="^[[1;3D"
+key[Control-Up]="${terminfo[kUP5]}"
+key[Control-Down]="${terminfo[kDN5]}"
+key[Control-Right]="${terminfo[kRIT]}"
+key[Control-Left]="${terminfo[kLFT]}"
+key[Alt-Right]="${terminfo[arit]}"
+key[Alt-Left]="${terminfo[alft]}"
 
 # setup key accordingly
 [[ -n "${key[Home]}"          ]] && bindkey -- "${key[Home]}"           beginning-of-line
@@ -30,10 +35,19 @@ key[Alt-Left]="^[[1;3D"
 [[ -n "${key[Right]}"         ]] && bindkey -- "${key[Right]}"          forward-char
 [[ -n "${key[PageUp]}"        ]] && bindkey -- "${key[PageUp]}"         beginning-of-line
 [[ -n "${key[PageDown]}"      ]] && bindkey -- "${key[PageDown]}"       end-of-line
+
+[[ -n "${key[Control-Up]}"    ]] && bindkey -- "${key[Control-Up]}"     history-substring-search-up
+[[ -n "${key[Control-Down]}"  ]] && bindkey -- "${key[Control-Down]}"   history-substring-search-down
 [[ -n "${key[Control-Right]}" ]] && bindkey -- "${key[Control-Right]}"  forward-word
 [[ -n "${key[Control-Left]}"  ]] && bindkey -- "${key[Control-Left]}"   backward-word
-[[ -n "${key[Alt-Right]}"     ]] && bindkey -- "${key[Alt-Right]}"      forward-word
-[[ -n "${key[Alt-Left]}"      ]] && bindkey -- "${key[Alt-Left]}"       backward-word
+
+if [[ "${TERM}" != "tmux-256color" ]]; then
+	echo "you're not in tmux!"
+
+	[[ -n "${key[Alt-Right]}"     ]] && bindkey -- "${key[Alt-Right]}"      forward-word
+	[[ -n "${key[Alt-Left]}"      ]] && bindkey -- "${key[Alt-Left]}"       backward-word
+fi
+
 
 # Finally, make sure the terminal is in application mode, when zle is
 # active. Only then are the values from $terminfo valid.
