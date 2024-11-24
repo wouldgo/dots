@@ -42,10 +42,8 @@ key[Alt-Left]="${terminfo[alft]}"
 [[ -n "${key[Control-Left]}"  ]] && bindkey -- "${key[Control-Left]}"   backward-word
 
 if [[ "${TERM}" != "tmux-256color" ]]; then
-	echo "you're not in tmux!"
-
-	[[ -n "${key[Alt-Right]}"     ]] && bindkey -- "${key[Alt-Right]}"      forward-word
-	[[ -n "${key[Alt-Left]}"      ]] && bindkey -- "${key[Alt-Left]}"       backward-word
+	[[ -n "${key[Alt-Right]}"   ]] && bindkey -- "${key[Alt-Right]}"      forward-word
+	[[ -n "${key[Alt-Left]}"    ]] && bindkey -- "${key[Alt-Left]}"       backward-word
 fi
 
 
