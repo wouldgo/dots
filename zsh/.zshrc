@@ -55,8 +55,8 @@ autoload -Uz add-zsh-hook
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1lh --git-ignore --group-directories-first --sort=accessed --color=always $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza -1lh --git-ignore --group-directories-first --sort=accessed --color=always $realpath'
 
 add-zsh-hook chpwd __load_node
 add-zsh-hook chpwd __load_go
