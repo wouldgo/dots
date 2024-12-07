@@ -42,7 +42,7 @@ key = "NumpadEnter"
 decorations = "Full"
 dynamic_title = true
 opacity = 1
-startup_mode = "Fullscreen"
+startup_mode = "Windowed"
 title = ""
 
 [window.padding]

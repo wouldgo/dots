@@ -7,7 +7,7 @@ function do_it () {
 
   chsh "${USER}" -s "$(command -v zsh)"
 
-  ln -s "${CURRENT_DIR}/.zshrc" "${HOME}/.zshrc"
+  ln -sf "${CURRENT_DIR}/.zshrc" "${HOME}/.zshrc"
 
   # shellcheck source=./colors/index.sh
   source "${CURRENT_DIR}/colors/index.sh"

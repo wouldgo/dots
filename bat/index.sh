@@ -6,7 +6,7 @@ function do_it () {
   CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
   mkdir --parents "${HOME}/.config/bat"
 
-  ln -s "${CURRENT_DIR}/bat.conf" "${HOME}/.config/bat/config"
+  ln -sf "${CURRENT_DIR}/bat.conf" "${HOME}/.config/bat/config"
 }
 
 do_it "$@"
