@@ -20,7 +20,7 @@ function git_config () {
     --global rerere.enabled true
 }
 
-function mise-cli () {
+function mise_cli () {
   local TMP_DIR
 
   TMP_DIR=$(mktemp -d)
@@ -93,7 +93,7 @@ function alacritty () {
 
 function do_it () {
   git_config;
-  mise-cli;
+  mise_cli;
   fzf;
   rustup;
   # ansible;

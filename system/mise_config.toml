@@ -28,7 +28,7 @@ bat = "latest"
 java = "21"
 stern = "latest"
 
-[plugins]
+[alias]
 operator-sdk = "https://github.com/Medium/asdf-operator-sdk"
 ripgrep = "https://gitlab.com/wt0f/asdf-ripgrep"
 websocat = "https://github.com/bdellegrazie/asdf-websocat"
