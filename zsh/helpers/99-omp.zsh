@@ -3,7 +3,6 @@
 export OMP_DIR="${HOME}/.omp"
 
 function __omp_bootstrap() {
-
   if [ -f "${OMP_DIR}/oh-my-posh" ]; then
     PATH="${PATH}:${OMP_DIR}"
 
