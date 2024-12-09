@@ -1,13 +1,22 @@
 # run to add to term db: tic -x terminals.terminfo
+# order:
+#   home
+#   end
+#   control-up
+#   control-down
+#   control-right
+#   control-left
+#   alt-right
+#   alt-left
 alacritty|alacritty terminal emulator,
-  khome=\E[H,     #home
-  kend=\E[F,      #end
-  kUP5=\E[1;5A,   #control-up
-  kDN5=\E[1;5B,   #control-down
-  kRIT=\E[1;5C,   #control-right
-  kLFT=\E[1;5D,   #control-left
-  arit=\E[1;3C,   #alt-right
-  alft=\E[1;3D,   #alt-left
+  khome=\E[H,
+  kend=\E[F,
+  kUP5=\E[1;5A,
+  kDN5=\E[1;5B,
+  kRIT=\E[1;5C,
+  kLFT=\E[1;5D,
+  arit=\E[1;3C,
+  alft=\E[1;3D,
   use=xterm-256color,
 
 tmux|tmux terminal multiplexer,
