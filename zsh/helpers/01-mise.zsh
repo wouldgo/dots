@@ -6,10 +6,10 @@ function __mise_bootstrap () {
 
     eval "$("${HOME}"/.local/bin/mise activate zsh)"
 
-    path=(
-      "${HOME}/.local/share/mise/shims"
-      $path)
-    export PATH
+    # path=(
+    #   "${HOME}/.local/share/mise/shims"
+    #   $path)
+    # export PATH
   fi
 
   if [ ! -f "${ZSH_COMPLETION_FOLDER}/_mise.zsh" ]; then
