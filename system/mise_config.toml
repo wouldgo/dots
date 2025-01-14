@@ -28,6 +28,7 @@ bat = "latest"
 java = "21"
 stern = "latest"
 argocd = "latest"
+zig = "latest"
 
 [alias]
 operator-sdk = "https://github.com/Medium/asdf-operator-sdk"
