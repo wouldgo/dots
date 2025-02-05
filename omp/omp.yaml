@@ -92,7 +92,7 @@ blocks:
       cache_duration: none
     leading_diamond: 
     trailing_diamond: 
-    template:  {{.Context}}{{if .Namespace}}:{{.Namespace}}{{end}}
+    template:  {{.Context}}{{if .Namespace}}:{{.Namespace}}{{end}}
     foreground: black
     background: blue
     type: kubectl
