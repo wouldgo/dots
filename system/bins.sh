@@ -73,7 +73,7 @@ function alacritty () {
   FOLDER=${HOME}/git/alacritty
   WITCH=$(loginctl show-session $(loginctl | grep "$USER" | awk '{print $1}') -p Type | sed 's/^Type=//')
 
-  git clone https://github.com/alacritty/alacritty.git "${FOLDER}" && \
+  git clone --depth 1 https://github.com/alacritty/alacritty.git "${FOLDER}" && \
   cd "${FOLDER}" && \
   cargo build --release --no-default-features --features="${WITCH}"
 

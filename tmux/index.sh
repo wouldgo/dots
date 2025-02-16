@@ -7,7 +7,7 @@ function do_it () {
 
   CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
 
-  git clone https://github.com/tmux-plugins/tpm.git "${HOME}/.tmux/plugins/tpm"
+  git clone --depth 1 https://github.com/tmux-plugins/tpm.git "${HOME}/.tmux/plugins/tpm"
   ln -sf "${CURRENT_DIR}/.tmux.conf" "${HOME}/.tmux.conf"
 
   "${HOME}/.tmux/plugins/tpm/bin/install_plugins"
