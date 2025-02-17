@@ -29,6 +29,7 @@ java = "21"
 stern = "latest"
 argocd = "latest"
 zig = "latest"
+kubens = "latest"
 
 [alias]
 operator-sdk = "https://github.com/Medium/asdf-operator-sdk"
@@ -44,6 +45,7 @@ kustomize = "https://github.com/Banno/asdf-kustomize"
 packer = "https://github.com/asdf-community/asdf-hashicorp"
 cilium-cli = "https://github.com/carnei-ro/asdf-cilium-cli.git"
 cilium-hubble = "https://github.com/NitriKx/asdf-cilium-hubble.git"
+kubens = "https://gitlab.com/wt0f/asdf-kubectx"
 
 [settings]
 trusted_config_paths = [
