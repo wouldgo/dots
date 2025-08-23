@@ -23,6 +23,7 @@ key[Control-Right]="${terminfo[kRIT]}"
 key[Control-Left]="${terminfo[kLFT]}"
 key[Alt-Right]="${terminfo[arit]}"
 key[Alt-Left]="${terminfo[alft]}"
+key[F12]="${terminfo[kf12]}"
 
 # setup key accordingly
 [[ -n "${key[Home]}"          ]] && bindkey -- "${key[Home]}"           beginning-of-line
@@ -40,6 +41,8 @@ key[Alt-Left]="${terminfo[alft]}"
 [[ -n "${key[Control-Down]}"  ]] && bindkey -- "${key[Control-Down]}"   history-substring-search-down
 [[ -n "${key[Control-Right]}" ]] && bindkey -- "${key[Control-Right]}"  forward-word
 [[ -n "${key[Control-Left]}"  ]] && bindkey -- "${key[Control-Left]}"   backward-word
+
+[[ -n "${key[F12]}"           ]] && bindkey -s "${key[F12]}" 'tmux new-session -A -s session\n'
 
 if [[ "${TERM}" != "tmux-256color" ]]; then
 	[[ -n "${key[Alt-Right]}"   ]] && bindkey -- "${key[Alt-Right]}"      forward-word
