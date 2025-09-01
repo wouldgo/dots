@@ -31,6 +31,7 @@ argocd = "latest"
 zig = "latest"
 kubens = "latest"
 ollama = "latest"
+golangci-lint = "latest"
 
 [alias]
 operator-sdk = "https://github.com/Medium/asdf-operator-sdk"
