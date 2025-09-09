@@ -33,6 +33,7 @@ kubens = "latest"
 ollama = "latest"
 golangci-lint = "latest"
 goreleaser = "latest"
+yt-dlp = "latest"
 
 [alias]
 operator-sdk = "https://github.com/Medium/asdf-operator-sdk"
