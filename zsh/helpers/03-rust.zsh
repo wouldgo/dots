@@ -1,8 +1,8 @@
 #!/usr/bin/env zsh
 
 function __rust_bootstrap () {
-  if [ -f "${HOME}/.cargo/env" ]; then
-    . "$HOME/.cargo/env"
+  if [ -f "${CARGO_HOME}/env" ]; then
+    . "${CARGO_HOME}/env"
 
     if [ ! -f "${ZSH_COMPLETION_FOLDER}/_rustup.zsh" ]; then
       rustup completions zsh | tee "${ZSH_COMPLETION_FOLDER}/_rustup.zsh" >/dev/null

@@ -50,11 +50,6 @@ function fzf () {
     --no-fish
 }
 
-function rustup () {
-  echo "Installing rustup..." && \
-  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-}
-
 function apple_keyboard () {
   echo "Apple keyboard workaround" && \
   echo options hid_apple fnmode=2 | sudo tee -a /etc/modprobe.d/hid_apple.conf && \
@@ -95,7 +90,6 @@ function do_it () {
   git_config;
   mise_cli;
   fzf;
-  rustup;
   # ansible;
 
   if [ ${IS_WSL} ]; then
