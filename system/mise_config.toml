@@ -35,6 +35,7 @@ golangci-lint = "latest"
 goreleaser = "latest"
 yt-dlp = "latest"
 rust = "latest"
+"go:sigs.k8s.io/kind" = "latest"
 
 [alias]
 operator-sdk = "https://github.com/Medium/asdf-operator-sdk"
