@@ -36,6 +36,7 @@ yt-dlp = "latest"
 rust = "latest"
 "go:sigs.k8s.io/kind" = "latest"
 "go:github.com/onsi/ginkgo/v2/ginkgo" = "latest"
+"github:cli/cli" = "latest"
 
 [alias]
 operator-sdk = "https://github.com/Medium/asdf-operator-sdk"
