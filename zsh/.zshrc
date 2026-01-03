@@ -36,12 +36,6 @@ for FILE in `ls ${CONFS_FOLDER}/zinit/_setup/*.sh | sort -g`; do
   #echo "zinit setup ${FILE} loaded"
 done
 
-for FILE in `ls ${CONFS_FOLDER}/keybindings/*.zsh | sort -g`; do
-
-  source ${FILE}
-  #echo "config ${FILE} loaded."
-done
-
 # completions
 fpath+=( "${ZSH_COMPLETION_FOLDER}" )
 autoload -U +X bashcompinit && bashcompinit
@@ -50,6 +44,12 @@ autoload -Uz compinit && compinit
 zinit cdreplay -q
 
 autoload -Uz add-zsh-hook
+
+for FILE in `ls ${CONFS_FOLDER}/keybindings/*.zsh | sort -g`; do
+
+  source ${FILE}
+  #echo "config ${FILE} loaded."
+done
 
 # completion styling
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
