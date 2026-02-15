@@ -1,4 +1,5 @@
 [tools]
+uv = "latest"
 node = "latest"
 go = "latest"
 operator-sdk = "latest"
@@ -41,6 +42,7 @@ rust = "latest"
 "go:github.com/gohugoio/hugo" = { version = "latest", tags = "extended" }
 "go:github.com/nektos/act" = "latest"
 "go:github.com/Zxilly/go-size-analyzer/cmd/gsa" = "latest"
+"pipx:huggingface_hub[cli]" = "latest"
 
 [alias]
 operator-sdk = "https://github.com/Medium/asdf-operator-sdk"
