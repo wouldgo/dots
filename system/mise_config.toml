@@ -43,6 +43,7 @@ rust = "latest"
 "go:github.com/nektos/act" = "latest"
 "go:github.com/Zxilly/go-size-analyzer/cmd/gsa" = "latest"
 "go:github.com/sibprogrammer/xq" = "latest"
+"go:github.com/loov/goda" = "latest"
 "pipx:huggingface_hub[cli]" = "latest"
 
 [alias]
