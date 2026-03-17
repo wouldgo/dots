@@ -37,6 +37,7 @@ yt-dlp = "latest"
 rust = "latest"
 "github:koalaman/shellcheck" = "latest"
 "github:cli/cli" = "latest"
+"github:longhorn/cli" = "latest"
 "go:sigs.k8s.io/kind" = "latest"
 "go:github.com/onsi/ginkgo/v2/ginkgo" = "latest"
 "go:github.com/gohugoio/hugo" = { version = "latest", tags = "extended" }
