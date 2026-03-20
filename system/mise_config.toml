@@ -13,7 +13,7 @@ kubectl = "latest"
 krew = "latest"
 neovim = "latest"
 kustomize = "latest"
-packer = "1.9.4"
+packer = "latest"
 cilium-cli = "latest"
 cilium-hubble = "latest"
 yq = "latest"
@@ -47,7 +47,7 @@ rust = "latest"
 "go:github.com/loov/goda" = "latest"
 "pipx:huggingface_hub[cli]" = "latest"
 
-[alias]
+[tool_alias]
 operator-sdk = "https://github.com/Medium/asdf-operator-sdk"
 ripgrep = "https://gitlab.com/wt0f/asdf-ripgrep"
 websocat = "https://github.com/bdellegrazie/asdf-websocat"
