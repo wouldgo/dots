@@ -6,107 +6,112 @@ blocks:
 - type: prompt
   alignment: left
   segments:
-  - properties:
-      cache_duration: none
+  -
+    type: path
+    style: plain
+    cache:
+      strategy: folder
+    options:
       style: full
     template: "{{ .Path }}"
     foreground: lightYellow
     background: transparent
-    type: path
-    style: plain
-  - properties:
-      cache_duration: none
-    template: "{{if gt .Code 0}} {{ .Code }}{{end}}"
-    background: transparent
+  -
     type: status
     style: plain
+    template: "{{if gt .Code 0}} {{ .Code }}{{end}}"
+    background: transparent
     foreground_templates:
     - "{{if .Error }}red{{end}}"
-  - properties:
-      cache_duration: none
+  -
+    type: git
+    style: plain
+    options:
       fetch_status: true
       fetch_upstream_icon: true
+      fetch_push_status: true
       source: cli
     template: " {{ .HEAD }}{{ if .Working.Changed }}|{{ if gt .Behind 0 }}\uea9d {{ .Behind }}|{{ end }}{{ if gt .Ahead 0 }}\ueaa0 {{ .Ahead }}|{{ end }}{{ if gt .Working.Unmerged 0 }}\uebd9 {{ .Working.Unmerged }}|{{ end }}{{ if gt .Working.Deleted 0 }}\uea81 {{ .Working.Deleted }}|{{ end }}{{ if gt .Working.Added 0 }}\uea7f {{ .Working.Added }}|{{ end }}{{ if gt .Working.Modified 0 }}\uea73 {{ .Working.Modified }}|{{ end }}{{ if gt .Working.Untracked 0 }}\uea6a {{ .Working.Untracked }}|{{ end }}{{ end }}"
     foreground: lightBlue
     background: transparent
-    type: git
+  -
+    type: executiontime
     style: plain
-  - properties:
-      cache_duration: none
-      threshold: 5000
+    options:
+      threshold: 2000
     template: " {{ .FormattedMs }}"
     foreground: yellow
     background: transparent
-    type: executiontime
-    style: plain
 - type: prompt
   alignment: right
   segments:
-  - properties:
+  -
+    type: go
+    style: diamond
+    options:
       cache_duration: none
     leading_diamond: 
     trailing_diamond: 
     template:  {{ .Full }}
     foreground: black
     background: lightBlue
-    type: go
+  -
+    type: node
     style: diamond
-  - properties:
+    options:
       cache_duration: none
     leading_diamond: 
     trailing_diamond: 
     template:  {{ .Full }}
     foreground: black
     background: green
-    type: node
+  -
+    type: python
     style: diamond
-  - properties:
+    options:
       cache_duration: none
     leading_diamond: 
     trailing_diamond: 
     template:  {{ .Full }}
     foreground: black
     background: yellow
-    type: python
+  -
+    type: rust
     style: diamond
-  - properties:
+    options:
       cache_duration: none
     leading_diamond: 
     trailing_diamond: 
     template:  {{ .Full }}
     foreground: black
     background: lightRed
-    type: rust
+  -
+    type: java
     style: diamond
-  - properties:
-      cache_duration: none
     leading_diamond: 
     trailing_diamond: 
     template:  {{ .Full }}
     foreground: black
     background: white
-    type: java
+  -
+    type: kubectl
     style: diamond
-  - properties:
-      cache_duration: none
     leading_diamond: 
     trailing_diamond: 
     template:  {{.Context}}{{if .Namespace}}:{{.Namespace}}{{end}}
     foreground: black
     background: blue
-    type: kubectl
-    style: diamond
 - type: prompt
   alignment: left
   segments:
-  - properties:
+  -
+    type: text
+    style: plain
+    options:
       cache_duration: none
     template: ❱
     foreground: white
     background: transparent
-    type: text
-    style: plain
   newline: true
 secondary_prompt:
   template: "❱❱ "
