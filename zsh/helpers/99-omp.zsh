@@ -6,7 +6,7 @@ function __omp_bootstrap() {
   if [ -f "${OMP_DIR}/oh-my-posh" ]; then
     PATH="${PATH}:${OMP_DIR}"
 
-    eval "$(${OMP_DIR}/oh-my-posh init zsh --config ${DOTS_FOLDER}/omp/omp.yaml )"
+    eval "$(${OMP_DIR}/oh-my-posh init zsh --config ${ZSHRC_DOTS_FOLDER}/omp/omp.yaml )"
 
     if [ ! -f "${ZSH_COMPLETION_FOLDER}/_oh-my-posh.zsh" ]; then
       "${OMP_DIR}/oh-my-posh" completion zsh | tee "${ZSH_COMPLETION_FOLDER}/_oh-my-posh.zsh" >/dev/null

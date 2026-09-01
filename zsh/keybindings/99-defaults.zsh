@@ -1,6 +1,3 @@
-HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=default,fg=green,bold'
-HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='bg=default,fg=red,bold'
-
 ### THANKS TO https://wiki.archlinux.org/title/Zsh#Key_bindings
 
 # create a zkbd compatible hash;
@@ -30,15 +27,18 @@ key[F12]="${terminfo[kf12]}"
 [[ -n "${key[End]}"           ]] && bindkey -- "${key[End]}"            end-of-line
 [[ -n "${key[Backspace]}"     ]] && bindkey -- "${key[Backspace]}"      backward-delete-char
 [[ -n "${key[Delete]}"        ]] && bindkey -- "${key[Delete]}"         delete-char
-[[ -n "${key[Up]}"            ]] && bindkey -- "${key[Up]}"             up-line-or-history
-[[ -n "${key[Down]}"          ]] && bindkey -- "${key[Down]}"           down-line-or-history
+
+[[ -n "${key[Up]}"            ]] && bindkey -- "${key[Up]}"             atuin-history-up
+[[ -n "${key[Down]}"          ]] && bindkey -- "${key[Down]}"           atuin-history-down
+
 [[ -n "${key[Left]}"          ]] && bindkey -- "${key[Left]}"           backward-char
 [[ -n "${key[Right]}"         ]] && bindkey -- "${key[Right]}"          forward-char
 [[ -n "${key[PageUp]}"        ]] && bindkey -- "${key[PageUp]}"         beginning-of-line
 [[ -n "${key[PageDown]}"      ]] && bindkey -- "${key[PageDown]}"       end-of-line
 
-[[ -n "${key[Control-Up]}"    ]] && bindkey -- "${key[Control-Up]}"     history-substring-search-up
-[[ -n "${key[Control-Down]}"  ]] && bindkey -- "${key[Control-Down]}"   history-substring-search-down
+[[ -n "${key[Control-Up]}"    ]] && bindkey -- "${key[Control-Up]}"     atuin-history-fulltext-up
+[[ -n "${key[Control-Down]}"  ]] && bindkey -- "${key[Control-Down]}"   atuin-history-fulltext-down
+
 [[ -n "${key[Control-Right]}" ]] && bindkey -- "${key[Control-Right]}"  forward-word
 [[ -n "${key[Control-Left]}"  ]] && bindkey -- "${key[Control-Left]}"   backward-word
 
@@ -58,4 +58,6 @@ if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
 	function zle_application_mode_stop { echoti rmkx }
 	add-zle-hook-widget -Uz zle-line-init zle_application_mode_start
 	add-zle-hook-widget -Uz zle-line-finish zle_application_mode_stop
+
+	echoti smkx
 fi

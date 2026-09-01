@@ -8,7 +8,6 @@ function do_it () {
   zinit snippet OMZP::kubectx
   zinit snippet OMZ::plugins/git/git.plugin.zsh
 
-  zinit snippet https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/lib/history.zsh
   zinit snippet https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/lib/grep.zsh
 }
 

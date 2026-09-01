@@ -1,11 +1,10 @@
 #zmodload zsh/zprof
 
-DOTS_FOLDER="${HOME}/git/dots"
-CONFS_FOLDER="${DOTS_FOLDER}/zsh"
-HISTSIZE=5000
-SAVEHIST=$HISTSIZE
-HISTFILE="${HOME}/.zsh_history"
-HISTDUP=erase
+export TERM=alacritty
+ZSHRC_LS_COMMAND="/bin/ls"
+
+ZSHRC_DOTS_FOLDER="${HOME}/git/dots"
+ZSHRC_CONFS_FOLDER="${ZSHRC_DOTS_FOLDER}/zsh"
 
 KERNEL_RELEASE=$(uname --kernel-release)
 WINDOWS_SUBSYSTEM_LINUX='WSL'
@@ -14,26 +13,15 @@ if [[ $KERNEL_RELEASE == *"${WINDOWS_SUBSYSTEM_LINUX}"* ]]; then
   IS_WSL=1
 fi
 
-# history
-setopt append_history
-setopt inc_append_history
-setopt share_history
-setopt hist_ignore_space
-setopt hist_save_no_dups
-setopt hist_find_no_dups
-setopt hist_ignore_all_dups
-setopt hist_ignore_dups
-setopt hist_expire_dups_first
-
 #customizations
-eval `dircolors ${CONFS_FOLDER}/colors/gruvbox.dircolors`
-for FILE in `ls ${CONFS_FOLDER}/helpers/*.{zsh,sh} | sort -g`; do
+eval `dircolors ${ZSHRC_CONFS_FOLDER}/colors/gruvbox.dircolors`
+for FILE in `${ZSHRC_LS_COMMAND} -L ${ZSHRC_CONFS_FOLDER}/helpers/*.{zsh,sh} | sort -g`; do
 
   source ${FILE}
   #echo "helper ${FILE} loaded."
 done
 
-for FILE in `ls ${CONFS_FOLDER}/zinit/_setup/*.sh | sort -g`; do
+for FILE in `${ZSHRC_LS_COMMAND} -L ${ZSHRC_CONFS_FOLDER}/zinit/_setup/*.sh | sort -g`; do
   source ${FILE}
   #echo "zinit setup ${FILE} loaded"
 done
@@ -47,7 +35,7 @@ zinit cdreplay -q
 
 autoload -Uz add-zsh-hook
 
-for FILE in `ls ${CONFS_FOLDER}/keybindings/*.zsh | sort -g`; do
+for FILE in `${ZSHRC_LS_COMMAND} -L ${ZSHRC_CONFS_FOLDER}/keybindings/*.zsh | sort -g`; do
 
   source ${FILE}
   #echo "config ${FILE} loaded."

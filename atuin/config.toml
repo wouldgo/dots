@@ -1,0 +1,7 @@
+store_failed = false
+enter_accept = false
+search_mode = "daemon-fuzzy"
+
+[daemon]
+enabled = true
+autostart = true
