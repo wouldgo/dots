@@ -1,63 +1,62 @@
-### THANKS TO https://wiki.archlinux.org/title/Zsh#Key_bindings
-
-# create a zkbd compatible hash;
-# to add other keys to this hash, see: man 5 terminfo
 typeset -g -A key
 
-key[Home]="${terminfo[khome]}"
-key[End]="${terminfo[kend]}"
-key[Backspace]="${terminfo[kbs]}"
-key[Delete]="${terminfo[kdch1]}"
-key[Up]="${terminfo[kcuu1]}"
-key[Down]="${terminfo[kcud1]}"
-key[Left]="${terminfo[kcub1]}"
-key[Right]="${terminfo[kcuf1]}"
-key[PageUp]="${terminfo[kpp]}"
-key[PageDown]="${terminfo[knp]}"
-key[Control-Up]="${terminfo[kUP5]}"
-key[Control-Down]="${terminfo[kDN5]}"
-key[Control-Right]="${terminfo[kRIT]}"
-key[Control-Left]="${terminfo[kLFT]}"
-key[Alt-Right]="${terminfo[arit]}"
-key[Alt-Left]="${terminfo[alft]}"
-key[F12]="${terminfo[kf12]}"
+key=(
+  Home          '^[[1~ ^[[H ^[OH'
+  End           '^[[4~ ^[[F ^[OF'
+  Backspace     '^?'
+  Delete        '^[[3~'
+  Up            '^[[A'
+  Down          '^[[B'
+  Left          '^[[D'
+  Right         '^[[C'
+  PageUp        '^[[5~'
+  PageDown      '^[[6~'
+  Control-Up    '^[[1;5A'
+  Control-Down  '^[[1;5B'
+  Control-Right '^[[1;5C'
+  Control-Left  '^[[1;5D'
+  Alt-Right     '^[[1;3C'
+  Alt-Left      '^[[1;3D'
+  F12           '^[[24~'
+)
 
-# setup key accordingly
-[[ -n "${key[Home]}"          ]] && bindkey -- "${key[Home]}"           beginning-of-line
-[[ -n "${key[End]}"           ]] && bindkey -- "${key[End]}"            end-of-line
-[[ -n "${key[Backspace]}"     ]] && bindkey -- "${key[Backspace]}"      backward-delete-char
-[[ -n "${key[Delete]}"        ]] && bindkey -- "${key[Delete]}"         delete-char
+# Funzione helper per associare tutte le sequenze contenute in una chiave
+bind_key() {
+  local k="$1" widget="$2"
+  local seq
+  # Se la chiave non esiste o è vuota, esce senza errori
+  [[ -z "${key[$k]}" ]] && return
 
-[[ -n "${key[Up]}"            ]] && bindkey -- "${key[Up]}"             atuin-history-up
-[[ -n "${key[Down]}"          ]] && bindkey -- "${key[Down]}"           atuin-history-down
+  for seq in ${=key[$k]}; do
+    bindkey "$seq" "$widget"
+  done
+}
 
-[[ -n "${key[Left]}"          ]] && bindkey -- "${key[Left]}"           backward-char
-[[ -n "${key[Right]}"         ]] && bindkey -- "${key[Right]}"          forward-char
-[[ -n "${key[PageUp]}"        ]] && bindkey -- "${key[PageUp]}"         beginning-of-line
-[[ -n "${key[PageDown]}"      ]] && bindkey -- "${key[PageDown]}"       end-of-line
+# --- BINDINGS ZLE ---
 
-[[ -n "${key[Control-Up]}"    ]] && bindkey -- "${key[Control-Up]}"     atuin-history-fulltext-up
-[[ -n "${key[Control-Down]}"  ]] && bindkey -- "${key[Control-Down]}"   atuin-history-fulltext-down
-
-[[ -n "${key[Control-Right]}" ]] && bindkey -- "${key[Control-Right]}"  forward-word
-[[ -n "${key[Control-Left]}"  ]] && bindkey -- "${key[Control-Left]}"   backward-word
-
-[[ -n "${key[F12]}"           ]] && bindkey -s "${key[F12]}" 'tmux new-session -A -s session\n'
+bind_key Home           beginning-of-line
+bind_key End            end-of-line
+bind_key Backspace      backward-delete-char
+bind_key Delete         delete-char
+bind_key Up             atuin-history-up
+bind_key Down           atuin-history-down
+bind_key Left           backward-char
+bind_key Right          forward-char
+bind_key PageUp         beginning-of-line
+bind_key PageDown       end-of-line
+bind_key Control-Up     atuin-history-fulltext-up
+bind_key Control-Down   atuin-history-fulltext-down
+bind_key Control-Right  forward-word
+bind_key Control-Left   backward-word
 
 if [[ "${TERM}" != "tmux-256color" ]]; then
-	[[ -n "${key[Alt-Right]}"   ]] && bindkey -- "${key[Alt-Right]}"      forward-word
-	[[ -n "${key[Alt-Left]}"    ]] && bindkey -- "${key[Alt-Left]}"       backward-word
+  bind_key Alt-Right    forward-word
+  bind_key Alt-Left     backward-word
 fi
 
-
-# Finally, make sure the terminal is in application mode, when zle is
-# active. Only then are the values from $terminfo valid.
-if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
-	autoload -Uz add-zle-hook-widget
-	function zle_application_mode_start { echoti smkx }
-	function zle_application_mode_stop { echoti rmkx }
-	add-zle-hook-widget -Uz zle-line-init zle_application_mode_start
-	add-zle-hook-widget -Uz zle-line-finish zle_application_mode_stop
-
-	echoti smkx
+# Macro per F12: l'opzione -s interpreta la stringa come sequenza di tasti da inviare
+if [[ -n "${key[F12]}" ]]; then
+  for seq in ${=key[F12]}; do
+    bindkey -s "$seq" 'tmux new-session -A -s session\n'
+  done
 fi
