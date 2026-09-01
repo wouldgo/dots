@@ -15,7 +15,7 @@ function git_config () {
   git config \
     --global user.name "wouldgo"
   git config \
-    --global user.email wouldgo84@gmail.com
+    --global user.email 1098882+wouldgo@users.noreply.github.com
   git config \
     --global rerere.enabled true
 }
