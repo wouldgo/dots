@@ -1,4 +1,4 @@
-store_failed = false
+#store_failed = false
 enter_accept = false
 search_mode = "daemon-fuzzy"
 
