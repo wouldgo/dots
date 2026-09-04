@@ -1,5 +1,8 @@
 [general]
-import = ["/home/dario/.gruvbox_dark.toml"]
+import = ["@@HOME@@/.gruvbox_dark.toml"]
+
+[terminal]
+shell = "/bin/zsh"
 
 [colors]
 draw_bold_text_with_bright_colors = true
@@ -33,6 +36,11 @@ style = "Regular"
 action = "SpawnNewInstance"
 key = "N"
 mods = "Shift|Control"
+
+[[keyboard.bindings]]
+key = "Return"
+mods = "Shift"
+chars = "\u001B\r"
 
 [[keyboard.bindings]]
 chars = "\r"

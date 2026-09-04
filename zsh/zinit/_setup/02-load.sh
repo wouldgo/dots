@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-function do_it () {
-  #zinit load zsh-users/zsh-history-substring-search
-  zinit load atuinsh/atuin
-}
+# function do_it () {
+#   #zinit load zsh-users/zsh-history-substring-search
+# }
 
-do_it "$@"
+# do_it "$@"

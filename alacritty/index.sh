@@ -5,9 +5,10 @@ function do_it () {
   CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
 
   (cd "${CURRENT_DIR}/" || exit; curl -LOk https://raw.githubusercontent.com/alacritty/alacritty-theme/master/themes/gruvbox_dark.toml) && \
-
   ln -sf "${CURRENT_DIR}/gruvbox_dark.toml" "${HOME}/.gruvbox_dark.toml"
-  ln -sf "${CURRENT_DIR}/alacritty.toml" "${HOME}/.alacritty.toml"
+
+  sed "s|@@HOME@@|${HOME}|g" "${CURRENT_DIR}/alacritty.toml.tpl" > "${CURRENT_DIR}/alacritty.toml"
+  ln -sf "${CURRENT_DIR}/alacritty.toml" "${HOME}/.config/alacritty/alacritty.toml"
 }
 
 do_it "$@"
