@@ -10,9 +10,6 @@
 #
 # If the user edits the buffer, a new search is started.
 
-# global configuration
-: ${ATUIN_HISTORY_SEARCH_FILTER_MODE='session'}
-
 typeset -g _ATUIN_FULLTEXT_INITIAL=""
 typeset -g _ATUIN_FULLTEXT_QUERY=""
 typeset -g _ATUIN_FULLTEXT_CURRENT=""
@@ -56,7 +53,7 @@ _atuin_history_fulltext_search() {
 
   result="$(
     atuin search \
-      --filter-mode "$ATUIN_HISTORY_SEARCH_FILTER_MODE" \
+      --filter-mode global \
       --search-mode fulltext \
       --limit 1 \
       --offset "$_ATUIN_FULLTEXT_OFFSET" \

@@ -43,9 +43,6 @@
 # main
 #----------------------------------
 
-# global configuration
-: ${ATUIN_HISTORY_SEARCH_FILTER_MODE='session'}
-
 # internal variables
 typeset -g -i _atuin_history_match_index
 typeset -g _atuin_history_search_result
@@ -220,7 +217,7 @@ _atuin-history-down-search() {
 _atuin-history-do-search() {
   if [[ $1 -ge 0 ]]; then
     atuin search \
-      --filter-mode "$ATUIN_HISTORY_SEARCH_FILTER_MODE" \
+      --filter-mode session \
       --search-mode prefix \
       --limit 1 \
       --offset $1 \
