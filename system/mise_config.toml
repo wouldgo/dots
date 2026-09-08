@@ -43,6 +43,7 @@ gsa = "latest"
 xq = "latest"
 goda = "latest"
 huggingface-hub-cli = "latest"
+oc = "latest-4.22"
 
 [tool_alias]
 zoxide = "aqua:ajeetdsouza/zoxide"
@@ -71,6 +72,7 @@ gsa = "go:github.com/Zxilly/go-size-analyzer/cmd/gsa"
 xq = "go:github.com/sibprogrammer/xq"
 goda = "go:github.com/loov/goda"
 huggingface-hub-cli = "pipx:huggingface_hub[cli]"
+oc = "asdf:https://github.com/sqtran/asdf-oc"
 
 [settings]
 trusted_config_paths = [
