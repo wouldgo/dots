@@ -43,6 +43,7 @@ gsa = "latest"
 xq = "latest"
 goda = "latest"
 huggingface-hub-cli = "latest"
+authelia = "latest"
 oc = "latest-4.22"
 
 [tool_alias]
@@ -72,6 +73,7 @@ gsa = "go:github.com/Zxilly/go-size-analyzer/cmd/gsa"
 xq = "go:github.com/sibprogrammer/xq"
 goda = "go:github.com/loov/goda"
 huggingface-hub-cli = "pipx:huggingface_hub[cli]"
+authelia = "github:authelia/authelia"
 oc = "asdf:https://github.com/sqtran/asdf-oc"
 
 [settings]
