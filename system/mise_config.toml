@@ -45,6 +45,7 @@ goda = "latest"
 huggingface-hub-cli = "latest"
 authelia = "latest"
 oc = "latest-4.22"
+gangway_cli = "latest"
 
 [tool_alias]
 zoxide = "aqua:ajeetdsouza/zoxide"
@@ -75,6 +76,7 @@ goda = "go:github.com/loov/goda"
 huggingface-hub-cli = "pipx:huggingface_hub[cli]"
 authelia = "github:authelia/authelia"
 oc = "asdf:https://github.com/sqtran/asdf-oc"
+gangway_cli = "go:github.com/openshift-eng/gangway-cli"
 
 [settings]
 trusted_config_paths = [
