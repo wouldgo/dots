@@ -82,4 +82,5 @@ gangway_cli = "go:github.com/openshift-eng/gangway-cli"
 trusted_config_paths = [
   '$ENV{HOME}/./config/mise/config.toml',
 ]
-experimental = true
+go.set_gobin = true
+go.set_goroot = true
