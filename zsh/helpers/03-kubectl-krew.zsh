@@ -5,8 +5,9 @@ function __kubectl_krew_boostrap () {
     local KREW_BIN=$(mise which krew)
 
     path=(
+      $path
       "${KREW_ROOT:-$HOME/.krew}/bin"
-      $path)
+    )
     export PATH
 
     local KREW_PLUGIN_LIST=$("${KREW_BIN}" list 2> /dev/null)

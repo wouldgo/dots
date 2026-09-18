@@ -3,8 +3,8 @@
 function __fzf_bootstrap () {
   if [ -d "${HOME}/.fzf" ]; then
     path=(
-      "${HOME}/.fzf/bin"
       $path
+      "${HOME}/.fzf/bin"
     )
     export PATH
   fi
