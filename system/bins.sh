@@ -2,13 +2,6 @@
 
 ENABLE_APPLE_KEYBOARD="NO"
 
-KERNEL_RELEASE=$(uname --kernel-release)
-WINDOWS_SUBSYSTEM_LINUX='WSL'
-IS_WSL=0
-if [[ $KERNEL_RELEASE == *"${WINDOWS_SUBSYSTEM_LINUX}"* ]]; then
-  IS_WSL=1
-fi
-
 function git_config () {
   git config \
     --global pull.rebase true
@@ -91,13 +84,8 @@ function do_it () {
   mise_cli;
   fzf;
   # ansible;
-
-  if [ ${IS_WSL} ]; then
-    # alacritty;
-
-    if [ "${ENABLE_APPLE_KEYBOARD}" == "YES" ]; then
+  if [ "${ENABLE_APPLE_KEYBOARD}" == "YES" ]; then
       apple_keyboard;
-    fi
   fi
 }
 

@@ -6,13 +6,6 @@ ZSHRC_LS_COMMAND="/bin/ls"
 ZSHRC_DOTS_FOLDER="${HOME}/git/dots"
 ZSHRC_CONFS_FOLDER="${ZSHRC_DOTS_FOLDER}/zsh"
 
-KERNEL_RELEASE=$(uname --kernel-release)
-WINDOWS_SUBSYSTEM_LINUX='WSL'
-IS_WSL=0
-if [[ $KERNEL_RELEASE == *"${WINDOWS_SUBSYSTEM_LINUX}"* ]]; then
-  IS_WSL=1
-fi
-
 #customizations
 eval `dircolors ${ZSHRC_CONFS_FOLDER}/colors/gruvbox.dircolors`
 for FILE in `${ZSHRC_LS_COMMAND} -L ${ZSHRC_CONFS_FOLDER}/helpers/*.{zsh,sh} | sort -g`; do
