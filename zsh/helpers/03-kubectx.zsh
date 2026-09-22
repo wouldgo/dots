@@ -1,17 +1,17 @@
 #!/usr/bin/env zsh
 
-function __kubens_boostrap () {
-  if [ "$(mise which -q kubens 2> /dev/null)" ]; then
-    local KUBENS_FOLDER=$(mise where kubens)
-
+function __kubectx_and_kubens_bootstrap () {
+  if [ "$(mise which -q kubectx 2> /dev/null)" ]; then
     if [ ! -f "${ZSH_COMPLETION_FOLDER}/_kubectx.zsh" ]; then
-      cat "${KUBENS_FOLDER}/completion/_kubectx.zsh" | tee "${ZSH_COMPLETION_FOLDER}/_kubectx.zsh" > /dev/null
+      ln -sf "${ZSHRC_CONFS_FOLDER}/completion/_kubectx.zsh" "${ZSH_COMPLETION_FOLDER}/_kubectx.zsh"
     fi
+  fi
 
+  if [ "$(mise which -q kubens 2> /dev/null)" ]; then
     if [ ! -f "${ZSH_COMPLETION_FOLDER}/_kubens.zsh" ]; then
-      cat "${KUBENS_FOLDER}/completion/_kubens.zsh" | tee "${ZSH_COMPLETION_FOLDER}/_kubens.zsh" > /dev/null
+      ln -sf "${ZSHRC_CONFS_FOLDER}/completion/_kubens.zsh" "${ZSH_COMPLETION_FOLDER}/_kubens.zsh"
     fi
   fi
 }
 
-__kubens_boostrap "$@"
+__kubectx_and_kubens_bootstrap "$@"

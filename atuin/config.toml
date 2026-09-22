@@ -2,8 +2,8 @@
 enter_accept = false
 search_mode = "daemon-fuzzy"
 
-sync_address = "https://atuin.wouldgo.me"
-sync_frequency = "30m"
+#sync_address = "https://atuin.wouldgo.me"
+#sync_frequency = "30m"
 
 [daemon]
 enabled = true
