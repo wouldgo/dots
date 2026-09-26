@@ -77,10 +77,12 @@ xq = "go:github.com/sibprogrammer/xq"
 goda = "go:github.com/loov/goda"
 huggingface-hub-cli = "pipx:huggingface_hub[cli]"
 authelia = "github:authelia/authelia"
+usage = "packslip:github.com/jdx/usage"
 oc = "asdf:https://github.com/sqtran/asdf-oc"
 podman = "github:podman-container-tools/podman"
 gangway_cli = "go:github.com/openshift-eng/gangway-cli"
 pi = "npm:@earendil-works/pi-coding-agent"
+tmux = "aqua:tmux/tmux-builds"
 
 [settings]
 trusted_config_paths = [
@@ -88,3 +90,4 @@ trusted_config_paths = [
 ]
 go.set_gobin = true
 go.set_goroot = true
+experimental = true
