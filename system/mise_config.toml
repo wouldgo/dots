@@ -48,6 +48,7 @@ oc = "latest-4.22"
 podman = "latest"
 gangway_cli = "latest"
 pi = "latest"
+git_crypt = "latest"
 
 [tool_alias]
 zoxide = "aqua:ajeetdsouza/zoxide"
@@ -83,6 +84,7 @@ podman = "github:podman-container-tools/podman"
 gangway_cli = "go:github.com/openshift-eng/gangway-cli"
 pi = "npm:@earendil-works/pi-coding-agent"
 tmux = "aqua:tmux/tmux-builds"
+git_crypt = "github:agwa/git-crypt"
 
 [settings]
 trusted_config_paths = [
