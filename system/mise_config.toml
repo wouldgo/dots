@@ -50,6 +50,7 @@ gangway_cli = "latest"
 pi = "latest"
 git_crypt = "latest"
 tirith = "latest"
+"npm:skills" = "latest"
 
 [tool_alias]
 zoxide = "aqua:ajeetdsouza/zoxide"
