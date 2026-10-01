@@ -49,6 +49,7 @@ podman = "latest"
 gangway_cli = "latest"
 pi = "latest"
 git_crypt = "latest"
+tirith = "latest"
 
 [tool_alias]
 zoxide = "aqua:ajeetdsouza/zoxide"
