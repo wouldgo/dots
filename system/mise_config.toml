@@ -51,6 +51,7 @@ pi = "latest"
 git_crypt = "latest"
 tirith = "latest"
 "npm:skills" = "latest"
+protoc = "latest"
 
 [tool_alias]
 zoxide = "aqua:ajeetdsouza/zoxide"
