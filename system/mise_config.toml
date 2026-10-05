@@ -52,6 +52,7 @@ git_crypt = "latest"
 tirith = "latest"
 "npm:skills" = "latest"
 protoc = "latest"
+cmctl = "latest"
 
 [tool_alias]
 zoxide = "aqua:ajeetdsouza/zoxide"
