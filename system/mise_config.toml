@@ -53,6 +53,7 @@ tirith = "latest"
 "npm:skills" = "latest"
 protoc = "latest"
 cmctl = "latest"
+"npm:@openai/codex" = "latest"
 
 [tool_alias]
 zoxide = "aqua:ajeetdsouza/zoxide"
