@@ -1,0 +1,36 @@
+# sway config, built from scratch one step at a time.
+# Read `man 5 sway` for every command used here.
+# Topic files live in config.d/ and are loaded in name order at the end.
+
+# --- Variables ----------------------------------------------------------------
+
+# Super as modifier: Alt stays free for the shell and programs (as in tmux)
+set $mod Mod4
+
+set $term alacritty
+set $font UbuntuMono Nerd Font 12
+
+# Gruvbox dark palette, the same used by alacritty, tmux and waybar
+set $bg0    #282828
+set $bg1    #3c3836
+set $bg2    #504945
+set $bg3    #665c54
+set $fg     #ebdbb2
+set $gray   #928374
+set $red    #fb4934
+set $yellow #fabd2f
+set $blue   #83a598
+set $aqua   #8ec07c
+set $orange #fe8019
+
+# Launcher: wmenu-run with gruvbox colors
+#   -N/-n normal bg/fg, -M/-m prompt bg/fg, -S/-s selection bg/fg
+set $menu wmenu-run -f "$font" -N $bg0 -n $fg -M $yellow -m $bg0 -S $bg2 -s $yellow
+
+# --- Includes -----------------------------------------------------------------
+
+# Distro snippets: export WAYLAND_DISPLAY, SWAYSOCK, XDG_CURRENT_DESKTOP=sway to
+# systemd and dbus, needed by portals (screen sharing, dark mode) and mako
+include /etc/sway/config.d/*
+
+include ~/.config/sway/config.d/*

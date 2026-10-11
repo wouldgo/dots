@@ -1,0 +1,17 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+{{ if eq .chezmoi.osRelease.id "arch" -}}
+sudo pacman -S --needed --noconfirm {{ range $group, $pkgs := .packages.arch }}{{ range $pkgs }}{{ . | quote }} {{ end }}{{ end }}
+{{- else if eq .chezmoi.osRelease.id "fedora" }}
+{{- range $group, $pkgs := .packages.fedora }}
+{{- range $pkgs }}
+{{- if hasPrefix "@" . }}
+sudo dnf group install -y {{ trimPrefix "@" . | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+sudo dnf install -y {{ range $group, $pkgs := .packages.fedora }}{{ range $pkgs }}{{ if not (hasPrefix "@" .) }}{{ . | quote }} {{ end }}{{ end }}{{ end }}
+{{- end }}
+{{ end -}}

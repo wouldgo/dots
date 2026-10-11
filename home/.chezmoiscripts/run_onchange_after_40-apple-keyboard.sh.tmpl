@@ -1,0 +1,13 @@
+{{ if .appleKeyboard -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "options hid_apple fnmode=2" | sudo tee /etc/modprobe.d/hid_apple.conf >/dev/null
+echo 2 | sudo tee /sys/module/hid_apple/parameters/fnmode >/dev/null || true
+
+{{ if eq .chezmoi.osRelease.id "arch" -}}
+sudo mkinitcpio -P
+{{ else if eq .chezmoi.osRelease.id "fedora" -}}
+sudo dracut --force --regenerate-all
+{{ end -}}
+{{ end -}}

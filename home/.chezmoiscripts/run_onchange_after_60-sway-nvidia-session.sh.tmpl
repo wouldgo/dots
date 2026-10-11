@@ -1,0 +1,18 @@
+{{ if .hasNvidia -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+# sway refuses to start on the proprietary NVIDIA driver without
+# --unsupported-gpu, so the stock "Sway" session drops back to the login
+# screen. Extra login entry "Sway (NVIDIA)" with the flag.
+# /usr/local/share: outside package-owned paths, still read by GDM.
+sudo mkdir -p /usr/local/share/wayland-sessions
+sudo tee /usr/local/share/wayland-sessions/sway-nvidia.desktop >/dev/null <<'DESKTOP'
+[Desktop Entry]
+Name=Sway (NVIDIA)
+Comment=An i3-compatible Wayland compositor, on the proprietary NVIDIA driver
+Exec=sway --unsupported-gpu
+Type=Application
+DesktopNames=sway
+DESKTOP
+{{ end -}}

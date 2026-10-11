@@ -1,0 +1,16 @@
+# mako notifications, `man 5 mako`. Gruvbox dark, top right.
+
+anchor=top-right
+font=UbuntuMono Nerd Font 12
+background-color=#3c3836
+text-color=#ebdbb2
+border-color=#fabd2f
+border-size=2
+padding=10
+margin=10
+width=400
+default-timeout=5000
+
+[urgency=high]
+border-color=#fb4934
+default-timeout=0

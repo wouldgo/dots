@@ -1,0 +1,11 @@
+{{- /* chezmoi:modify-template */ -}}
+{{- /* Merges the keys from .chezmoidata/claude.yaml into the existing file,
+       keeping everything Claude Code wrote there */ -}}
+{{- $settings := dict -}}
+{{- if .chezmoi.stdin -}}
+{{-   $settings = .chezmoi.stdin | fromJson -}}
+{{- end -}}
+{{- range $key, $value := .claude.settings -}}
+{{-   $settings = set $settings $key $value -}}
+{{- end -}}
+{{- $settings | toPrettyJson }}

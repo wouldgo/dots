@@ -1,6 +1,3 @@
-alacritty/alacritty.toml
-alacritty/gruvbox_dark.toml
 
 tmux/tpm-master/
-zsh/colors/*
 !zsh/colors/index.sh

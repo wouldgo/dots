@@ -1,0 +1,125 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
+version: 3
+final_space: true
+console_title_template: "{{ .AbsolutePWD }}{{if .Root}}::root{{end}}::{{.Shell}}"
+blocks:
+- type: prompt
+  alignment: left
+  segments:
+  -
+    type: path
+    style: plain
+    cache:
+      strategy: folder
+    options:
+      style: full
+    template: "{{ .Path }}"
+    foreground: lightYellow
+    background: transparent
+  -
+    type: status
+    style: plain
+    template: "{{if gt .Code 0}} {{ .Code }}{{end}}"
+    background: transparent
+    foreground_templates:
+    - "{{if .Error }}red{{end}}"
+  -
+    type: git
+    style: plain
+    options:
+      fetch_status: true
+      fetch_upstream_icon: true
+      fetch_push_status: true
+      source: cli
+    template: " {{ .HEAD }}{{ if .Working.Changed }}|{{ if gt .Behind 0 }}\uea9d {{ .Behind }}|{{ end }}{{ if gt .Ahead 0 }}\ueaa0 {{ .Ahead }}|{{ end }}{{ if gt .Working.Unmerged 0 }}\uebd9 {{ .Working.Unmerged }}|{{ end }}{{ if gt .Working.Deleted 0 }}\uea81 {{ .Working.Deleted }}|{{ end }}{{ if gt .Working.Added 0 }}\uea7f {{ .Working.Added }}|{{ end }}{{ if gt .Working.Modified 0 }}\uea73 {{ .Working.Modified }}|{{ end }}{{ if gt .Working.Untracked 0 }}\uea6a {{ .Working.Untracked }}|{{ end }}{{ end }}"
+    foreground: lightBlue
+    background: transparent
+  -
+    type: executiontime
+    style: plain
+    options:
+      threshold: 2000
+    template: " {{ .FormattedMs }}"
+    foreground: yellow
+    background: transparent
+- type: prompt
+  alignment: right
+  segments:
+  -
+    type: go
+    style: diamond
+    options:
+      cache_duration: none
+    leading_diamond: 
+    trailing_diamond: 
+    template:  {{ .Full }}
+    foreground: black
+    background: lightBlue
+  -
+    type: node
+    style: diamond
+    options:
+      cache_duration: none
+    leading_diamond: 
+    trailing_diamond: 
+    template:  {{ .Full }}
+    foreground: black
+    background: green
+  -
+    type: python
+    style: diamond
+    options:
+      cache_duration: none
+    leading_diamond: 
+    trailing_diamond: 
+    template:  {{ .Full }}
+    foreground: black
+    background: yellow
+  -
+    type: rust
+    style: diamond
+    options:
+      cache_duration: none
+    leading_diamond: 
+    trailing_diamond: 
+    template:  {{ .Full }}
+    foreground: black
+    background: lightRed
+  -
+    type: java
+    style: diamond
+    leading_diamond: 
+    trailing_diamond: 
+    template:  {{ .Full }}
+    foreground: black
+    background: white
+  -
+    type: kubectl
+    style: diamond
+    leading_diamond: 
+    trailing_diamond: 
+    template:  {{.Context}}{{if .Namespace}}:{{.Namespace}}{{end}}
+    foreground: black
+    background: blue
+- type: prompt
+  alignment: left
+  segments:
+  -
+    type: text
+    style: plain
+    options:
+      cache_duration: none
+    template: ❱
+    foreground: white
+    background: transparent
+  newline: true
+secondary_prompt:
+  template: "❱❱ "
+  background: transparent
+  foreground: white
+transient_prompt:
+  template: "❱ "
+  background: transparent
+  foreground_templates:
+  - "{{if gt .Code 0}}red{{end}}"
+  - "{{if eq .Code 0}}white{{end}}"

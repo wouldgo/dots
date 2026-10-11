@@ -1,0 +1,29 @@
+# swaylock, `man 1 swaylock`: every long option without the leading --.
+# Gruvbox dark ring on a plain background.
+
+color=282828
+font=UbuntuMono Nerd Font
+indicator-radius=80
+indicator-thickness=8
+show-failed-attempts
+ignore-empty-password
+
+inside-color=3c3836
+ring-color=504945
+line-color=00000000
+separator-color=00000000
+key-hl-color=fabd2f
+bs-hl-color=fe8019
+text-color=ebdbb2
+
+inside-ver-color=3c3836
+ring-ver-color=83a598
+text-ver-color=83a598
+
+inside-wrong-color=3c3836
+ring-wrong-color=fb4934
+text-wrong-color=fb4934
+
+inside-clear-color=3c3836
+ring-clear-color=8ec07c
+text-clear-color=8ec07c

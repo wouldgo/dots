@@ -1,0 +1,127 @@
+packages:
+  arch:
+    apps:
+      - zed
+    base:
+      - base-devel
+      - cmake
+      - git
+      - curl
+      - gnupg
+      - time
+      - zsh
+      - openssh
+      - unzip
+      - podman
+      # docker CLI that runs podman
+      - podman-docker
+    # x86_64 and aarch64 only
+    virt:
+      - qemu-desktop
+      - qemu-system-aarch64
+      - qemu-img
+      - edk2-ovmf
+      - edk2-aarch64
+      - qemu-user-static
+      - qemu-user-static-binfmt
+      - dosfstools
+      - e2fsprogs
+    # GNOME is the starting point: only what sway and these configs need on top
+    desktop:
+      - alacritty
+      - sway
+      - waybar
+      - swaylock
+      - swayidle
+      - mako
+      - wmenu
+      - grim
+      - slurp
+      - wl-clipboard
+      # notify-send, used by the Claude Code notification hook
+      - libnotify
+      - xdg-desktop-portal-wlr
+      - xdg-desktop-portal-gtk
+      - polkit
+      # GNOME's polkit agent lives in gnome-shell: sway needs its own
+      # (GTK, available on Arch and Fedora)
+      - mate-polkit
+      - xorg-xwayland
+      - pavucontrol
+      - brightnessctl
+      # media keys (play/pause/next) for any MPRIS player
+      - playerctl
+      # network entry of the sway settings menu
+      - nm-connection-editor
+    fonts:
+      - noto-fonts-cjk
+  # Installed with yay (bootstrapped when missing), see run_onchange_after_20-extra-packages
+  aur:
+    desktop:
+      - brave-bin
+    dev:
+      - esp-idf
+  fedora:
+    base:
+      - "@development-tools"
+      - cmake
+      - git
+      - gnupg2
+      - time
+      - zsh
+      - openssh-clients
+      - unzip
+      # dnf config-manager, used to add third-party repos
+      - dnf5-plugins
+      - podman
+      # docker CLI that runs podman
+      - podman-docker
+    # x86_64 and aarch64 only
+    virt:
+      # full x86 emulator with GUI and audio modules (shared with aarch64)
+      - qemu-system-x86
+      - qemu-system-aarch64-core
+      - qemu-img
+      - edk2-ovmf
+      - edk2-aarch64
+      # binfmt rules included
+      - qemu-user-static-aarch64
+      - dosfstools
+      - e2fsprogs
+      - kpartx
+    # GNOME is the starting point: only what sway and these configs need on top
+    desktop:
+      - alacritty
+      - sway
+      - waybar
+      - swaylock
+      - swayidle
+      - mako
+      - wmenu
+      - grim
+      - slurp
+      - wl-clipboard
+      # notify-send, used by the Claude Code notification hook
+      - libnotify
+      - xdg-desktop-portal-wlr
+      - xdg-desktop-portal-gtk
+      - polkit
+      # GNOME's polkit agent lives in gnome-shell: sway needs its own
+      - mate-polkit
+      - xorg-x11-server-Xwayland
+      - pavucontrol
+      - brightnessctl
+      # media keys (play/pause/next) for any MPRIS player
+      - playerctl
+      # network entry of the sway settings menu
+      - nm-connection-editor
+    fonts:
+      - google-noto-sans-cjk-vf-fonts
+  # Third-party dnf repos (the Fedora counterpart of aur), see
+  # run_onchange_after_20-extra-packages, which also installs zed with its
+  # official installer. esp-idf has no Fedora package: use Espressif's installer
+  fedora_repos:
+    brave:
+      repofile: https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
+      packages:
+        - brave-browser

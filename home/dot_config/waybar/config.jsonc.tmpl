@@ -1,0 +1,95 @@
+// waybar config, JSON with comments. Docs: `man 5 waybar` and one man page
+// per module, e.g. `man 5 waybar-pulseaudio`.
+{
+    "layer": "top",
+    "position": "top",
+    "height": 28,
+    "spacing": 0,
+
+    "modules-left": ["sway/workspaces", "sway/mode"],
+    "modules-center": ["clock"],
+    "modules-right": [
+        "tray",
+        "pulseaudio",
+        "network",
+        "cpu",
+        "memory",
+        "disk",
+{{- if .isLaptop }}
+        "backlight",
+        "battery",
+{{- end }}
+        "custom/settings"
+    ],
+
+    "sway/workspaces": {
+        "disable-scroll": true
+    },
+    "sway/mode": {
+        "format": "{}"
+    },
+
+    "clock": {
+        "format": "{:%a %d %b  %H:%M}",
+        "tooltip-format": "<tt>{calendar}</tt>"
+    },
+
+    "tray": {
+        "spacing": 8
+    },
+
+    // Click opens the mixer
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "󰝟 muted",
+        "format-icons": { "default": ["󰕿", "󰖀", "󰕾"] },
+        "on-click": "pavucontrol",
+        "scroll-step": 5
+    },
+
+    "network": {
+        "format-wifi": "󰖩 {essid}",
+        "format-ethernet": "󰈀 {ipaddr}",
+        "format-disconnected": "󰖪 offline",
+        "tooltip-format": "{ifname} {ipaddr}/{cidr} via {gwaddr}",
+        "on-click": "nm-connection-editor"
+    },
+
+    "cpu": {
+        "format": " {usage}%",
+        "interval": 5
+    },
+    "memory": {
+        "format": " {percentage}%",
+        "tooltip-format": "{used:0.1f}G / {total:0.1f}G",
+        "interval": 5
+    },
+    "disk": {
+        "format": "󰋊 {percentage_used}%",
+        "tooltip-format": "{path}: {used} / {total}",
+        "path": "/",
+        "interval": 60
+    },
+{{- if .isLaptop }}
+
+    // Scroll changes the brightness
+    "backlight": {
+        "format": "󰃠 {percent}%",
+        "on-scroll-up": "brightnessctl set 5%+",
+        "on-scroll-down": "brightnessctl --min-value=1% set 5%-"
+    },
+    "battery": {
+        "format": "{icon} {capacity}%",
+        "format-charging": "󰂄 {capacity}%",
+        "format-icons": ["󰂎", "󰁻", "󰁽", "󰁿", "󰂁", "󰁹"],
+        "states": { "warning": 25, "critical": 10 }
+    },
+{{- end }}
+
+    // Same menu as $mod+Shift+e
+    "custom/settings": {
+        "format": "",
+        "tooltip-format": "Settings and power",
+        "on-click": "~/.local/bin/sway-menu"
+    }
+}

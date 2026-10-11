@@ -1,0 +1,45 @@
+# shellcheck shell=zsh
+#zmodload zsh/zprof
+
+export TERM=alacritty
+
+ZSHRC_CONFS_FOLDER="${HOME}/.config/zsh"
+
+source "${ZSHRC_CONFS_FOLDER}/zinit.zsh"
+
+eval "$(dircolors "${ZSHRC_CONFS_FOLDER}/colors/gruvbox.dircolors")"
+
+for FILE in "${ZSHRC_CONFS_FOLDER}"/helpers/*.(zsh|sh)(N); do
+
+  source "${FILE}"
+  #echo "helper ${FILE} loaded."
+done
+
+__zsh_completion_register_new
+
+zinit cdreplay -q
+
+autoload -Uz add-zsh-hook
+
+for FILE in "${ZSHRC_CONFS_FOLDER}"/keybindings/*.(zsh|sh)(N); do
+
+  source "${FILE}"
+  #echo "config ${FILE} loaded."
+done
+
+# completion styling
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu no
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1lh --git-ignore --group-directories-first --sort=accessed --color=always $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza -1lh --git-ignore --group-directories-first --sort=accessed --color=always $realpath'
+
+add-zsh-hook chpwd __load_node
+add-zsh-hook chpwd __load_go
+add-zsh-hook chpwd __load_python
+
+__load_node
+__load_go
+__load_python
+
+#zprof

@@ -1,0 +1,25 @@
+# Keys of ~/.claude/settings.json managed by chezmoi.
+# Every other key is left to Claude Code; list them with claude-settings-unmanaged.
+claude:
+  settings:
+    theme: auto
+    statusLine:
+      type: command
+      command: ~/.claude/statusline-command.sh
+    # Desktop notifications: see ~/.claude/hooks/notify.sh
+    hooks:
+      UserPromptSubmit:
+        - hooks:
+            - type: command
+              command: ~/.claude/hooks/notify.sh
+      Stop:
+        - hooks:
+            - type: command
+              command: ~/.claude/hooks/notify.sh
+              async: true
+      Notification:
+        - matcher: "permission_prompt|elicitation_dialog|agent_needs_input"
+          hooks:
+            - type: command
+              command: ~/.claude/hooks/notify.sh
+              async: true

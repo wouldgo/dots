@@ -1,0 +1,7 @@
+[pull]
+	rebase = true
+[user]
+	name = wouldgo
+	email = 1098882+wouldgo@users.noreply.github.com
+[rerere]
+	enabled = true

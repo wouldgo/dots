@@ -1,0 +1,7 @@
+{{- $appleKeyboard := promptBoolOnce . "appleKeyboard" "Is there an Apple keyboard on this machine?" false -}}
+{{- $isLaptop := promptBoolOnce . "isLaptop" "Is this machine a laptop (battery, backlight, touchpad)?" false -}}
+{{- $hasNvidia := promptBoolOnce . "hasNvidia" "Does this machine use the proprietary NVIDIA driver?" false -}}
+[data]
+appleKeyboard = {{ $appleKeyboard }}
+isLaptop = {{ $isLaptop }}
+hasNvidia = {{ $hasNvidia }}

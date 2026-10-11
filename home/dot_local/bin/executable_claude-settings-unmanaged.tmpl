@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Lists the keys of ~/.claude/settings.json not managed by chezmoi
+# (managed keys come from .chezmoidata/claude.yaml).
+set -euo pipefail
+
+settings="${HOME}/.claude/settings.json"
+managed='{{ keys .claude.settings | sortAlpha | toJson }}'
+
+[ -f "${settings}" ] || exit 0
+
+# jq comes from mise: fall back to it when jq is not in PATH
+if command -v jq >/dev/null; then
+  jq=(jq)
+elif [ -x "${HOME}/.local/bin/mise" ]; then
+  jq=("${HOME}/.local/bin/mise" exec -- jq)
+else
+  echo "claude-settings-unmanaged: jq not found" >&2
+  exit 0
+fi
+
+unmanaged=$("${jq[@]}" --argjson managed "${managed}" \
+  'with_entries(select(.key as $k | $managed | index($k) | not))' "${settings}")
+
+if [ "${unmanaged}" != "{}" ]; then
+  echo "Keys in ${settings} not managed by chezmoi:"
+  echo "${unmanaged}"
+fi

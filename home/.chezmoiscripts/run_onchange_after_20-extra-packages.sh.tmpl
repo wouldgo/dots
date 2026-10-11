@@ -1,0 +1,32 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/usr/bin/env bash
+# Installs packages from outside the official repos (.chezmoidata/packages.yaml):
+#   - Arch: AUR packages with yay, bootstrapped when missing
+#   - Fedora: third-party dnf repos and their packages
+set -euo pipefail
+
+{{ if eq .chezmoi.osRelease.id "arch" -}}
+# Runs after the files, so makepkg already picks up ~/.config/pacman/makepkg.conf
+if ! command -v yay >/dev/null; then
+  tmp=$(mktemp -d)
+  trap 'rm -rf "${tmp}"' EXIT
+  # yay-bin: prebuilt, no Go toolchain needed
+  git clone --depth 1 https://aur.archlinux.org/yay-bin.git "${tmp}/yay-bin"
+  (cd "${tmp}/yay-bin" && makepkg -si --noconfirm)
+fi
+
+yay -S --needed --noconfirm {{ range $group, $pkgs := .packages.aur }}{{ range $pkgs }}{{ . | quote }} {{ end }}{{ end }}
+{{- else if eq .chezmoi.osRelease.id "fedora" -}}
+{{ range $name, $repo := .packages.fedora_repos }}
+# {{ $name }}
+sudo dnf config-manager addrepo --overwrite --from-repofile={{ $repo.repofile | quote }}
+sudo dnf install -y {{ range $repo.packages }}{{ . | quote }} {{ end }}
+{{- end }}
+
+# zed: not in the Fedora repos. Official installer: ~/.local/zed.app, linked in
+# ~/.local/bin, with desktop entry; it updates itself afterwards
+if [ ! -x "${HOME}/.local/bin/zed" ]; then
+  curl -fsSL https://zed.dev/install.sh | sh
+fi
+{{- end }}
+{{ end -}}

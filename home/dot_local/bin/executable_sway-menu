@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# Settings and power menu for sway: wmenu list, the chosen entry runs.
+# Opened from the waybar gear and with $mod+Shift+e.
+set -euo pipefail
+
+# Gruvbox, same colors as the launcher ($menu in ~/.config/sway/config)
+wmenu_opts=(-f "UbuntuMono Nerd Font 12" -N 282828 -n ebdbb2 -M fabd2f -m 282828 -S 504945 -s fabd2f)
+
+entries="Lock
+Audio
+Network
+GNOME Settings
+Reload sway
+Logout
+Suspend
+Reboot
+Poweroff"
+
+choice=$(printf '%s\n' "$entries" | wmenu -p "Settings" "${wmenu_opts[@]}") || exit 0
+
+case "$choice" in
+    "Lock")           swaylock -f ;;
+    "Audio")          pavucontrol & ;;
+    "Network")        nm-connection-editor & ;;
+    # GNOME panels refuse to load unless the desktop looks like GNOME
+    "GNOME Settings") XDG_CURRENT_DESKTOP=GNOME gnome-control-center & ;;
+    "Reload sway")    swaymsg reload ;;
+    "Logout")         swaymsg exit ;;
+    "Suspend")        systemctl suspend ;;
+    "Reboot")         systemctl reboot ;;
+    "Poweroff")       systemctl poweroff ;;
+esac

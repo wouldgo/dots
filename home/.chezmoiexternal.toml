@@ -1,0 +1,4 @@
+[".config/alacritty/themes/gruvbox_dark.toml"]
+type = "file"
+url = "https://raw.githubusercontent.com/alacritty/alacritty-theme/master/themes/gruvbox_dark.toml"
+refreshPeriod = "720h"
