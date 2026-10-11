@@ -8,7 +8,7 @@ function do_it () {
   mkdir --parents "${HOME}/.config/mise" && \
   ln -sf "${CURRENT_DIR}/mise_config.toml" "${HOME}/.config/mise/config.toml"
 
-  "${HOME}/.local/bin/mise install"
+  "${HOME}/.local/bin/mise" install
 }
 
 do_it "$@"

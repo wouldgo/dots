@@ -4,6 +4,9 @@ make
 time
 
 
+sudo pacman -S podman     # Arch
+sudo dnf install podman   # Fedora
+
 #
 sudo dnf group install development-tools
 

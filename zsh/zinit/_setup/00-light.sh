@@ -6,7 +6,6 @@ function do_it () {
   zinit light zsh-users/zsh-autosuggestions
   zinit light Aloxaf/fzf-tab
   zinit light BreakingPitt/zsh-packer
-  zinit light StackExchange/blackbox
 }
 
 do_it "$@"

@@ -14,7 +14,7 @@ function __mise_bootstrap () {
 
   if [ ! -f "${ZSH_COMPLETION_FOLDER}/_mise.zsh" ]; then
 
-    "${HOME}"/.local/bin/mise completion zsh > "${ZSH_COMPLETION_FOLDER}/_mise.zsh"
+    "${HOME}/.local/bin/mise" completion zsh > "${ZSH_COMPLETION_FOLDER}/_mise.zsh"
   fi
 }
 
