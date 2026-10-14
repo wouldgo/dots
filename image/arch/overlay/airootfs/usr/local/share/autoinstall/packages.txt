@@ -1,0 +1,47 @@
+# System tier: a complete GNOME OS without personal customization.
+# Personal apps live in the dots repo (home/.chezmoidata/packages.yaml).
+# CPU microcode and the NVIDIA driver are added by the installer after detection.
+
+# base / boot
+base
+linux
+linux-headers
+linux-firmware
+sudo
+efibootmgr
+btrfs-progs
+# btrfs tools: GUI for subvolumes, snapshots, scrub; compression ratio
+btrfs-assistant
+compsize
+# man pages and basic CLI
+man-db
+man-pages
+vim
+nano
+less
+wget
+usbutils
+unzip
+7zip
+# filesystems
+ntfs-3g
+mtools
+# AppImages
+fuse2
+# desktop
+gnome
+gnome-shell-extensions
+gnome-tweaks
+# audio
+pipewire
+pipewire-audio
+pipewire-pulse
+wireplumber
+# network, bluetooth, printing
+networkmanager
+bluez
+bluez-utils
+cups
+# bootstraps the dotfiles (chezmoi and git are not in packages.yaml)
+chezmoi
+git

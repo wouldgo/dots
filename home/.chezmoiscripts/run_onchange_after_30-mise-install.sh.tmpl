@@ -2,4 +2,5 @@
 # config hash: {{ include "dot_config/mise/config.toml" | sha256sum }}
 set -euo pipefail
 
-"${HOME}/.local/bin/mise" install
+# --yes: asdf plugins (e.g. oc) install without a prompt
+"${HOME}/.local/bin/mise" install --yes

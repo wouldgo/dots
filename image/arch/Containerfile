@@ -1,0 +1,11 @@
+FROM docker.io/library/archlinux:latest
+
+RUN pacman -Syu --noconfirm --needed archiso \
+    && pacman -Scc --noconfirm
+
+WORKDIR /build
+
+COPY overlay/ ./overlay/
+COPY packages.extra build-iso.sh ./
+
+ENTRYPOINT ["bash", "/build/build-iso.sh"]

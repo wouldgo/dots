@@ -1,0 +1,527 @@
+#!/usr/bin/env bash
+# Arch Linux installer: GPT (ESP + root), LUKS2, btrfs subvolumes, systemd-boot,
+# GNOME. It produces a complete OS without personal customization, clones the dots
+# repo, writes the chezmoi data detected from the hardware and powers off.
+#
+# Settings, last wins:
+#   /usr/local/share/autoinstall/defaults.env
+#   QEMU fw_cfg opt/autoinstall (same KEY=value format)
+#   kernel cmdline autoinstall.<key>=<value> (e.g. autoinstall.disk=/dev/vda)
+# Whatever is still empty is prompted for on tty1.
+set -Eeuo pipefail
+
+SHARE=/usr/local/share/autoinstall
+LOG=/var/log/autoinstall.log
+MNT=/mnt
+MAPPER=root
+
+declare -A CFG=()
+UNATTENDED=false
+
+# --- helpers ----------------------------------------------------------------
+
+log() { printf '\n==> %s\n' "$*"; }
+die() { printf '\n!!! %s\n' "$*" >&2; exit 1; }
+
+is_true() { [[ "${1,,}" =~ ^(1|y|yes|true|on)$ ]]; }
+
+load_env() {
+  local line key value
+  while IFS= read -r line || [[ -n "${line}" ]]; do
+    [[ "${line}" =~ ^[[:space:]]*([A-Za-z_][A-Za-z0-9_]*)=(.*)$ ]] || continue
+    key="${BASH_REMATCH[1]^^}"
+    value="${BASH_REMATCH[2]}"
+    value="${value%\"}"; value="${value#\"}"
+    value="${value%\'}"; value="${value#\'}"
+    CFG[${key}]="${value}"
+  done
+}
+
+load_config() {
+  local param fwcfg=/sys/firmware/qemu_fw_cfg/by_name/opt/autoinstall/raw
+
+  [[ -f "${SHARE}/defaults.env" ]] && load_env < "${SHARE}/defaults.env"
+
+  modprobe qemu_fw_cfg 2>/dev/null || true
+  if [[ -r "${fwcfg}" ]]; then
+    load_env < "${fwcfg}"
+    echo "loaded settings from QEMU fw_cfg"
+  fi
+
+  for param in $(< /proc/cmdline); do
+    case "${param}" in
+      autoinstall.*=*)
+        param="${param#autoinstall.}"
+        CFG[${param%%=*}]="${param#*=}"
+        ;;
+    esac
+  done
+  # cmdline keys are lowercase: normalize everything to uppercase
+  local k
+  for k in "${!CFG[@]}"; do
+    if [[ "${k}" != "${k^^}" ]]; then
+      CFG[${k^^}]="${CFG[${k}]}"
+      unset "CFG[${k}]"
+    fi
+  done
+
+  # Unattended = nothing to ask: the disk and every secret are given
+  if [[ -n "${CFG[DISK]:-}" && -n "${CFG[PASSWORD_HASH]:-}" ]] \
+    && { ! is_true "${CFG[LUKS]:-true}" || [[ -n "${CFG[LUKS_PASSPHRASE]:-}" ]]; }; then
+    UNATTENDED=true
+  fi
+}
+
+# ask KEY "question" [default]: fills CFG[KEY] when empty
+ask() {
+  local key="$1" question="$2" default="${3:-}" answer
+  [[ -n "${CFG[${key}]:-}" ]] && return 0
+  ${UNATTENDED} && { CFG[${key}]="${default}"; return 0; }
+  read -r -p "${question}${default:+ [${default}]}: " answer
+  CFG[${key}]="${answer:-${default}}"
+}
+
+# ask_secret VAR "question": reads twice, stores in the named variable
+ask_secret() {
+  local -n out="$1"
+  local first second
+  while true; do
+    read -r -s -p "$2: " first; echo
+    read -r -s -p "Repeat: " second; echo
+    if [[ -z "${first}" ]]; then
+      echo "Empty, try again."
+    elif [[ "${first}" != "${second}" ]]; then
+      echo "They don't match, try again."
+    else
+      out="${first}"
+      return 0
+    fi
+  done
+}
+
+part() {
+  # part N: path of partition N of the target disk
+  lsblk -lnpo NAME,PARTN "${CFG[DISK]}" | awk -v n="$1" '$2 == n { print $1 }'
+}
+
+# --- disk selection -----------------------------------------------------------
+
+boot_disk() {
+  # Disk holding the live medium (USB stick): never a target
+  local src
+  src="$(findmnt -no SOURCE /run/archiso/bootmnt 2>/dev/null || true)"
+  [[ -n "${src}" ]] && lsblk -no PKNAME "${src}" 2>/dev/null | head -1
+  # Also any disk with a partition labeled like the ISO
+  lsblk -lnpo PKNAME,LABEL | awk '$2 ~ /^ARCH_/ { print $1 }' | xargs -r -n1 basename
+}
+
+candidate_disks() {
+  local excluded
+  excluded="$(boot_disk | sort -u)"
+  lsblk -dnpo NAME,TYPE | awk '$2 == "disk" { print $1 }' \
+    | grep -Ev '/dev/(zram|loop|sr)' \
+    | while read -r d; do
+        grep -qx "$(basename "${d}")" <<< "${excluded}" || echo "${d}"
+      done
+}
+
+pick_disk() {
+  local disks d i choice confirm
+  mapfile -t disks < <(candidate_disks)
+  (( ${#disks[@]} > 0 )) || die "no target disk found"
+
+  if [[ "${CFG[DISK]:-}" == auto ]]; then
+    for pattern in '/dev/nvme' '/dev/vd' '/dev/sd'; do
+      for d in "${disks[@]}"; do
+        [[ "${d}" == "${pattern}"* ]] && { CFG[DISK]="${d}"; return 0; }
+      done
+    done
+    CFG[DISK]="${disks[0]}"
+    return 0
+  fi
+
+  if [[ -n "${CFG[DISK]:-}" ]]; then
+    printf '%s\n' "${disks[@]}" | grep -qx "${CFG[DISK]}" \
+      || die "${CFG[DISK]} is not an available disk (live medium or missing)"
+    return 0
+  fi
+
+  echo "Available disks (EVERYTHING on the chosen one will be erased):"
+  for i in "${!disks[@]}"; do
+    printf '  %d) %s\n' "$((i + 1))" \
+      "$(lsblk -dno NAME,SIZE,TRAN,MODEL "${disks[$i]}" | tr -s ' ')"
+  done
+  while true; do
+    read -r -p "Disk number: " choice
+    [[ "${choice}" =~ ^[0-9]+$ ]] && (( choice >= 1 && choice <= ${#disks[@]} )) && break
+  done
+  d="${disks[$((choice - 1))]}"
+  lsblk "${d}"
+  read -r -p "Type ${d} to confirm the wipe: " confirm
+  [[ "${confirm}" == "${d}" ]] || die "not confirmed, nothing touched"
+  CFG[DISK]="${d}"
+}
+
+# --- hardware detection ---------------------------------------------------------
+
+detect_hardware() {
+  CPU_UCODE=""
+  case "$(awk -F': ' '/^vendor_id/ { print $2; exit }' /proc/cpuinfo)" in
+    GenuineIntel) CPU_UCODE=intel-ucode ;;
+    AuthenticAMD) CPU_UCODE=amd-ucode ;;
+  esac
+
+  HAS_NVIDIA=false
+  lspci -d 10de::0300 2>/dev/null | grep -q . && HAS_NVIDIA=true
+  lspci -d 10de::0302 2>/dev/null | grep -q . && HAS_NVIDIA=true
+
+  IS_LAPTOP=false
+  compgen -G '/sys/class/power_supply/BAT*' > /dev/null && IS_LAPTOP=true
+
+  APPLE_KEYBOARD=false
+  lsusb -d 05ac: 2>/dev/null | grep -qi keyboard && APPLE_KEYBOARD=true
+
+  echo "cpu microcode: ${CPU_UCODE:-none}, nvidia: ${HAS_NVIDIA}, laptop: ${IS_LAPTOP}, apple keyboard: ${APPLE_KEYBOARD}"
+}
+
+# --- steps --------------------------------------------------------------------
+
+wait_for_live_system() {
+  log "Waiting for network and pacman keyring"
+  systemctl start pacman-init.service
+  local i
+  for i in $(seq 60); do
+    curl -fsI --max-time 5 https://archlinux.org > /dev/null 2>&1 && return 0
+    sleep 2
+  done
+  die "no network (for wifi run iwctl, then autoinstall again)"
+}
+
+update_mirrors() {
+  log "Ranking mirrors"
+  local args=(--protocol https --latest 20 --sort rate --download-timeout 5
+              --save /etc/pacman.d/mirrorlist)
+  [[ -n "${CFG[MIRROR_COUNTRY]:-}" ]] && args+=(--country "${CFG[MIRROR_COUNTRY]}")
+  reflector "${args[@]}" || echo "reflector failed, keeping the default mirrorlist"
+
+  # multilib: lib32-nvidia-utils (and steam, if installed by hand)
+  if ! grep -q '^\[multilib\]' /etc/pacman.conf; then
+    printf '\n[multilib]\nInclude = /etc/pacman.d/mirrorlist\n' >> /etc/pacman.conf
+  fi
+  sed -i 's/^#ParallelDownloads.*/ParallelDownloads = 10/' /etc/pacman.conf
+  pacman -Sy
+}
+
+partition() {
+  log "Partitioning ${CFG[DISK]}"
+  umount -R "${MNT}" 2>/dev/null || true
+  cryptsetup close "${MAPPER}" 2>/dev/null || true
+
+  wipefs -af "${CFG[DISK]}"
+  sgdisk --zap-all "${CFG[DISK]}"
+  if is_true "${CFG[LUKS]}"; then
+    sgdisk -n1:0:+1G -t1:ef00 -c1:ESP -n2:0:0 -t2:8309 -c2:cryptroot "${CFG[DISK]}"
+  else
+    sgdisk -n1:0:+1G -t1:ef00 -c1:ESP -n2:0:0 -t2:8304 -c2:root "${CFG[DISK]}"
+  fi
+  partprobe "${CFG[DISK]}"
+  udevadm settle
+
+  ESP_PART="$(part 1)"
+  ROOT_PART="$(part 2)"
+  [[ -b "${ESP_PART}" && -b "${ROOT_PART}" ]] || die "partitions not found"
+
+  mkfs.fat -F 32 -n ESP "${ESP_PART}"
+
+  ROOT_DEV="${ROOT_PART}"
+  if is_true "${CFG[LUKS]}"; then
+    log "Encrypting ${ROOT_PART} (LUKS2)"
+    printf '%s' "${LUKS_PASSPHRASE}" \
+      | cryptsetup luksFormat --type luks2 --batch-mode --label cryptroot \
+          --key-file=- "${ROOT_PART}"
+    # --persistent stores allow-discards in the header (TRIM through LUKS)
+    printf '%s' "${LUKS_PASSPHRASE}" \
+      | cryptsetup open --allow-discards --persistent --key-file=- "${ROOT_PART}" "${MAPPER}"
+    ROOT_DEV="/dev/mapper/${MAPPER}"
+    LUKS_UUID="$(cryptsetup luksUUID "${ROOT_PART}")"
+  fi
+}
+
+create_filesystems() {
+  log "Creating btrfs subvolumes"
+  mkfs.btrfs -f -L arch "${ROOT_DEV}"
+  mount "${ROOT_DEV}" "${MNT}"
+  local sv
+  for sv in @ @home @snapshots @var_log @var_cache_pacman @swap @vms; do
+    btrfs subvolume create "${MNT}/${sv}"
+  done
+  umount "${MNT}"
+
+  BTRFS_OPTS="noatime,compress=zstd:1"
+  mount -o "${BTRFS_OPTS},subvol=@" "${ROOT_DEV}" "${MNT}"
+  # @snapshots is mounted after snapper creates its config (see setup_snapper)
+  mkdir -p "${MNT}"/{boot,home,var/log,var/cache/pacman/pkg,swap}
+  mount -o "${BTRFS_OPTS},subvol=@home" "${ROOT_DEV}" "${MNT}/home"
+  mount -o "${BTRFS_OPTS},subvol=@var_log" "${ROOT_DEV}" "${MNT}/var/log"
+  mount -o "${BTRFS_OPTS},subvol=@var_cache_pacman" "${ROOT_DEV}" "${MNT}/var/cache/pacman/pkg"
+  mount -o "noatime,subvol=@swap" "${ROOT_DEV}" "${MNT}/swap"
+  mount -o umask=0077 "${ESP_PART}" "${MNT}/boot"
+
+  if [[ "${CFG[SWAP_SIZE]:-0}" != 0 ]]; then
+    btrfs filesystem mkswapfile --size "${CFG[SWAP_SIZE]}" --uuid clear "${MNT}/swap/swapfile"
+    swapon "${MNT}/swap/swapfile"
+  fi
+}
+
+install_packages() {
+  log "Installing packages"
+  local pkgs
+  mapfile -t pkgs < <(grep -Ev '^\s*(#|$)' "${SHARE}/packages.txt")
+  [[ -n "${CPU_UCODE}" ]] && pkgs+=("${CPU_UCODE}")
+  ${HAS_NVIDIA} && pkgs+=(nvidia-open nvidia-utils lib32-nvidia-utils)
+  # In a VM: clean shutdown from the host (tests/vm/vm.sh stop)
+  systemd-detect-virt -q --vm && pkgs+=(qemu-guest-agent)
+  # -P copies the live pacman.conf (multilib) to the target
+  pacstrap -K -P "${MNT}" "${pkgs[@]}"
+}
+
+configure_system() {
+  log "Configuring the system"
+  local user="${CFG[USERNAME]}" locale
+
+  # Includes the swapfile, already active
+  genfstab -U "${MNT}" >> "${MNT}/etc/fstab"
+
+  arch-chroot "${MNT}" ln -sf "/usr/share/zoneinfo/${CFG[TIMEZONE]}" /etc/localtime
+  arch-chroot "${MNT}" hwclock --systohc
+  for locale in ${CFG[LOCALES]//,/ }; do
+    sed -i "s/^#\(${locale} \)/\1/" "${MNT}/etc/locale.gen"
+  done
+  arch-chroot "${MNT}" locale-gen
+  echo "LANG=${CFG[LANG]}" > "${MNT}/etc/locale.conf"
+  echo "KEYMAP=${CFG[KEYMAP]}" > "${MNT}/etc/vconsole.conf"
+  echo "${CFG[HOSTNAME]}" > "${MNT}/etc/hostname"
+  cat > "${MNT}/etc/hosts" << EOF
+127.0.0.1 localhost
+::1       localhost
+127.0.1.1 ${CFG[HOSTNAME]}
+EOF
+
+  # initramfs: systemd based, sd-encrypt for LUKS; the nvidia driver doesn't want kms
+  local hooks="base systemd autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt filesystems fsck"
+  ${HAS_NVIDIA} && hooks="${hooks/ kms/}"
+  mkdir -p "${MNT}/etc/mkinitcpio.conf.d"
+  echo "HOOKS=(${hooks})" > "${MNT}/etc/mkinitcpio.conf.d/10-autoinstall.conf"
+
+  if is_true "${CFG[LUKS]}"; then
+    # x-initrd.attach: copied into the initramfs by the sd-encrypt hook
+    echo "${MAPPER} UUID=${LUKS_UUID} none discard,x-initrd.attach" >> "${MNT}/etc/crypttab"
+  fi
+  arch-chroot "${MNT}" mkinitcpio -P
+
+  log "Installing systemd-boot"
+  arch-chroot "${MNT}" bootctl install
+  # /dev/mapper/root is a stable name; a plain partition is found by UUID
+  # (kernel names like nvme0n1 can change between boots)
+  local root_spec="${ROOT_DEV}"
+  is_true "${CFG[LUKS]}" || root_spec="UUID=$(blkid -s UUID -o value "${ROOT_DEV}")"
+  local options="root=${root_spec} rootflags=subvol=@ rw quiet"
+  ${HAS_NVIDIA} && options+=" nvidia-drm.modeset=1"
+  cat > "${MNT}/boot/loader/loader.conf" << EOF
+default arch.conf
+timeout 3
+console-mode max
+editor no
+EOF
+  cat > "${MNT}/boot/loader/entries/arch.conf" << EOF
+title   Arch Linux
+linux   /vmlinuz-linux
+initrd  /initramfs-linux.img
+options ${options}
+EOF
+  cat > "${MNT}/boot/loader/entries/arch-fallback.conf" << EOF
+title   Arch Linux (fallback initramfs)
+linux   /vmlinuz-linux
+initrd  /initramfs-linux-fallback.img
+options ${options}
+EOF
+
+  log "Creating user ${user}"
+  arch-chroot "${MNT}" useradd -m -G wheel -c "${CFG[FULLNAME]}" "${user}"
+  if [[ -n "${CFG[PASSWORD_HASH]:-}" ]]; then
+    arch-chroot "${MNT}" usermod -p "${CFG[PASSWORD_HASH]}" "${user}"
+  else
+    printf '%s:%s\n' "${user}" "${USER_PASSWORD}" | arch-chroot "${MNT}" chpasswd
+  fi
+  arch-chroot "${MNT}" passwd -l root
+  echo '%wheel ALL=(ALL:ALL) ALL' > "${MNT}/etc/sudoers.d/10-wheel"
+  chmod 440 "${MNT}/etc/sudoers.d/10-wheel"
+
+  # Copy-on-write hurts VM images and container layers: new files inherit +C
+  mkdir -p "${MNT}/home/${user}/vms" "${MNT}/home/${user}/.local/share/containers"
+  mount -o "noatime,subvol=@vms" "${ROOT_DEV}" "${MNT}/home/${user}/vms"
+  chattr +C "${MNT}/home/${user}/vms" "${MNT}/home/${user}/.local/share/containers"
+  echo "UUID=$(blkid -s UUID -o value "${ROOT_DEV}") /home/${user}/vms btrfs noatime,subvol=@vms 0 0" \
+    >> "${MNT}/etc/fstab"
+
+  arch-chroot "${MNT}" systemctl enable \
+    gdm.service \
+    NetworkManager.service \
+    bluetooth.service \
+    cups.socket \
+    systemd-timesyncd.service \
+    systemd-boot-update.service \
+    fstrim.timer \
+    btrfs-scrub@-.timer
+}
+
+setup_snapper() {
+  log "Setting up snapper"
+  # Installed only now: snap-pac would otherwise hook into pacstrap
+  arch-chroot "${MNT}" pacman -S --noconfirm --needed snapper snap-pac
+  arch-chroot "${MNT}" snapper --no-dbus -c root create-config /
+  # snapper creates .snapshots as a nested subvolume: use the top level @snapshots
+  btrfs subvolume delete "${MNT}/.snapshots"
+  mkdir "${MNT}/.snapshots"
+  mount -o "${BTRFS_OPTS},subvol=@snapshots" "${ROOT_DEV}" "${MNT}/.snapshots"
+  chmod 750 "${MNT}/.snapshots"
+  echo "UUID=$(blkid -s UUID -o value "${ROOT_DEV}") /.snapshots btrfs ${BTRFS_OPTS},subvol=@snapshots 0 0" \
+    >> "${MNT}/etc/fstab"
+  # Snapshots come from snap-pac (pacman transactions), no hourly timeline
+  sed -i \
+    -e 's/^TIMELINE_CREATE=.*/TIMELINE_CREATE="no"/' \
+    -e 's/^NUMBER_LIMIT=.*/NUMBER_LIMIT="20"/' \
+    -e 's/^NUMBER_LIMIT_IMPORTANT=.*/NUMBER_LIMIT_IMPORTANT="10"/' \
+    -e "s/^ALLOW_GROUPS=.*/ALLOW_GROUPS=\"wheel\"/" \
+    "${MNT}/etc/snapper/configs/root"
+  arch-chroot "${MNT}" systemctl enable snapper-cleanup.timer
+}
+
+setup_dots() {
+  local user="${CFG[USERNAME]}" home="${MNT}/home/${CFG[USERNAME]}"
+  log "Cloning ${CFG[DOTS_REPO]} (${CFG[DOTS_REF]})"
+  mkdir -p "${home}/git"
+  if git clone --branch "${CFG[DOTS_REF]}" "${CFG[DOTS_REPO]}" "${home}/git/dots"; then
+    if [[ -n "${CFG[DOTS_PUSH_URL]:-}" ]]; then
+      git -C "${home}/git/dots" remote set-url origin "${CFG[DOTS_PUSH_URL]}"
+    fi
+  else
+    echo "clone failed, clone it by hand after the first login"
+  fi
+
+  # Answers for the promptBoolOnce questions in .chezmoi.toml.tmpl
+  mkdir -p "${home}/.config/chezmoi"
+  cat > "${home}/.config/chezmoi/chezmoi.toml" << EOF
+sourceDir = "~/git/dots"
+
+[data]
+appleKeyboard = ${APPLE_KEYBOARD}
+isLaptop = ${IS_LAPTOP}
+hasNvidia = ${HAS_NVIDIA}
+EOF
+  arch-chroot "${MNT}" chown -R "${user}:${user}" "/home/${user}"
+
+  # The YubiKey enrollment script, for later (see enroll-yubikey --help)
+  install -m 755 /usr/local/bin/enroll-yubikey "${MNT}/usr/local/bin/enroll-yubikey"
+}
+
+show_recovery_key() {
+  is_true "${CFG[LUKS]}" || return 0
+  log "Adding a LUKS recovery key"
+  local key
+  key="$(PASSWORD="${LUKS_PASSPHRASE}" systemd-cryptenroll --recovery-key "${ROOT_PART}")"
+  # Straight to the terminal, not the log (which is copied to the disk). Unattended
+  # runs are QEMU tests: there it goes to the log/serial too
+  local out=/dev/tty
+  ${UNATTENDED} && out=/dev/stdout
+  cat > "${out}" << EOF
+
+############################################################################
+  LUKS RECOVERY KEY (unlocks the disk if you lose the passphrase):
+
+    ${key}
+
+  Write it down now: it is not saved anywhere.
+############################################################################
+EOF
+  if ! ${UNATTENDED}; then
+    local typed
+    read -r -p "Type 'done' once written down: " typed
+    while [[ "${typed}" != "done" ]]; do read -r -p "Type 'done': " typed; done
+  fi
+}
+
+finish() {
+  log "Finishing"
+  cp "${LOG}" "${MNT}/var/log/autoinstall.log" 2>/dev/null || true
+  swapoff -a || true
+  umount -R "${MNT}"
+  is_true "${CFG[LUKS]}" && cryptsetup close "${MAPPER}"
+  echo "AUTOINSTALL DONE"
+  if is_true "${CFG[POWEROFF]}"; then
+    sleep 3
+    systemctl poweroff
+  fi
+}
+
+on_error() {
+  local rc=$?
+  echo "AUTOINSTALL FAILED (exit ${rc}, line ${BASH_LINENO[0]}): see ${LOG}"
+  # Unattended runs (QEMU tests) must end; interactive ones keep the shell
+  ${UNATTENDED} && is_true "${CFG[POWEROFF]:-true}" && { sleep 3; systemctl poweroff; }
+  exit "${rc}"
+}
+
+main() {
+  if [[ "${1:-}" == --from-login ]]; then
+    # Started by root's .zlogin: only on tty1 and with the autoinstall boot entry
+    [[ "$(tty)" == /dev/tty1 ]] || return 0
+    grep -qw autoinstall /proc/cmdline || return 0
+  fi
+
+  # Log everything; mirror to the serial port with the serial boot entry and in
+  # QEMU tests (settings passed with fw_cfg)
+  modprobe qemu_fw_cfg 2>/dev/null || true
+  if [[ -c /dev/ttyS0 ]] && { grep -q 'console=ttyS0' /proc/cmdline \
+      || [[ -e /sys/firmware/qemu_fw_cfg/by_name/opt/autoinstall/raw ]]; }; then
+    exec > >(tee -a "${LOG}" /dev/ttyS0) 2>&1
+  else
+    exec > >(tee -a "${LOG}") 2>&1
+  fi
+  trap on_error ERR
+
+  load_config
+  echo "Arch automated install (unattended: ${UNATTENDED})"
+  detect_hardware
+  pick_disk
+
+  ask HOSTNAME "Hostname" "archlinux"
+  ask USERNAME "User name" "dario"
+  ask FULLNAME "Full name" ""
+
+  # Encryption is optional: a passphrase (or YubiKey PIN) at every boot
+  ask LUKS "Encrypt the disk? A passphrase is asked at every boot (yes/no)" "yes"
+  if is_true "${CFG[LUKS]}"; then CFG[LUKS]=true; else CFG[LUKS]=false; fi
+
+  USER_PASSWORD=""
+  [[ -n "${CFG[PASSWORD_HASH]:-}" ]] || ask_secret USER_PASSWORD "Password for ${CFG[USERNAME]}"
+  LUKS_PASSPHRASE="${CFG[LUKS_PASSPHRASE]:-}"
+  if is_true "${CFG[LUKS]}" && [[ -z "${LUKS_PASSPHRASE}" ]]; then
+    ask_secret LUKS_PASSPHRASE "Disk encryption passphrase"
+  fi
+
+  echo "Installing to ${CFG[DISK]} as ${CFG[HOSTNAME]}, user ${CFG[USERNAME]}, luks ${CFG[LUKS]}, dots ${CFG[DOTS_REF]}"
+
+  wait_for_live_system
+  update_mirrors
+  partition
+  create_filesystems
+  install_packages
+  configure_system
+  setup_snapper
+  setup_dots
+  show_recovery_key
+  finish
+}
+
+main "$@"

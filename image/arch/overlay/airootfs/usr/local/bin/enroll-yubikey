@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+# Adds a YubiKey (PIV smartcard, works on a YubiKey 4) as an extra way to unlock
+# the LUKS2 root. The passphrase and the recovery key keep working.
+#
+#   sudo enroll-yubikey [--new-key] [LUKS_DEVICE]
+#
+# How it works: systemd-cryptenroll generates a random volume key, encrypts it
+# with the public key of the certificate in PIV slot 9d and stores the result in
+# the LUKS2 header. At boot the initramfs (sd-encrypt-opensc hook) asks for the
+# PIN and the YubiKey decrypts it.
+#
+# --new-key creates a new RSA 2048 key + self-signed certificate in slot 9d
+# (overwrites what's there). Without it, the existing slot 9d certificate is used.
+# Firmware 4.2.6-4.3.4 has ROCA: on those, import a key generated elsewhere.
+set -euo pipefail
+
+NEW_KEY=false
+DEVICE=""
+for arg in "$@"; do
+  case "${arg}" in
+    --new-key) NEW_KEY=true ;;
+    -h|--help) sed -n '2,15p' "$0"; exit 0 ;;
+    *) DEVICE="${arg}" ;;
+  esac
+done
+
+[[ ${EUID} -eq 0 ]] || { echo "run as root (sudo)"; exit 1; }
+
+if [[ -z "${DEVICE}" ]]; then
+  # The LUKS device behind the root mapping, from /etc/crypttab
+  uuid="$(awk '$1 == "root" { sub(/^UUID=/, "", $2); print $2 }' /etc/crypttab)"
+  [[ -n "${uuid}" ]] || { echo "no 'root' entry in /etc/crypttab, pass the device"; exit 1; }
+  DEVICE="/dev/disk/by-uuid/${uuid}"
+fi
+cryptsetup isLuks --type luks2 "${DEVICE}" || { echo "${DEVICE} is not LUKS2"; exit 1; }
+
+echo "==> Installing smartcard tools"
+pacman -S --needed --noconfirm ccid opensc pcsclite yubikey-manager
+systemctl enable --now pcscd.socket
+
+echo "==> YubiKey"
+ykman info
+firmware="$(ykman info | awk -F': ' '/^Firmware version/ { print $2 }')"
+
+if ${NEW_KEY}; then
+  case "${firmware}" in
+    4.2.[6-9]*|4.3.[0-4]*)
+      echo "firmware ${firmware} is affected by ROCA: don't generate RSA keys on it"
+      exit 1
+      ;;
+  esac
+  cat << 'EOF'
+Defaults are PIN 123456, PUK 12345678 and a well-known management key: if you
+never changed them, do it first:
+  ykman piv access change-pin
+  ykman piv access change-puk
+  ykman piv access change-management-key --generate --protect
+EOF
+  read -r -p "Continue generating a new key in slot 9d? [y/N] " answer
+  [[ "${answer,,}" == y ]] || exit 1
+  tmp="$(mktemp)"
+  trap 'rm -f "${tmp}"' EXIT
+  ykman piv keys generate --algorithm RSA2048 --pin-policy ONCE --touch-policy CACHED 9d "${tmp}"
+  ykman piv certificates generate --subject "CN=LUKS $(cat /etc/hostname)" 9d "${tmp}"
+fi
+
+echo "==> Enrolling into ${DEVICE} (asks for the current passphrase, then the PIN)"
+systemd-cryptenroll --pkcs11-token-uri=auto "${DEVICE}"
+
+echo "==> Initramfs: crypttab option + sd-encrypt-opensc hook"
+if ! awk '$1 == "root"' /etc/crypttab | grep -q 'pkcs11-uri='; then
+  sed -i '/^root / s/\(\S\+\)$/\1,pkcs11-uri=auto/' /etc/crypttab
+fi
+conf=/etc/mkinitcpio.conf.d/10-autoinstall.conf
+if ! grep -q sd-encrypt-opensc "${conf}"; then
+  sed -i 's/ sd-encrypt / sd-encrypt sd-encrypt-opensc /' "${conf}"
+fi
+grep -E '^root ' /etc/crypttab
+cat "${conf}"
+mkinitcpio -P
+
+cat << 'EOF'
+
+Done. Reboot with the YubiKey plugged in: you'll be asked for its PIN. Without
+the key, the passphrase prompt still works. To remove the token later:
+  systemd-cryptenroll --wipe-slot=pkcs11 <device>
+EOF

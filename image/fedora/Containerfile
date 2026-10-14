@@ -1,0 +1,10 @@
+FROM registry.fedoraproject.org/fedora:44
+
+RUN dnf install -y lorax xorriso curl pykickstart \
+    && dnf clean all
+
+WORKDIR /build
+
+COPY autoinstall.ks build-iso.sh ./
+
+ENTRYPOINT ["bash", "/build/build-iso.sh"]

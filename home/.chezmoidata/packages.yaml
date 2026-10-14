@@ -5,13 +5,11 @@ packages:
     base:
       - base-devel
       - cmake
-      - git
       - curl
       - gnupg
       - time
       - zsh
       - openssh
-      - unzip
       - podman
       # docker CLI that runs podman
       - podman-docker
@@ -30,6 +28,8 @@ packages:
     desktop:
       - alacritty
       - sway
+      # output bg in sway/config.d/10-look.conf
+      - swaybg
       - waybar
       - swaylock
       - swayidle
@@ -55,6 +55,35 @@ packages:
       - nm-connection-editor
     fonts:
       - noto-fonts-cjk
+    cli:
+      # psql
+      - postgresql-libs
+      # drill
+      - ldns
+      - openldap
+      - nmap
+      - tcpdump
+      - whois
+      - graphviz
+    printing:
+      - hplip
+    net-gui:
+      - wireshark-qt
+    graphics-office:
+      - gimp
+      - inkscape
+      - libreoffice-still
+      - pdfarranger
+      - mpv
+      - vlc
+      - vlc-plugins-all
+      - openscad
+    eda:
+      - kicad
+    # installed only when hasNvidia (driver itself comes from the installer)
+    nvidia:
+      - cuda
+      - nvidia-container-toolkit
   # Installed with yay (bootstrapped when missing), see run_onchange_after_20-extra-packages
   aur:
     desktop:
@@ -65,14 +94,14 @@ packages:
     base:
       - "@development-tools"
       - cmake
-      - git
       - gnupg2
       - time
       - zsh
       - openssh-clients
-      - unzip
       # dnf config-manager, used to add third-party repos
       - dnf5-plugins
+      # fontconfig.pc for cargo builds in mise (binwalk); Arch ships it in fontconfig
+      - fontconfig-devel
       - podman
       # docker CLI that runs podman
       - podman-docker
@@ -93,6 +122,8 @@ packages:
     desktop:
       - alacritty
       - sway
+      # output bg in sway/config.d/10-look.conf
+      - swaybg
       - waybar
       - swaylock
       - swayidle
@@ -117,6 +148,31 @@ packages:
       - nm-connection-editor
     fonts:
       - google-noto-sans-cjk-vf-fonts
+    cli:
+      # psql
+      - postgresql
+      # drill
+      - ldns-utils
+      - openldap-clients
+      - nmap
+      - tcpdump
+      - whois
+      - graphviz
+    printing:
+      - hplip
+    net-gui:
+      - wireshark
+    graphics-office:
+      - gimp
+      - inkscape
+      - libreoffice
+      - pdfarranger
+      - mpv
+      - vlc
+      - openscad
+    eda:
+      - kicad
+    # cuda is only in NVIDIA's versioned repo: install it by hand
   # Third-party dnf repos (the Fedora counterpart of aur), see
   # run_onchange_after_20-extra-packages, which also installs zed with its
   # official installer. esp-idf has no Fedora package: use Espressif's installer
