@@ -18,6 +18,9 @@
 #   vm.sh snapshot <arch|fedora> <name>   save the disk state (VM off)
 #   vm.sh revert <arch|fedora> <name>     go back to it (VM off)
 #   vm.sh snapshots <arch|fedora>         list them
+#   vm.sh exec <arch|fedora> <command>    run a shell command in the running
+#       VM as root through the guest agent; prints its output, exits with its
+#       exit code
 #
 # Test credentials: user dario / password "test", LUKS passphrase "test".
 
@@ -31,42 +34,19 @@ OVMF_VARS=/usr/share/edk2/x64/OVMF_VARS.4m.fd
 TEST_PASSWORD="test"
 TEST_LUKS_PASSPHRASE="test"
 
-usage() { sed -n '2,24p' "$0"; exit 1; }
+usage() { sed -n '2,26p' "$0"; exit 1; }
 
 # qmp <distro> <command>: one QMP command on the VM control socket
-qmp() {
-  python3 - "${TMP_DIR}/$1.qmp" "$2" << 'EOF'
-import json, socket, sys
-s = socket.socket(socket.AF_UNIX)
-s.settimeout(5)
-s.connect(sys.argv[1])
-f = s.makefile("rw")
-f.readline()
-for command in ("qmp_capabilities", sys.argv[2]):
-    f.write(json.dumps({"execute": command}) + "\n")
-    f.flush()
-    f.readline()
-EOF
-}
+qmp() { python3 "${CURRENT_DIR}/qmp.py" "${TMP_DIR}/$1.qmp" "$2"; }
 
 is_running() { qmp "$1" query-status 2> /dev/null; }
 
 # Asks the guest agent (qemu-guest-agent in the VM) to power off. A GNOME or
 # sway session ignores the ACPI power button, the agent doesn't
-guest_shutdown() {
-  python3 - "${TMP_DIR}/$1.qga" << 'EOF'
-import json, socket, sys
-s = socket.socket(socket.AF_UNIX)
-s.settimeout(5)
-s.connect(sys.argv[1])
-f = s.makefile("rw")
-f.write(json.dumps({"execute": "guest-ping"}) + "\n")
-f.flush()
-f.readline()
-f.write(json.dumps({"execute": "guest-shutdown"}) + "\n")
-f.flush()
-EOF
-}
+guest_shutdown() { python3 "${CURRENT_DIR}/qga.py" "${TMP_DIR}/$1.qga" shutdown; }
+
+# guest_exec <distro> <command>: runs it with /bin/sh -c in the guest, as root
+guest_exec() { python3 "${CURRENT_DIR}/qga.py" "${TMP_DIR}/$1.qga" exec "$2"; }
 
 cmd_stop() {
   local distro="$1" mode="${2:-}" _
@@ -220,5 +200,6 @@ case "${command}" in
   snapshot) [[ $# -eq 1 ]] || usage; qemu-img snapshot -c "$1" "${TMP_DIR}/${distro}.qcow2" ;;
   revert) [[ $# -eq 1 ]] || usage; qemu-img snapshot -a "$1" "${TMP_DIR}/${distro}.qcow2" ;;
   snapshots) qemu-img snapshot -l "${TMP_DIR}/${distro}.qcow2" ;;
+  exec) [[ $# -ge 1 ]] || usage; guest_exec "${distro}" "$*" ;;
   *) usage ;;
 esac

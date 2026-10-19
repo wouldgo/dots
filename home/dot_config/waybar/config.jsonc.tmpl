@@ -3,7 +3,6 @@
 {
     "layer": "top",
     "position": "top",
-    "height": 28,
     "spacing": 0,
 
     "modules-left": ["sway/workspaces", "sway/mode"],
@@ -56,11 +55,11 @@
     },
 
     "cpu": {
-        "format": " {usage}%",
+        "format": "\udb80\udf5b {usage}%",  // nf-md-memory
         "interval": 5
     },
     "memory": {
-        "format": " {percentage}%",
+        "format": "\udb81\ude1a {percentage}%",  // nf-md-chip
         "tooltip-format": "{used:0.1f}G / {total:0.1f}G",
         "interval": 5
     },
@@ -88,7 +87,7 @@
 
     // Same menu as $mod+Shift+e
     "custom/settings": {
-        "format": "",
+        "format": "\uf013",  // nf-fa-gear
         "tooltip-format": "Settings and power",
         "on-click": "~/.local/bin/sway-menu"
     }
