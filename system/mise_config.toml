@@ -50,10 +50,12 @@ gangway_cli = "latest"
 pi = "latest"
 git_crypt = "latest"
 tirith = "latest"
-"npm:skills" = "latest"
+"skills" = "latest"
 protoc = "latest"
 cmctl = "latest"
-"npm:@openai/codex" = "latest"
+"codex" = "latest"
+termaid = "latest"
+scroll = "latest"
 
 [tool_alias]
 zoxide = "aqua:ajeetdsouza/zoxide"
@@ -87,9 +89,13 @@ usage = "packslip:github.com/jdx/usage"
 oc = "asdf:https://github.com/sqtran/asdf-oc"
 podman = "github:podman-container-tools/podman"
 gangway_cli = "go:github.com/openshift-eng/gangway-cli"
+skills = "npm:skills"
 pi = "npm:@earendil-works/pi-coding-agent"
+codex = "npm:@openai/codex"
 tmux = "aqua:tmux/tmux-builds"
 git_crypt = "github:agwa/git-crypt"
+termaid = "pipx:termaid"
+scroll = "go:github.com/rynobey/scroll"
 
 [settings]
 trusted_config_paths = [
