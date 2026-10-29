@@ -57,6 +57,8 @@ claude-code = "latest"
 binwalk = "latest"
 apkeep = "latest"
 lazysql = "latest"
+termaid = "latest"
+scroll = "latest"
 
 [tool_alias]
 zoxide = "aqua:ajeetdsouza/zoxide"
@@ -97,6 +99,8 @@ codex = "aqua:openai/codex"
 binwalk = "cargo:binwalk"
 apkeep = "github:EFForg/apkeep"
 lazysql = "go:github.com/jorgerojas26/lazysql"
+termaid = "pipx:termaid"
+scroll = "go:github.com/rynobey/scroll"
 
 [settings]
 trusted_config_paths = [
