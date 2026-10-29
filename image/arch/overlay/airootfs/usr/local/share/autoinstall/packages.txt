@@ -16,7 +16,6 @@ compsize
 # man pages and basic CLI
 man-db
 man-pages
-vim
 nano
 less
 wget

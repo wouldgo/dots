@@ -65,8 +65,6 @@ packages:
       - tcpdump
       - whois
       - graphviz
-    printing:
-      - hplip
     net-gui:
       - wireshark-qt
     graphics-office:
@@ -117,7 +115,6 @@ packages:
       - qemu-user-static-aarch64
       - dosfstools
       - e2fsprogs
-      - kpartx
     # GNOME is the starting point: only what sway and these configs need on top
     desktop:
       - alacritty
@@ -158,8 +155,6 @@ packages:
       - tcpdump
       - whois
       - graphviz
-    printing:
-      - hplip
     net-gui:
       - wireshark
     graphics-office:
