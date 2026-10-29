@@ -25,7 +25,9 @@ set $orange #fe8019
 
 # Launcher: wmenu-run with gruvbox colors
 #   -N/-n normal bg/fg, -M/-m prompt bg/fg, -S/-s selection bg/fg
-set $menu wmenu-run -f "$font" -N $bg0 -n $fg -M $yellow -m $bg0 -S $bg2 -s $yellow
+# Colors in quotes: exec runs through sh -c, where an unquoted #282828 starts
+# a comment and drops the rest of the command
+set $menu wmenu-run -f "$font" -N "$bg0" -n "$fg" -M "$yellow" -m "$bg0" -S "$bg2" -s "$yellow"
 
 # --- Includes -----------------------------------------------------------------
 

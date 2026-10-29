@@ -172,7 +172,10 @@ cmd_run() {
   done
   if ${gl}; then
     common_args "${distro}" virtio-vga-gl
-    ARGS+=(-display "gtk,gl=on")
+    # grab-on-hover: the keyboard goes to the VM while the pointer is on the
+    # window, so the host desktop doesn't take Super combos (GNOME keeps
+    # Super+Space for the input source)
+    ARGS+=(-display "gtk,gl=on,window-close=off,grab-on-hover=on")
   else
     common_args "${distro}"
   fi

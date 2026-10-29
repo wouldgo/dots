@@ -1,0 +1,39 @@
+#
+# ~/.bashrc: plain bash (login shell, ttys, ssh), gruvbox like zsh and the rest.
+# No plugins and no tools from mise: it must work on a bare system.
+#
+
+# Fedora: system defaults and ~/.bashrc.d
+# shellcheck source=/dev/null
+[[ -f /etc/bashrc ]] && . /etc/bashrc
+
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+# Linux console (tty): load the gruvbox dark palette, as alacritty does
+if [[ "${TERM}" == linux ]]; then
+  printf '\e]P0282828\e]P1cc241d\e]P298971a\e]P3d79921'
+  printf '\e]P4458588\e]P5b16286\e]P6689d6a\e]P7a89984'
+  printf '\e]P8928374\e]P9fb4934\e]PAb8bb26\e]PBfabd2f'
+  printf '\e]PC83a598\e]PDd3869b\e]PE8ec07c\e]PFebdbb2'
+  clear
+fi
+
+# Same ls colors as zsh
+if [[ -f "${HOME}/.config/zsh/colors/gruvbox.dircolors" ]]; then
+  eval "$(dircolors -b "${HOME}/.config/zsh/colors/gruvbox.dircolors")"
+fi
+
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+
+# Prompt in the shape of oh-my-posh (omp.yaml): path in yellow, exit code in
+# red when not 0, then ">" on a new line. ANSI colors take the terminal
+# palette, so gruvbox in alacritty and on the tty
+__bash_prompt() {
+  local code=$?
+  PS1='\[\e[93m\]\w\[\e[0m\]'
+  ((code != 0)) && PS1+=" \[\e[91m\]${code}\[\e[0m\]"
+  PS1+='\n\[\e[97m\]>\[\e[0m\] '
+}
+PROMPT_COMMAND=__bash_prompt
