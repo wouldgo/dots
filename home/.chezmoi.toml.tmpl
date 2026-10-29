@@ -1,6 +1,5 @@
 {{- $appleKeyboard := promptBoolOnce . "appleKeyboard" "Is there an Apple keyboard on this machine?" false -}}
 {{- $isLaptop := promptBoolOnce . "isLaptop" "Is this machine a laptop (battery, backlight, touchpad)?" false -}}
-{{- $hasNvidia := promptBoolOnce . "hasNvidia" "Does this machine use the proprietary NVIDIA driver?" false -}}
 {{- $gaming := promptBoolOnce . "gaming" "Install gaming apps (Steam, Sunshine, GE-Proton)?" false -}}
 # The repo lives in ~/git/dots (README): keep pointing there after `chezmoi init --source`
 sourceDir = {{ .chezmoi.workingTree | quote }}
@@ -8,5 +7,4 @@ sourceDir = {{ .chezmoi.workingTree | quote }}
 [data]
 appleKeyboard = {{ $appleKeyboard }}
 isLaptop = {{ $isLaptop }}
-hasNvidia = {{ $hasNvidia }}
 gaming = {{ $gaming }}

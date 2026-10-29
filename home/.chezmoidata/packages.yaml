@@ -81,7 +81,7 @@ packages:
     # installed only when gaming (Steam needs multilib, enabled by the installer)
     gaming:
       - steam
-    # installed only when hasNvidia (driver itself comes from the installer)
+    # installed only with an NVIDIA GPU (the driver: run_onchange_before_15-gpu-driver)
     nvidia:
       - cuda
       - nvidia-container-toolkit

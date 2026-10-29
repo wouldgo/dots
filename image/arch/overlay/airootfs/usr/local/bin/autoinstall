@@ -417,7 +417,6 @@ sourceDir = "~/git/dots"
 [data]
 appleKeyboard = ${APPLE_KEYBOARD}
 isLaptop = ${IS_LAPTOP}
-hasNvidia = ${HAS_NVIDIA}
 gaming = ${CFG[GAMING]}
 EOF
   arch-chroot "${MNT}" chown -R "${user}:${user}" "/home/${user}"

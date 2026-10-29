@@ -1,0 +1,4 @@
+{{- /* PCI vendor ids of the GPUs on this machine, one per line: 0x10de NVIDIA,
+0x1002 AMD, 0x8086 Intel. Read at every apply, so a new card changes the
+scripts that use it and they run again */ -}}
+{{- output "sh" "-c" "for d in /sys/bus/pci/devices/*; do case $(cat \"$d/class\") in 0x03*) cat \"$d/vendor\" ;; esac; done | sort -u" | trim -}}

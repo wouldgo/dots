@@ -1,0 +1,67 @@
+{{ if eq .chezmoi.os "linux" -}}
+{{- $gpus := includeTemplate "gpu-vendors" . -}}
+{{- $nvidia := contains "0x10de" $gpus -}}
+#!/usr/bin/env bash
+# The NVIDIA driver follows the GPU in the machine: installed with an NVIDIA
+# card, removed without, with the initramfs and kernel options the installer
+# would have set. The GPU list below is part of this script, so a new card runs
+# it again (after packages, which already has the Vulkan driver for Steam).
+# GPUs: {{ $gpus | splitList "\n" | join " " }}
+set -euo pipefail
+
+{{ if eq .chezmoi.osRelease.id "arch" -}}
+# Written by the installer: on other installs these are left alone
+hooks=/etc/mkinitcpio.conf.d/10-autoinstall.conf
+mapfile -t entries < <(compgen -G '/boot/loader/entries/arch*.conf' || true)
+[ -f "${hooks}" ] || { echo "no ${hooks}: initramfs hooks not managed" >&2; hooks=""; }
+[ "${#entries[@]}" -gt 0 ] || echo "no systemd-boot entries: kernel options not managed" >&2
+before=$(cat ${hooks:+"${hooks}"} /dev/null | sha256sum)
+
+{{ if $nvidia -}}
+# nvidia-open: prebuilt for linux, nothing to compile. Same userspace (and
+# performance) as the closed modules, recommended from Turing (RTX 20) on
+sudo pacman -S --needed --noconfirm nvidia-open nvidia-utils lib32-nvidia-utils
+# kms would put nouveau in the initramfs
+[ -n "${hooks}" ] && sudo sed -i -E '/^HOOKS=/s/ kms / /' "${hooks}"
+for e in "${entries[@]}"; do
+  grep -q 'nvidia-drm.modeset=1' "${e}" || sudo sed -i -E '/^options /s/$/ nvidia-drm.modeset=1/' "${e}"
+done
+{{- else -}}
+mapfile -t installed < <(pacman -Qq nvidia-open nvidia-utils lib32-nvidia-utils cuda nvidia-container-toolkit 2>/dev/null || true)
+if [ "${#installed[@]}" -gt 0 ]; then
+  sudo pacman -Rns --noconfirm "${installed[@]}"
+fi
+# kms back in place: early modesetting for amdgpu, i915, nouveau
+[ -n "${hooks}" ] && sudo sed -i -E '/^HOOKS=/{/ kms /!s/ modconf / modconf kms /}' "${hooks}"
+for e in "${entries[@]}"; do
+  sudo sed -i -E '/^options /s/ nvidia-drm\.modeset=1//' "${e}"
+done
+{{- end }}
+
+# Package changes already rebuild it (pacman hook): only the HOOKS change needs this
+if [ "${before}" != "$(cat ${hooks:+"${hooks}"} /dev/null | sha256sum)" ]; then
+  sudo mkinitcpio -P
+fi
+{{- else if eq .chezmoi.osRelease.id "fedora" -}}
+{{ if $nvidia -}}
+# RPM Fusion akmod: built for every kernel (here once, now), the packages also
+# set the kernel options (nouveau blacklist) with grubby
+if ! rpm -q rpmfusion-nonfree-release >/dev/null; then
+  sudo dnf install -y "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
+fi
+if ! rpm -q akmod-nvidia >/dev/null; then
+  # libs.i686: 32-bit Vulkan/GL, like lib32-nvidia-utils on Arch (Steam). Mesa
+  # covers the other GPUs, with its 32-bit packages pulled in by steam itself
+  sudo dnf install -y akmod-nvidia xorg-x11-drv-nvidia-cuda xorg-x11-drv-nvidia-libs.i686
+  sudo akmods --force
+fi
+{{- else -}}
+# The RPM Fusion packages also take their kernel options away
+if rpm -q akmod-nvidia >/dev/null; then
+  sudo dnf remove -y akmod-nvidia 'xorg-x11-drv-nvidia*' 'kmod-nvidia*'
+fi
+{{- end }}
+{{- end }}
+
+echo "GPU driver in line with the GPUs ({{ $gpus | splitList "\n" | join " " }}): reboot if it changed"
+{{ end -}}

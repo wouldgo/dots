@@ -2,9 +2,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+{{- $gpus := includeTemplate "gpu-vendors" . }}
+{{- $nvidia := contains "0x10de" $gpus }}
 {{ if eq .chezmoi.osRelease.id "arch" -}}
-# The nvidia group only on machines with the proprietary driver, gaming only when asked
-sudo pacman -S --needed --noconfirm {{ range $group, $pkgs := .packages.arch }}{{ if and (or (ne $group "nvidia") $.hasNvidia) (or (ne $group "gaming") $.gaming) }}{{ range $pkgs }}{{ . | quote }} {{ end }}{{ end }}{{ end }}
+{{- /* Vulkan drivers (64 and 32 bit) of the GPUs in the machine, gaming or not:
+named, or pacman --noconfirm picks the first provider of vulkan-driver for Steam,
+and a card swap never leaves Steam or other Vulkan apps without one when
+gpu-driver removes the NVIDIA stack. swrast when no GPU is known (VMs) */ -}}
+{{- $vulkan := list }}
+{{- if $nvidia }}{{ $vulkan = concat $vulkan (list "nvidia-utils" "lib32-nvidia-utils") }}{{ end }}
+{{- if contains "0x1002" $gpus }}{{ $vulkan = concat $vulkan (list "vulkan-radeon" "lib32-vulkan-radeon") }}{{ end }}
+{{- if contains "0x8086" $gpus }}{{ $vulkan = concat $vulkan (list "vulkan-intel" "lib32-vulkan-intel") }}{{ end }}
+{{- if not $vulkan }}{{ $vulkan = list "vulkan-swrast" "lib32-vulkan-swrast" }}{{ end }}
+# The nvidia group only with an NVIDIA GPU, gaming only when asked
+# GPUs: {{ $gpus | splitList "\n" | join " " }}
+sudo pacman -S --needed --noconfirm {{ range $group, $pkgs := .packages.arch }}{{ if and (or (ne $group "nvidia") $nvidia) (or (ne $group "gaming") $.gaming) }}{{ range $pkgs }}{{ . | quote }} {{ end }}{{ end }}{{ end }}{{ range $vulkan }}{{ . | quote }} {{ end }}
 {{- else if eq .chezmoi.osRelease.id "fedora" }}
 {{- range $group, $pkgs := .packages.fedora }}
 {{- range $pkgs }}

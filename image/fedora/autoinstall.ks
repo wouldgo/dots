@@ -300,7 +300,6 @@ sourceDir = "~/git/dots"
 [data]
 appleKeyboard = ${APPLE_KEYBOARD}
 isLaptop = ${IS_LAPTOP}
-hasNvidia = ${HAS_NVIDIA}
 gaming = ${GAMING}
 EOF
 chown -R "${user}:${user}" "${home}"
