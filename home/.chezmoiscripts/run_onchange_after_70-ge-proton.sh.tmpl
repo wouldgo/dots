@@ -1,0 +1,20 @@
+{{ if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "fedora") .gaming -}}
+#!/usr/bin/env bash
+# GE-Proton for Steam on Fedora (Arch gets proton-ge-custom-bin from AUR).
+# The release tag is part of this script, so a new release runs it again.
+# Older versions stay: games may be pinned to them in Steam
+set -euo pipefail
+
+tag={{ (gitHubLatestRelease "GloriousEggroll/proton-ge-custom").TagName | quote }}
+dest="${HOME}/.local/share/Steam/compatibilitytools.d"
+[ -d "${dest}/${tag}" ] && exit 0
+
+tmp=$(mktemp -d)
+trap 'rm -rf "${tmp}"' EXIT
+url="https://github.com/GloriousEggroll/proton-ge-custom/releases/download/${tag}"
+curl -fsSL -o "${tmp}/${tag}.tar.gz" "${url}/${tag}.tar.gz"
+curl -fsSL -o "${tmp}/${tag}.sha512sum" "${url}/${tag}.sha512sum"
+(cd "${tmp}" && sha512sum -c "${tag}.sha512sum")
+mkdir -p "${dest}"
+tar -xzf "${tmp}/${tag}.tar.gz" -C "${dest}"
+{{ end -}}

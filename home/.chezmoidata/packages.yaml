@@ -78,6 +78,9 @@ packages:
       - openscad
     eda:
       - kicad
+    # installed only when gaming (Steam needs multilib, enabled by the installer)
+    gaming:
+      - steam
     # installed only when hasNvidia (driver itself comes from the installer)
     nvidia:
       - cuda
@@ -88,6 +91,11 @@ packages:
       - brave-bin
     dev:
       - esp-idf
+    # installed only when gaming
+    gaming:
+      - sunshine-bin
+      # GE-Proton in /usr/share/steam/compatibilitytools.d, updated by yay
+      - proton-ge-custom-bin
   fedora:
     base:
       - "@development-tools"
@@ -177,3 +185,9 @@ packages:
       repofile: https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
       packages:
         - brave-browser
+  # Installed only when gaming, see run_onchange_after_20-extra-packages (it
+  # needs RPM Fusion nonfree and the LizardByte COPR). GE-Proton has no package:
+  # run_onchange_after_70-ge-proton downloads the latest release
+  fedora_gaming:
+    - steam
+    - sunshine

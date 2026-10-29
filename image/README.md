@@ -57,6 +57,7 @@ The installer reads the settings from three places. The last one wins:
 Example: `autoinstall.disk=/dev/nvme0n1 autoinstall.dots_ref=master`.
 
 `LUKS=true` or `LUKS=false` gives the answer to the encryption question.
+`GAMING=true` or `GAMING=false` gives the answer to the gaming question (Steam, Sunshine, GE-Proton, installed by chezmoi). The default answer is no.
 If `DISK` and `PASSWORD_HASH` have values, and `LUKS=false` or `LUKS_PASSPHRASE` has a value, the installer asks nothing.
 The Arch ISO also has a "live / rescue" boot entry. This entry does not install.
 

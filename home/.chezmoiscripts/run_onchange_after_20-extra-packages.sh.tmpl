@@ -15,7 +15,7 @@ if ! command -v yay >/dev/null; then
   (cd "${tmp}/yay-bin" && makepkg -si --noconfirm)
 fi
 
-yay -S --needed --noconfirm {{ range $group, $pkgs := .packages.aur }}{{ range $pkgs }}{{ . | quote }} {{ end }}{{ end }}
+yay -S --needed --noconfirm {{ range $group, $pkgs := .packages.aur }}{{ if or (ne $group "gaming") $.gaming }}{{ range $pkgs }}{{ . | quote }} {{ end }}{{ end }}{{ end }}
 {{- else if eq .chezmoi.osRelease.id "fedora" -}}
 # Full codecs, same as Arch: ffmpeg-free and the stock VA-API drivers leave
 # out the patented ones (HEVC, H.264, AAC...). mpv links the libraries, so
@@ -29,6 +29,15 @@ fi
 if rpm -q mesa-va-drivers >/dev/null; then
   sudo dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld --allowerasing
 fi
+{{- if .gaming }}
+
+# Gaming: steam from RPM Fusion nonfree, sunshine from the LizardByte COPR
+if ! rpm -q rpmfusion-nonfree-release >/dev/null; then
+  sudo dnf install -y "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
+fi
+sudo dnf copr enable -y lizardbyte/stable
+sudo dnf install -y {{ range .packages.fedora_gaming }}{{ . | quote }} {{ end }}
+{{- end }}
 {{ range $name, $repo := .packages.fedora_repos }}
 # {{ $name }}
 sudo dnf config-manager addrepo --overwrite --from-repofile={{ $repo.repofile | quote }}

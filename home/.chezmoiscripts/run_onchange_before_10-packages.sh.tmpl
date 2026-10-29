@@ -3,8 +3,8 @@
 set -euo pipefail
 
 {{ if eq .chezmoi.osRelease.id "arch" -}}
-# The nvidia group only on machines with the proprietary driver
-sudo pacman -S --needed --noconfirm {{ range $group, $pkgs := .packages.arch }}{{ if or (ne $group "nvidia") $.hasNvidia }}{{ range $pkgs }}{{ . | quote }} {{ end }}{{ end }}{{ end }}
+# The nvidia group only on machines with the proprietary driver, gaming only when asked
+sudo pacman -S --needed --noconfirm {{ range $group, $pkgs := .packages.arch }}{{ if and (or (ne $group "nvidia") $.hasNvidia) (or (ne $group "gaming") $.gaming) }}{{ range $pkgs }}{{ . | quote }} {{ end }}{{ end }}{{ end }}
 {{- else if eq .chezmoi.osRelease.id "fedora" }}
 {{- range $group, $pkgs := .packages.fedora }}
 {{- range $pkgs }}

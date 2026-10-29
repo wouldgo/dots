@@ -418,6 +418,7 @@ sourceDir = "~/git/dots"
 appleKeyboard = ${APPLE_KEYBOARD}
 isLaptop = ${IS_LAPTOP}
 hasNvidia = ${HAS_NVIDIA}
+gaming = ${CFG[GAMING]}
 EOF
   arch-chroot "${MNT}" chown -R "${user}:${user}" "/home/${user}"
 
@@ -503,6 +504,10 @@ main() {
   ask LUKS "Encrypt the disk? A passphrase is asked at every boot (yes/no)" "yes"
   if is_true "${CFG[LUKS]}"; then CFG[LUKS]=true; else CFG[LUKS]=false; fi
 
+  # Written to chezmoi.toml: chezmoi installs them
+  ask GAMING "Install the gaming apps: Steam, Sunshine, GE-Proton (yes/no)" "no"
+  if is_true "${CFG[GAMING]}"; then CFG[GAMING]=true; else CFG[GAMING]=false; fi
+
   USER_PASSWORD=""
   [[ -n "${CFG[PASSWORD_HASH]:-}" ]] || ask_secret USER_PASSWORD "Password for ${CFG[USERNAME]}"
   LUKS_PASSPHRASE="${CFG[LUKS_PASSPHRASE]:-}"
@@ -510,7 +515,7 @@ main() {
     ask_secret LUKS_PASSPHRASE "Disk encryption passphrase"
   fi
 
-  echo "Installing to ${CFG[DISK]} as ${CFG[HOSTNAME]}, user ${CFG[USERNAME]}, luks ${CFG[LUKS]}, dots ${CFG[DOTS_REF]}"
+  echo "Installing to ${CFG[DISK]} as ${CFG[HOSTNAME]}, user ${CFG[USERNAME]}, luks ${CFG[LUKS]}, gaming ${CFG[GAMING]}, dots ${CFG[DOTS_REF]}"
 
   wait_for_live_system
   update_mirrors
