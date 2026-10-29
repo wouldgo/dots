@@ -75,8 +75,8 @@ packages:
       - libreoffice-still
       - pdfarranger
       - mpv
-      - vlc
-      - vlc-plugins-all
+      # MPRIS for mpv, so playerctl and the media keys drive it
+      - mpv-mpris
       - openscad
     eda:
       - kicad
@@ -168,7 +168,8 @@ packages:
       - libreoffice
       - pdfarranger
       - mpv
-      - vlc
+      # MPRIS for mpv, so playerctl and the media keys drive it
+      - mpv-mpris
       - openscad
     eda:
       - kicad

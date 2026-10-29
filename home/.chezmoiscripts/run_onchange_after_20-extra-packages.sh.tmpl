@@ -2,7 +2,7 @@
 #!/usr/bin/env bash
 # Installs packages from outside the official repos (.chezmoidata/packages.yaml):
 #   - Arch: AUR packages with yay, bootstrapped when missing
-#   - Fedora: third-party dnf repos and their packages
+#   - Fedora: third-party dnf repos and their packages, full codecs from RPM Fusion
 set -euo pipefail
 
 {{ if eq .chezmoi.osRelease.id "arch" -}}
@@ -17,6 +17,18 @@ fi
 
 yay -S --needed --noconfirm {{ range $group, $pkgs := .packages.aur }}{{ range $pkgs }}{{ . | quote }} {{ end }}{{ end }}
 {{- else if eq .chezmoi.osRelease.id "fedora" -}}
+# Full codecs, same as Arch: ffmpeg-free and the stock VA-API drivers leave
+# out the patented ones (HEVC, H.264, AAC...). mpv links the libraries, so
+# the swap covers it too. The autoinstall image already ships RPM Fusion
+if ! rpm -q rpmfusion-free-release >/dev/null; then
+  sudo dnf install -y "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
+fi
+if rpm -q ffmpeg-free >/dev/null; then
+  sudo dnf swap -y ffmpeg-free ffmpeg --allowerasing
+fi
+if rpm -q mesa-va-drivers >/dev/null; then
+  sudo dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld --allowerasing
+fi
 {{ range $name, $repo := .packages.fedora_repos }}
 # {{ $name }}
 sudo dnf config-manager addrepo --overwrite --from-repofile={{ $repo.repofile | quote }}
