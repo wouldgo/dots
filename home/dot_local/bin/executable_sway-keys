@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Current sway key bindings in a wmenu list: type to filter, Escape closes.
+# Read from the config files, so it always matches what sway loaded after the
+# last reload. Opened with $mod+Shift+slash (as tmux prefix ?).
+set -euo pipefail
+
+# Gruvbox, same colors as the launcher ($menu in ~/.config/sway/config)
+wmenu_opts=(-f "UbuntuMono Nerd Font 12" -N 282828 -n ebdbb2 -M fabd2f -m 282828 -S 504945 -s fabd2f)
+
+# bindsym [--flags] KEYS COMMAND, with "\" continuations joined; $mod shown as Super
+awk '
+    /\\$/ { sub(/\\$/, ""); buf = buf $0; next }
+    { line = buf $0; buf = "" }
+    line ~ /^[[:space:]]*bindsym/ {
+        n = split(line, f, /[[:space:]]+/)
+        i = (f[1] == "") ? 2 : 1
+        i++
+        while (f[i] ~ /^--/) i++
+        keys = f[i]
+        cmd = ""
+        for (j = i + 1; j <= n; j++) cmd = cmd (cmd == "" ? "" : " ") f[j]
+        gsub(/\$mod/, "Super", keys)
+        printf "%-24s %s\n", keys, cmd
+    }
+' ~/.config/sway/config ~/.config/sway/config.d/* \
+    | wmenu -l 25 -p "Keys" "${wmenu_opts[@]}" >/dev/null || true
