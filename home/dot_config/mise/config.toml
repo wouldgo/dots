@@ -55,6 +55,8 @@ codex = "latest"
 oh-my-posh = "latest"
 claude-code = "latest"
 binwalk = "latest"
+apkeep = "latest"
+lazysql = "latest"
 
 [tool_alias]
 zoxide = "aqua:ajeetdsouza/zoxide"
@@ -93,6 +95,8 @@ git_crypt = "github:agwa/git-crypt"
 skills = "npm:skills"
 codex = "aqua:openai/codex"
 binwalk = "cargo:binwalk"
+apkeep = "github:EFForg/apkeep"
+lazysql = "go:github.com/jorgerojas26/lazysql"
 
 [settings]
 trusted_config_paths = [
