@@ -16,7 +16,9 @@ gpu-driver removes the NVIDIA stack. swrast when no GPU is known (VMs) */ -}}
 {{- if not $vulkan }}{{ $vulkan = list "vulkan-swrast" "lib32-vulkan-swrast" }}{{ end }}
 # The nvidia group only with an NVIDIA GPU, gaming only when asked
 # GPUs: {{ $gpus | splitList "\n" | join " " }}
-sudo pacman -S --needed --noconfirm {{ range $group, $pkgs := .packages.arch }}{{ if and (or (ne $group "nvidia") $nvidia) (or (ne $group "gaming") $.gaming) }}{{ range $pkgs }}{{ . | quote }} {{ end }}{{ end }}{{ end }}{{ range $vulkan }}{{ . | quote }} {{ end }}
+# -Syu: a stale package database asks the mirrors for versions they no longer
+# have (404). Not -Sy alone: a partial upgrade breaks Arch
+sudo pacman -Syu --needed --noconfirm {{ range $group, $pkgs := .packages.arch }}{{ if and (or (ne $group "nvidia") $nvidia) (or (ne $group "gaming") $.gaming) }}{{ range $pkgs }}{{ . | quote }} {{ end }}{{ end }}{{ end }}{{ range $vulkan }}{{ . | quote }} {{ end }}
 {{- else if eq .chezmoi.osRelease.id "fedora" }}
 {{- range $group, $pkgs := .packages.fedora }}
 {{- range $pkgs }}
