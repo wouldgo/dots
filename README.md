@@ -58,7 +58,8 @@ This is a TL;DR. The full information is in the chezmoi docs:
 1. Install `git` and `chezmoi`.
 2. Clone the repo: `git clone https://github.com/wouldgo/dots.git ~/git/dots`.
 3. Apply: `chezmoi init --apply --source ~/git/dots`.
-4. If chezmoi asks about the Apple keyboard, laptop or NVIDIA, answer the questions.
+4. If chezmoi asks about the Apple keyboard, laptop, gaming or sway, answer the questions.
+   Answer no to sway where you can only use GNOME: chezmoi skips its packages and configs.
 5. Log out and log in again.
 
 To get changes later:

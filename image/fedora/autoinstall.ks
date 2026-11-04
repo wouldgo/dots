@@ -22,6 +22,8 @@ declare -A CFG=(
   [LUKS]=""
   # Gaming apps by chezmoi (Steam, Sunshine, GE-Proton): true, false, or empty = ask (default answer no)
   [GAMING]=""
+  # sway desktop by chezmoi (packages and configs): true, false, or empty = ask (default answer yes)
+  [SWAY]=""
   [DOTS_REPO]=https://github.com/wouldgo/dots.git
   [DOTS_PUSH_URL]=git@github.com:wouldgo/dots.git
   [DOTS_REF]=feature/chezmoi
@@ -137,6 +139,8 @@ if is_true "${CFG[LUKS]}"; then CFG[LUKS]=true; else CFG[LUKS]=false; fi
 # Written to chezmoi.toml: chezmoi installs them
 ask GAMING "Install the gaming apps: Steam, Sunshine, GE-Proton (yes/no)" "no"
 if is_true "${CFG[GAMING]}"; then CFG[GAMING]=true; else CFG[GAMING]=false; fi
+ask SWAY "Install the sway desktop and its configs (yes/no)" "yes"
+if is_true "${CFG[SWAY]}"; then CFG[SWAY]=true; else CFG[SWAY]=false; fi
 USER_PASSWORD=""
 [[ -n "${CFG[PASSWORD_HASH]:-}" ]] || ask_secret USER_PASSWORD "Password for ${CFG[USERNAME]}"
 LUKS_PASSPHRASE="${CFG[LUKS_PASSPHRASE]:-}"
@@ -184,6 +188,7 @@ HAS_NVIDIA=${HAS_NVIDIA}
 IS_LAPTOP=${IS_LAPTOP}
 APPLE_KEYBOARD=${APPLE_KEYBOARD}
 GAMING=${CFG[GAMING]}
+SWAY=${CFG[SWAY]}
 DOTS_REPO=${CFG[DOTS_REPO]}
 DOTS_PUSH_URL=${CFG[DOTS_PUSH_URL]}
 DOTS_REF=${CFG[DOTS_REF]}
@@ -193,7 +198,7 @@ EOF
 printf '%s' "${LUKS_PASSPHRASE}" > /tmp/autoinstall-luks-passphrase
 chmod 600 /tmp/autoinstall-luks-passphrase
 
-echo "Installing to ${CFG[DISK]} as ${CFG[HOSTNAME]}, user ${CFG[USERNAME]}, luks ${CFG[LUKS]}, gaming ${CFG[GAMING]}, dots ${CFG[DOTS_REF]}"
+echo "Installing to ${CFG[DISK]} as ${CFG[HOSTNAME]}, user ${CFG[USERNAME]}, luks ${CFG[LUKS]}, gaming ${CFG[GAMING]}, sway ${CFG[SWAY]}, dots ${CFG[DOTS_REF]}"
 if ! ${UNATTENDED}; then
   chvt 1
 fi
@@ -301,6 +306,7 @@ sourceDir = "~/git/dots"
 appleKeyboard = ${APPLE_KEYBOARD}
 isLaptop = ${IS_LAPTOP}
 gaming = ${GAMING}
+sway = ${SWAY}
 EOF
 chown -R "${user}:${user}" "${home}"
 restorecon -R "${home}"

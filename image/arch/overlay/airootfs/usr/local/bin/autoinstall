@@ -418,6 +418,7 @@ sourceDir = "~/git/dots"
 appleKeyboard = ${APPLE_KEYBOARD}
 isLaptop = ${IS_LAPTOP}
 gaming = ${CFG[GAMING]}
+sway = ${CFG[SWAY]}
 EOF
   arch-chroot "${MNT}" chown -R "${user}:${user}" "/home/${user}"
 
@@ -506,6 +507,8 @@ main() {
   # Written to chezmoi.toml: chezmoi installs them
   ask GAMING "Install the gaming apps: Steam, Sunshine, GE-Proton (yes/no)" "no"
   if is_true "${CFG[GAMING]}"; then CFG[GAMING]=true; else CFG[GAMING]=false; fi
+  ask SWAY "Install the sway desktop and its configs (yes/no)" "yes"
+  if is_true "${CFG[SWAY]}"; then CFG[SWAY]=true; else CFG[SWAY]=false; fi
 
   USER_PASSWORD=""
   [[ -n "${CFG[PASSWORD_HASH]:-}" ]] || ask_secret USER_PASSWORD "Password for ${CFG[USERNAME]}"
@@ -514,7 +517,7 @@ main() {
     ask_secret LUKS_PASSPHRASE "Disk encryption passphrase"
   fi
 
-  echo "Installing to ${CFG[DISK]} as ${CFG[HOSTNAME]}, user ${CFG[USERNAME]}, luks ${CFG[LUKS]}, gaming ${CFG[GAMING]}, dots ${CFG[DOTS_REF]}"
+  echo "Installing to ${CFG[DISK]} as ${CFG[HOSTNAME]}, user ${CFG[USERNAME]}, luks ${CFG[LUKS]}, gaming ${CFG[GAMING]}, sway ${CFG[SWAY]}, dots ${CFG[DOTS_REF]}"
 
   wait_for_live_system
   update_mirrors

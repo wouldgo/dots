@@ -1,0 +1,9 @@
+{{ if not .sway -}}
+.config/mako
+.config/sway
+.config/swaylock
+.config/waybar
+.config/xdg-desktop-portal
+.local/bin/sway-keys
+.local/bin/sway-menu
+{{ end -}}

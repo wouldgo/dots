@@ -58,6 +58,7 @@ Example: `autoinstall.disk=/dev/nvme0n1 autoinstall.dots_ref=master`.
 
 `LUKS=true` or `LUKS=false` gives the answer to the encryption question.
 `GAMING=true` or `GAMING=false` gives the answer to the gaming question (Steam, Sunshine, GE-Proton, installed by chezmoi). The default answer is no.
+`SWAY=true` or `SWAY=false` gives the answer to the sway question (packages and configs, installed by chezmoi). The default answer is yes.
 If `DISK` and `PASSWORD_HASH` have values, and `LUKS=false` or `LUKS_PASSPHRASE` has a value, the installer asks nothing.
 The Arch ISO also has a "live / rescue" boot entry. This entry does not install.
 
@@ -400,7 +401,7 @@ Use `fedora` in place of `arch` for the Fedora VM.
 
 1. `tests/vm/vm.sh run arch --gl`
 2. Unlock the disk and log in to GNOME.
-3. `chezmoi init --apply --source ~/git/dots`
+3. `chezmoi init --apply --source ~/git/dots`. Answer yes to the sway question.
 4. Log out. In GDM, select the sway session with the gear button.
 
 sway needs 3D. Without `--gl`, start it with `WLR_RENDERER=pixman sway`.

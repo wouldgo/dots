@@ -24,9 +24,13 @@ packages:
       - qemu-user-static-binfmt
       - dosfstools
       - e2fsprogs
-    # GNOME is the starting point: only what sway and these configs need on top
+    # GNOME is the starting point: only what these configs need on top
     desktop:
       - alacritty
+      # notify-send, used by the Claude Code notification hook
+      - libnotify
+    # installed only when sway
+    sway:
       - sway
       # output bg in sway/config.d/10-look.conf
       - swaybg
@@ -38,8 +42,6 @@ packages:
       - grim
       - slurp
       - wl-clipboard
-      # notify-send, used by the Claude Code notification hook
-      - libnotify
       - xdg-desktop-portal-wlr
       - xdg-desktop-portal-gtk
       - polkit
@@ -123,9 +125,13 @@ packages:
       - qemu-user-static-aarch64
       - dosfstools
       - e2fsprogs
-    # GNOME is the starting point: only what sway and these configs need on top
+    # GNOME is the starting point: only what these configs need on top
     desktop:
       - alacritty
+      # notify-send, used by the Claude Code notification hook
+      - libnotify
+    # installed only when sway
+    sway:
       - sway
       # output bg in sway/config.d/10-look.conf
       - swaybg
@@ -137,8 +143,6 @@ packages:
       - grim
       - slurp
       - wl-clipboard
-      # notify-send, used by the Claude Code notification hook
-      - libnotify
       - xdg-desktop-portal-wlr
       - xdg-desktop-portal-gtk
       - polkit

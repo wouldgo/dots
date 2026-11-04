@@ -6,10 +6,10 @@ set -euo pipefail
 # sway refuses to start on the proprietary NVIDIA driver without
 # --unsupported-gpu, so the stock "Sway" session drops back to the login
 # screen. Extra login entry "Sway (NVIDIA)" with the flag, only with an NVIDIA
-# GPU (nvidia: {{ $nvidia }}).
+# GPU and sway (nvidia: {{ $nvidia }}, sway: {{ .sway }}).
 # /usr/local/share: outside package-owned paths, still read by GDM.
 session=/usr/local/share/wayland-sessions/sway-nvidia.desktop
-{{ if $nvidia -}}
+{{ if and $nvidia .sway -}}
 sudo mkdir -p "$(dirname "${session}")"
 sudo tee "${session}" >/dev/null <<'DESKTOP'
 [Desktop Entry]
