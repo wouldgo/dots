@@ -18,6 +18,8 @@
 #   vm.sh snapshot <arch|fedora> <name>   save the disk state (VM off)
 #   vm.sh revert <arch|fedora> <name>     go back to it (VM off)
 #   vm.sh snapshots <arch|fedora>         list them
+#   vm.sh sync <arch|fedora>              copy this working tree, commits or not,
+#       to ~/git/dots in the running VM
 #   vm.sh exec <arch|fedora> <command>    run a shell command in the running
 #       VM as root through the guest agent; prints its output, exits with its
 #       exit code
@@ -33,8 +35,10 @@ OVMF_VARS=/usr/share/edk2/x64/OVMF_VARS.4m.fd
 
 TEST_PASSWORD="test"
 TEST_LUKS_PASSPHRASE="test"
+REPO_DIR="$(cd "${CURRENT_DIR}/../.." && pwd)"
+SYNC_PORT=18765
 
-usage() { sed -n '2,26p' "$0"; exit 1; }
+usage() { sed -n '2,28p' "$0"; exit 1; }
 
 # qmp <distro> <command>: one QMP command on the VM control socket
 qmp() { python3 "${CURRENT_DIR}/qmp.py" "${TMP_DIR}/$1.qmp" "$2"; }
@@ -159,6 +163,29 @@ cmd_install() {
   fi
 }
 
+# Serves the working tree on the host, 10.0.2.2 from the VM: tar of what git would
+# add, deleted files left out. Over the guest agent it would take too long
+cmd_sync() {
+  local distro="$1" dir pid file
+  is_running "${distro}" || { echo "${distro} is not running"; exit 1; }
+  dir="$(mktemp -d)"
+  (
+    cd "${REPO_DIR}"
+    git ls-files -co --exclude-standard -z | while IFS= read -r -d '' file; do
+      if [[ -e "${file}" ]]; then printf '%s\0' "${file}"; fi
+    done | tar --null -T - -czf "${dir}/dots.tar.gz"
+  )
+  python3 -m http.server --bind 127.0.0.1 --directory "${dir}" "${SYNC_PORT}" > /dev/null 2>&1 &
+  pid=$!
+  trap 'kill "${pid}" 2> /dev/null; rm -rf "${dir}"' RETURN
+  sleep 1
+  guest_exec "${distro}" "cd /home/dario/git/dots \
+    && find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} + \
+    && curl -fsS http://10.0.2.2:${SYNC_PORT}/dots.tar.gz | tar -xz \
+    && chown -R dario: ."
+  echo "${distro}: ~/git/dots is now this working tree"
+}
+
 cmd_run() {
   local distro="$1" opt gl=false
   shift
@@ -203,6 +230,7 @@ case "${command}" in
   snapshot) [[ $# -eq 1 ]] || usage; qemu-img snapshot -c "$1" "${TMP_DIR}/${distro}.qcow2" ;;
   revert) [[ $# -eq 1 ]] || usage; qemu-img snapshot -a "$1" "${TMP_DIR}/${distro}.qcow2" ;;
   snapshots) qemu-img snapshot -l "${TMP_DIR}/${distro}.qcow2" ;;
+  sync) cmd_sync "${distro}" ;;
   exec) [[ $# -ge 1 ]] || usage; guest_exec "${distro}" "$*" ;;
   *) usage ;;
 esac

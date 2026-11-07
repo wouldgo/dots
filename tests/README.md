@@ -17,6 +17,9 @@ tests/vm/vm.sh stop arch
 
 Test credentials: user `dario` / password `test`, LUKS passphrase `test`.
 
+`tests/vm/vm.sh sync <arch|fedora>` copies this working tree to `~/git/dots` in
+the running VM. After `sync`, a change needs no commit and no push.
+
 ### Driving the VM from the host
 
 While the VM runs, QEMU exposes two UNIX sockets in `vm/tmp/`:
