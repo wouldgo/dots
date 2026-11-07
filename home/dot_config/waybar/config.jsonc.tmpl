@@ -11,6 +11,7 @@
         "tray",
         "pulseaudio",
         "network",
+        "custom/wireguard",
         "cpu",
         "memory",
         "disk",
@@ -52,6 +53,16 @@
         "format-disconnected": "󰖪 offline",
         "tooltip-format": "{ifname} {ipaddr}/{cidr} via {gwaddr}",
         "on-click": "nm-connection-editor"
+    },
+
+    // Hidden with no tunnels. Click opens the tunnel list. "signal": refresh
+    // right after a change, same number as in wg-menu
+    "custom/wireguard": {
+        "exec": "~/.local/bin/wg-menu status",
+        "return-type": "json",
+        "interval": 5,
+        "signal": 8,
+        "on-click": "~/.local/bin/wg-menu"
     },
 
     "cpu": {

@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+# WireGuard tunnels of NetworkManager from sway: wmenu list, the chosen tunnel
+# goes up or down. `wg-menu status` is the waybar module (custom/wireguard).
+# Opened from waybar and from the settings menu ($mod+Shift+e).
+set -euo pipefail
+
+# Gruvbox, same colors as the launcher ($menu in ~/.config/sway/config)
+wmenu_opts=(-f "UbuntuMono Nerd Font 12" -N 282828 -n ebdbb2 -M fabd2f -m 282828 -S 504945 -s fabd2f)
+
+# Same number as "signal" in ~/.config/waybar/config.jsonc
+waybar_signal=8
+
+up=()
+down=()
+# NAME last and no escaping: a ":" in a name stays in the name
+while IFS=: read -r type active name; do
+    [ "$type" = wireguard ] || continue
+    if [ "$active" = yes ]; then up+=("$name"); else down+=("$name"); fi
+done < <(nmcli -t -e no -f TYPE,ACTIVE,NAME connection show 2>/dev/null || true)
+
+# JSON string with pango markup (waybar parses both)
+escape() {
+    local s=$1
+    s=${s//'&'/'&amp;'}
+    s=${s//'<'/'&lt;'}
+    s=${s//'>'/'&gt;'}
+    s=${s//"\\"/"\\\\"}
+    s=${s//'"'/'\"'}
+    printf '%s' "$s"
+}
+
+status() {
+    # Empty text: waybar hides the module on machines with no tunnels
+    if [ "$(( ${#up[@]} + ${#down[@]} ))" -eq 0 ]; then
+        printf '{"text":""}\n'
+        return
+    fi
+
+    # nf-md-vpn in UTF-8 bytes: $'\U...' needs a UTF-8 locale, waybar may have LANG=C
+    local icon=$'\xf3\xb0\x96\x82'
+    local text="" tooltip="" class=disconnected name
+    for name in ${up[@]+"${up[@]}"}; do
+        text+="${text:+ }$(escape "$name")"
+        tooltip+="${tooltip:+\\n}$(escape "$name"): up"
+        class=connected
+    done
+    for name in ${down[@]+"${down[@]}"}; do
+        tooltip+="${tooltip:+\\n}$(escape "$name"): down"
+    done
+    printf '{"text":"%s","tooltip":"%s","class":"%s"}\n' "$icon${text:+ $text}" "$tooltip" "$class"
+}
+
+menu() {
+    if [ "$(( ${#up[@]} + ${#down[@]} ))" -eq 0 ]; then
+        notify-send "WireGuard" "No tunnels. Import one: nmcli connection import type wireguard file wg0.conf"
+        return
+    fi
+
+    local choice output
+    choice=$(
+        { printf '● %s\n' ${up[@]+"${up[@]}"}; printf '○ %s\n' ${down[@]+"${down[@]}"}; } \
+            | grep -v -x -e '● ' -e '○ ' \
+            | wmenu -p "WireGuard" "${wmenu_opts[@]}"
+    ) || return 0
+
+    local action
+    case "$choice" in
+        "● "*) action=down ;;
+        "○ "*) action=up ;;
+        *) return 0 ;;
+    esac
+    # Tell the bar also on failure: the state may have changed anyway
+    if ! output=$(nmcli connection "$action" id "${choice#* }" 2>&1); then
+        notify-send -u critical "WireGuard" "$output"
+    fi
+    pkill "-RTMIN+${waybar_signal}" -x waybar || true
+}
+
+case "${1:-menu}" in
+    status) status ;;
+    menu) menu ;;
+    *)
+        echo "usage: wg-menu [menu|status]" >&2
+        exit 2
+        ;;
+esac

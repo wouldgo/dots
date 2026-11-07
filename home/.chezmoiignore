@@ -6,4 +6,5 @@
 .config/xdg-desktop-portal
 .local/bin/sway-keys
 .local/bin/sway-menu
+.local/bin/wg-menu
 {{ end -}}

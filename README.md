@@ -149,7 +149,27 @@ The VM uses the branch in `DOTS_REF`. The default is `feature/chezmoi`.
 5. In the VM, apply: `chezmoi init --apply --source ~/git/dots`.
 6. Make sure that the change works.
 
-## 5. Bring back changes made by hand
+## 5. Use a WireGuard VPN
+
+NetworkManager keeps the tunnels and their keys, outside this repo.
+Do not put a `.conf` file in the repo: it contains the private key.
+On each machine, import each tunnel one time:
+
+1. Import: `nmcli connection import type wireguard file wg0.conf`.
+   The file name, without `.conf`, is the tunnel name. The tunnel starts at once.
+2. To start the tunnel only on request: `nmcli connection modify wg0 connection.autoconnect no`.
+3. Delete the `.conf` file if you do not need it.
+
+To start or stop a tunnel:
+
+- GNOME: use the VPN toggle in the quick settings. No extension is necessary.
+- sway: click the VPN icon on waybar, or select `VPN` in the settings menu (`$mod+Shift+e`).
+  The icon is yellow when a tunnel is up. It is hidden when the machine has no tunnels.
+
+This is a TL;DR. The full information is in
+[WireGuard](https://wiki.archlinux.org/title/WireGuard#NetworkManager) on the Arch wiki.
+
+## 6. Bring back changes made by hand
 
 Use this when you change a config file on the machine and want the change in
 the repo. This is a TL;DR. The full information is in the chezmoi docs:
