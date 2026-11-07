@@ -1,0 +1,29 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/usr/bin/env bash
+# Login screen: greetd with tuigreet, or GDM. Only enabled here: the running
+# session stays, the change comes with the next boot (greetd: {{ .greetd }}).
+set -euo pipefail
+
+{{ if .greetd -}}
+# Same VT and user as the config in the package: the user differs per distro
+sudo tee /etc/greetd/config.toml >/dev/null <<'TOML'
+[terminal]
+vt = 1
+
+[default_session]
+# /usr/local/share: the "Sway (NVIDIA)" entry of run_onchange_after_60
+command = "tuigreet --time --remember --remember-user-session --asterisks --sessions /usr/share/wayland-sessions:/usr/local/share/wayland-sessions"
+user = "{{ if eq .chezmoi.osRelease.id "fedora" }}greetd{{ else }}greeter{{ end }}"
+TOML
+# Both are display-manager.service: GDM first, or enabling greetd fails
+if systemctl list-unit-files gdm.service >/dev/null 2>&1; then
+  sudo systemctl disable gdm.service
+fi
+sudo systemctl enable greetd.service
+{{- else -}}
+if systemctl is-enabled --quiet greetd.service 2>/dev/null; then
+  sudo systemctl disable greetd.service
+  sudo systemctl enable gdm.service
+fi
+{{- end }}
+{{ end -}}

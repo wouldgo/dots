@@ -14,11 +14,12 @@ gpu-driver removes the NVIDIA stack. swrast when no GPU is known (VMs) */ -}}
 {{- if contains "0x1002" $gpus }}{{ $vulkan = concat $vulkan (list "vulkan-radeon" "lib32-vulkan-radeon") }}{{ end }}
 {{- if contains "0x8086" $gpus }}{{ $vulkan = concat $vulkan (list "vulkan-intel" "lib32-vulkan-intel") }}{{ end }}
 {{- if not $vulkan }}{{ $vulkan = list "vulkan-swrast" "lib32-vulkan-swrast" }}{{ end }}
-# The nvidia group only with an NVIDIA GPU, gaming and sway only when asked
+# The nvidia group only with an NVIDIA GPU, gaming, sway and greetd only when
+# asked
 # GPUs: {{ $gpus | splitList "\n" | join " " }}
 # -Syu: a stale package database asks the mirrors for versions they no longer
 # have (404). Not -Sy alone: a partial upgrade breaks Arch
-sudo pacman -Syu --needed --noconfirm {{ range $group, $pkgs := .packages.arch }}{{ if and (or (ne $group "nvidia") $nvidia) (or (ne $group "gaming") $.gaming) (or (ne $group "sway") $.sway) }}{{ range $pkgs }}{{ . | quote }} {{ end }}{{ end }}{{ end }}{{ range $vulkan }}{{ . | quote }} {{ end }}
+sudo pacman -Syu --needed --noconfirm {{ range $group, $pkgs := .packages.arch }}{{ if and (or (ne $group "nvidia") $nvidia) (or (ne $group "gaming") $.gaming) (or (ne $group "sway") $.sway) (or (ne $group "greetd") $.greetd) }}{{ range $pkgs }}{{ . | quote }} {{ end }}{{ end }}{{ end }}{{ range $vulkan }}{{ . | quote }} {{ end }}
 {{- else if eq .chezmoi.osRelease.id "fedora" }}
 {{- range $group, $pkgs := .packages.fedora }}
 {{- range $pkgs }}
@@ -27,6 +28,6 @@ sudo dnf group install -y {{ trimPrefix "@" . | quote }}
 {{- end }}
 {{- end }}
 {{- end }}
-sudo dnf install -y {{ range $group, $pkgs := .packages.fedora }}{{ if or (ne $group "sway") $.sway }}{{ range $pkgs }}{{ if not (hasPrefix "@" .) }}{{ . | quote }} {{ end }}{{ end }}{{ end }}{{ end }}
+sudo dnf install -y {{ range $group, $pkgs := .packages.fedora }}{{ if and (or (ne $group "sway") $.sway) (or (ne $group "greetd") $.greetd) }}{{ range $pkgs }}{{ if not (hasPrefix "@" .) }}{{ . | quote }} {{ end }}{{ end }}{{ end }}{{ end }}
 {{- end }}
 {{ end -}}

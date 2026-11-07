@@ -80,6 +80,10 @@ packages:
       - openscad
     eda:
       - kicad
+    # installed only when greetd
+    greetd:
+      - greetd
+      - greetd-tuigreet
     # installed only when gaming (Steam needs multilib, enabled by the installer)
     gaming:
       - steam
@@ -169,6 +173,10 @@ packages:
       - graphviz
     net-gui:
       - wireshark
+    # installed only when greetd
+    greetd:
+      - greetd
+      - tuigreet
     graphics-office:
       - gimp
       - inkscape

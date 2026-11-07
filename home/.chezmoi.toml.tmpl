@@ -2,6 +2,7 @@
 {{- $isLaptop := promptBoolOnce . "isLaptop" "Is this machine a laptop (battery, backlight, touchpad)?" false -}}
 {{- $gaming := promptBoolOnce . "gaming" "Install gaming apps (Steam, Sunshine, GE-Proton)?" false -}}
 {{- $sway := promptBoolOnce . "sway" "Install the sway desktop and its configs (not where only GNOME is allowed)?" true -}}
+{{- $greetd := promptBoolOnce . "greetd" "Log in with greetd and tuigreet instead of GDM?" false -}}
 # The repo lives in ~/git/dots (README): keep pointing there after `chezmoi init --source`
 sourceDir = {{ .chezmoi.workingTree | quote }}
 
@@ -10,3 +11,4 @@ appleKeyboard = {{ $appleKeyboard }}
 isLaptop = {{ $isLaptop }}
 gaming = {{ $gaming }}
 sway = {{ $sway }}
+greetd = {{ $greetd }}
