@@ -1,0 +1,30 @@
+# Global agent skills, kept on every machine by run_onchange_after_75-skills.sh.
+# Written by `skills-sync save`: change the skills with the skills CLI, then save.
+skills:
+  agents: [claude-code, codex, pi]
+  sources:
+    juliusbrussee/caveman:
+      - cavecrew
+      - caveman
+      - caveman-commit
+      - caveman-compress
+      - caveman-discover
+      - caveman-evidence-review
+      - caveman-explore
+      - caveman-help
+      - caveman-learn
+      - caveman-manage
+      - caveman-optimize
+      - caveman-review
+      - caveman-setup
+      - caveman-stats
+      - investigate-first
+      - lean-build
+      - megacave
+      - migration
+      - safe-refactor
+      - surgical-patch
+      - ultracave
+      - verify-and-stop
+    vercel-labs/skills:
+      - find-skills

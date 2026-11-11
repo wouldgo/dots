@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# inventory hash: {{ include ".chezmoidata/skills.yaml" | sha256sum }}
+set -euo pipefail
+
+SKILLS_INVENTORY={{ joinPath .chezmoi.sourceDir ".chezmoidata/skills.yaml" | quote }} \
+  "${HOME}/.local/bin/skills-sync" apply

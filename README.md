@@ -95,6 +95,23 @@ This is a TL;DR. The full information is in the mise docs:
 [dev tools](https://mise.jdx.dev/dev-tools/),
 [configuration](https://mise.jdx.dev/configuration.html).
 
+### Add an agent skill
+
+The global skills of Claude Code, Codex and Pi are listed in
+`home/.chezmoidata/skills.yaml`. `chezmoi apply` installs them with the
+`skills` CLI and removes the global skills that are not in the list.
+
+1. Install the skill: `skills add <owner/repo> -g -s <skill>`.
+   To remove one: `skills remove -g -s <skill>`.
+2. Write the installed skills to the list: `skills-sync save`.
+3. Commit `home/.chezmoidata/skills.yaml`. On the other machines, `chezmoi apply`.
+
+You can also edit the list by hand and run `chezmoi apply` (or `skills-sync apply`).
+To update the skills to their latest version: `skills update -g -y`.
+A skill that you install and do not save goes away on the next apply.
+
+This is a TL;DR. The full information is in `skills --help` and on [skills.sh](https://skills.sh).
+
 ### Add a config file
 
 1. Copy the file into chezmoi: `chezmoi add ~/.config/<app>/<file>`.

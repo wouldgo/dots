@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+# Keeps the global agent skills (skills CLI) equal to the inventory in the
+# repo, .chezmoidata/skills.yaml. The inventory wins: apply also removes the
+# installed skills that are not listed.
+# shellcheck disable=SC2016 # $names in single quotes belong to jq
+set -euo pipefail
+
+source_dir=$(chezmoi source-path 2>/dev/null || echo "${HOME}/git/dots/home")
+inventory="${SKILLS_INVENTORY:-${source_dir}/.chezmoidata/skills.yaml}"
+
+usage() {
+  cat <<EOF
+Usage: skills-sync apply|save
+
+  apply  install the skills of the inventory, remove the other global skills
+  save   write the installed global skills to the inventory
+
+Change the skills with the skills CLI (skills add -g, skills remove -g), then
+save and commit. Update them with: skills update -g -y
+Inventory: ${inventory}
+EOF
+}
+
+# skills, jq and yq come from mise: run them through it when not in PATH
+tool() {
+  if command -v "$1" >/dev/null; then
+    "$@"
+  else
+    "${HOME}/.local/bin/mise" exec -- "$@"
+  fi
+}
+
+# No install telemetry to skills.sh
+export DO_NOT_TRACK=1
+
+installed() {
+  tool skills list --global --json
+}
+
+apply() {
+  [ -f "${inventory}" ] || { echo "skills-sync: ${inventory} not found" >&2; exit 1; }
+  local data agents names extra source
+  data=$(tool yq -o json '.skills' "${inventory}")
+  mapfile -t agents < <(tool jq -r '.agents[]' <<<"${data}")
+
+  # Also reinstalls the skills already there: it updates them and fixes the
+  # agent links when the agents change. skills reads stdin: without
+  # </dev/null it eats the rest of the source list.
+  while IFS= read -r source; do
+    mapfile -t names < <(tool jq -r --arg source "${source}" '.sources[$source][]' <<<"${data}")
+    tool skills add "${source}" --global --yes --agent "${agents[@]}" --skill "${names[@]}" </dev/null
+  done < <(tool jq -r '.sources | keys[]' <<<"${data}")
+
+  mapfile -t extra < <(installed | tool jq -r --argjson data "${data}" \
+    '($data.sources | [.[][]]) as $listed | .[].name | select(. as $n | $listed | index($n) | not)')
+  if [ "${#extra[@]}" -gt 0 ]; then
+    echo "skills-sync: removing the skills not in the inventory: ${extra[*]}"
+    tool skills remove --global --yes --skill "${extra[@]}"
+  fi
+}
+
+save() {
+  local agents_json='["claude-code","codex","pi"]'
+  if [ -f "${inventory}" ]; then
+    agents_json=$(tool yq -o json -I0 '.skills.agents' "${inventory}")
+  fi
+
+  # GitHub sources as owner/repo, the others by URL; quotes only when needed
+  installed | tool jq -r --argjson agents "${agents_json}" '
+    def y: if test("^[A-Za-z0-9._/-]+$") then . else @json end;
+    "# Global agent skills, kept on every machine by run_onchange_after_75-skills.sh.",
+    "# Written by `skills-sync save`: change the skills with the skills CLI, then save.",
+    "skills:",
+    "  agents: [\($agents | map(y) | join(", "))]",
+    "  sources:",
+    (map(.source = (if .sourceType == "github" then .source else (.sourceUrl // .source) end))
+      | group_by(.source)[]
+      | "    \(.[0].source | y):", (map(.name) | sort[] | "      - \(y)"))
+  ' >"${inventory}.new"
+  mv "${inventory}.new" "${inventory}"
+  echo "skills-sync: saved to ${inventory}"
+  git -C "$(dirname "${inventory}")" diff --stat -- "${inventory}" 2>/dev/null || true
+}
+
+case "${1:-}" in
+  apply) apply ;;
+  save) save ;;
+  *)
+    usage
+    [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ] || exit 1
+    ;;
+esac
