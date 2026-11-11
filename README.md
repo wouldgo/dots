@@ -170,7 +170,35 @@ To start or stop a tunnel:
 This is a TL;DR. The full information is in
 [WireGuard](https://wiki.archlinux.org/title/WireGuard#NetworkManager) on the Arch wiki.
 
-## 6. Bring back changes made by hand
+## 6. Use nvim
+
+nvim keeps the Vim modes and adds the VSCode keybindings on top: `Ctrl+S`,
+`Ctrl+P`, `Ctrl+Shift+F`, `F12`, `Ctrl+.`, `Ctrl+/`, `Ctrl+D` and the others.
+All of them are in `~/.config/nvim/lua/config/keymaps.lua`. To find one, press
+`Ctrl+K Ctrl+S`. The other commands start with `Space`: wait a moment after it
+and a menu shows them. Window commands are on `Space w` because `Ctrl+W` closes
+the editor. `Ctrl+A` belongs to tmux: select all with `ggVG`.
+
+The first start installs the plugins, the language servers and the debuggers.
+Wait until it ends (`:Mason` shows the progress), then restart nvim.
+
+To debug Go, Rust, JavaScript or TypeScript, use the VSCode keys:
+
+- `F9` toggles a breakpoint, `Shift+F9` sets a breakpoint with a condition.
+- `F5` starts the debug or continues. On the first start, select what to run.
+  The configurations of `.vscode/launch.json` are in the list too.
+- `F10` step over, `F11` step into, `Shift+F11` step out, `Shift+F5` stop.
+- `Ctrl+Shift+D` shows or hides the debug views.
+
+Known problems:
+
+- `Ctrl+Shift+P`, `Ctrl+.` and similar keys need a terminal that reports them
+  (Alacritty does). Over ssh from another terminal, some of them do not arrive:
+  use `:` for the commands.
+- `:Lazy update` changes `~/.config/nvim/lazy-lock.json`. Bring it back to the
+  repo with `chezmoi re-add` (see [Bring back changes made by hand](#7-bring-back-changes-made-by-hand)).
+
+## 7. Bring back changes made by hand
 
 Use this when you change a config file on the machine and want the change in
 the repo. This is a TL;DR. The full information is in the chezmoi docs:

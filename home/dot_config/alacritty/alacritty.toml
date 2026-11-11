@@ -46,6 +46,13 @@ chars = "\u001B\r"
 chars = "\r"
 key = "NumpadEnter"
 
+# Ctrl+Shift+F to the program (search in files in nvim) instead of the
+# Alacritty search, which stays on Ctrl+Shift+B
+[[keyboard.bindings]]
+action = "ReceiveChar"
+key = "F"
+mods = "Control|Shift"
+
 [window]
 decorations = "Full"
 dynamic_title = true
