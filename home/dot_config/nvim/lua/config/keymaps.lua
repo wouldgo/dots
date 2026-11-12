@@ -68,11 +68,16 @@ vim.api.nvim_create_user_command("CloseFile", function()
     vim.cmd("confirm quit")
   end
 end, { desc = "Close the file, or nvim with the last one" })
-for lhs, rhs in pairs({ q = "CloseFile", wq = "write | CloseFile", x = "update | CloseFile" }) do
-  vim.keymap.set("ca", lhs, function()
-    return (vim.fn.getcmdtype() == ":" and vim.fn.getcmdline() == lhs) and rhs or lhs
-  end, { expr = true })
-end
+-- Replaced on Enter, only when the whole line is the command: what you type is
+-- never rewritten, and :q!, :qa, :wq file keep their Vim meaning
+local close_file = { q = "CloseFile", quit = "CloseFile", wq = "write | CloseFile", x = "update | CloseFile" }
+vim.keymap.set("c", "<CR>", function()
+  local line = vim.fn.getcmdtype() == ":" and close_file[vim.trim(vim.fn.getcmdline())]
+  if line then
+    vim.fn.setcmdline(line)
+  end
+  return "<CR>"
+end, { expr = true, desc = "Run the command (:q closes the file)" })
 
 map({ "n", "i", "v" }, "<C-s>", save, "Save")
 map({ "n", "i", "v" }, "<C-w>", function()
