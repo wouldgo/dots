@@ -246,6 +246,15 @@ in `build/`: CMake writes it with `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON`, and
 `idf.py build` always writes it. An ESP-IDF project (it has `sdkconfig`) uses
 the clangd of esp-clang, installed by chezmoi with `idf_tools.py`.
 
+To debug an ESP32 over the USB serial port, without a JTAG probe:
+
+1. `Space d f` builds a debug firmware (GDB stub, `-Og`) and flashes it.
+   The build goes to `~/.cache/nvim/esp-idf-debug/`: the project files do not change.
+2. `F5`, then `ESP-IDF: debug over the serial port`. Close `idf.py monitor` first.
+3. Go back to the normal firmware with `idf.py flash`.
+
+Only 2 breakpoints at a time: the stub uses the hardware breakpoints of the chip.
+
 Known problems:
 
 - `Ctrl+Shift+P`, `Ctrl+.` and the other `Ctrl+Shift` keys work only in Alacritty

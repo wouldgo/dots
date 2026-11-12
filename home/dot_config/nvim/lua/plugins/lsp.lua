@@ -22,6 +22,7 @@ return {
         "yaml-language-server",
         -- debug adapters
         "codelldb",
+        "cpptools",
         "delve",
         "js-debug-adapter",
         -- formatters

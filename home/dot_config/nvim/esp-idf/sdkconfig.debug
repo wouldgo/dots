@@ -1,0 +1,6 @@
+# Debug firmware, on top of the sdkconfig of the project: the GDB stub on the
+# serial port, without the FreeRTOS task list (cpptools fails on it), and -Og
+# so that stepping follows the source
+CONFIG_ESP_SYSTEM_GDBSTUB_RUNTIME=y
+# CONFIG_ESP_GDBSTUB_SUPPORT_TASKS is not set
+CONFIG_COMPILER_OPTIMIZATION_DEBUG=y

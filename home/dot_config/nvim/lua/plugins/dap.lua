@@ -137,6 +137,12 @@ return {
       }
     end
 
+    -- ESP32 over the serial port, with no JTAG probe: see lua/esp_idf.lua.
+    -- Two hardware breakpoints at most, and the monitor cannot use the port
+    -- at the same time.
+    dap.adapters.cppdbg = { id = "cppdbg", type = "executable", command = "OpenDebugAD7" }
+    dap.providers.configs["esp-idf"] = require("esp_idf").dap_configurations
+
     -- .vscode/launch.json is read on every F5: these types tell which
     -- filetypes its configurations belong to
     local vscode = require("dap.ext.vscode")
