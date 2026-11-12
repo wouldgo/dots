@@ -1,0 +1,11 @@
+# Ignored in every repository (git reads it when core.excludesFile is unset).
+# Files already tracked stay tracked: remove them with git rm --cached.
+
+# Claude Code: the permissions of this machine
+**/.claude/settings.local.json
+
+# The index of clangd, made in every C/C++ project
+**/.cache/clangd/
+
+# Some work projects do not want the mise config in git
+mise.toml
