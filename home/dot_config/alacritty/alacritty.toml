@@ -55,6 +55,7 @@ mods = "Control|Shift"
 
 [window]
 decorations = "Full"
+dynamic_padding = true
 dynamic_title = true
 opacity = 1
 startup_mode = "Windowed"
