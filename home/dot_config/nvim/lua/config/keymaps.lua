@@ -106,13 +106,37 @@ map("t", "<Esc><Esc>", "<C-\\><C-n>", "Exit terminal mode")
 
 -- Navigation -----------------------------------------------------------------
 
--- The jumplist: Alt+Left goes back, Alt+Right forward again. The count is
--- needed because :normal drops a leading Tab, which is what Ctrl+I is
+-- The jumplist: Alt+Left goes back, Alt+Right forward again. Like VSCode it
+-- skips the places that are gone (lines deleted, file changed outside), where
+-- Ctrl+O/Ctrl+I stop with E19. A closed file is fine: the jump opens it again.
+local function jump(step)
+  local list, current = unpack(vim.fn.getjumplist())
+  local wanted, count, i = vim.v.count1, 0, current
+  while wanted > 0 do
+    i = i + step
+    local entry = list[i + 1]
+    if not entry then
+      return
+    end
+    count = count + 1
+    local buf = entry.bufnr
+    local gone = not vim.api.nvim_buf_is_valid(buf)
+      or (vim.api.nvim_buf_is_loaded(buf) and entry.lnum > vim.api.nvim_buf_line_count(buf))
+    if not gone then
+      wanted = wanted - 1
+    end
+  end
+  -- The count also keeps :normal from dropping a leading Tab (Ctrl+I)
+  local ok, err = pcall(vim.cmd, "normal! " .. count .. (step < 0 and "\15" or "\t"))
+  if not ok then
+    vim.notify(err:match("E%d+:.*") or err, vim.log.levels.WARN)
+  end
+end
 map({ "n", "i" }, "<M-Left>", function()
-  vim.cmd("normal! " .. vim.v.count1 .. "\15")
+  jump(-1)
 end, "Go back")
 map({ "n", "i" }, "<M-Right>", function()
-  vim.cmd("normal! " .. vim.v.count1 .. "\t")
+  jump(1)
 end, "Go forward")
 map({ "n", "i" }, "<C-g>", "<Esc>:", "Go to line", { silent = false })
 map({ "n", "i" }, "<C-S-o>", picker("lsp_symbols"), "Go to symbol in editor")

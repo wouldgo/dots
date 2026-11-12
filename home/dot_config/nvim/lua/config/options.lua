@@ -31,6 +31,9 @@ opt.splitright = true
 opt.splitbelow = true
 opt.undofile = true
 opt.confirm = true
+-- Alt+Left/Right go back also to closed files, as in VSCode (the default
+-- "clean" drops them from the jumplist)
+opt.jumpoptions = ""
 opt.autoread = true
 opt.updatetime = 250
 opt.timeoutlen = 400
