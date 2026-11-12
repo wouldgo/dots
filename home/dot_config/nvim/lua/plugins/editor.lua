@@ -36,6 +36,8 @@ return {
     config = function()
       require("nvim-treesitter").install({
         "bash",
+        "c",
+        "cpp",
         "css",
         "diff",
         "dockerfile",

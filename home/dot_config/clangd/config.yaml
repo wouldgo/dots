@@ -1,0 +1,8 @@
+# Flags of the Espressif gcc (ESP-IDF builds) that clang rejects: without
+# this, clangd shows them as errors at the top of every file
+CompileFlags:
+  Remove:
+    - -fno-tree-switch-conversion
+    - -fstrict-volatile-bitfields
+    - -mdisable-hardware-atomics
+    - -mno-disable-hardware-atomics

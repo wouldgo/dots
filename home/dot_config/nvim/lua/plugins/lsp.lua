@@ -42,6 +42,51 @@ return {
           gopls = { buildFlags = { "-tags=test" } },
         },
       })
+
+      -- C/C++: clangd finds compile_commands.json also in build/. An ESP-IDF
+      -- project (it has sdkconfig) gets the clangd of esp-clang instead: it
+      -- knows the Xtensa and RISC-V targets, and it asks the Espressif gcc for
+      -- the system headers. esp-clang comes from idf_tools.py (chezmoi or the
+      -- VSCode extension): the newest one wins.
+      local espressif = vim.fs.normalize("~/.espressif/tools")
+      local esp_clangd = vim.fn.glob(espressif .. "/esp-clang/*/esp-clang/bin/clangd", false, true)
+      table.sort(esp_clangd)
+      esp_clangd = esp_clangd[#esp_clangd]
+      local function esp_root(buf)
+        return esp_clangd and vim.fs.root(buf, "sdkconfig")
+      end
+
+      local clangd_root = vim.lsp.config.clangd.root_markers
+      vim.lsp.config("clangd", {
+        root_dir = function(buf, on_dir)
+          if not esp_root(buf) then
+            on_dir(vim.fs.root(buf, clangd_root) or vim.fn.getcwd())
+          end
+        end,
+      })
+      vim.lsp.config(
+        "esp_clangd",
+        vim.tbl_extend("force", vim.lsp.config.clangd, {
+          cmd = {
+            esp_clangd or "clangd",
+            "--background-index",
+            "--query-driver=" .. espressif .. "/**/bin/*-gcc",
+          },
+          root_dir = function(buf, on_dir)
+            local root = esp_root(buf)
+            if root then
+              on_dir(root)
+            end
+          end,
+        })
+      )
+      if vim.fn.executable("clangd") == 1 then
+        vim.lsp.enable("clangd")
+      end
+      if esp_clangd then
+        vim.lsp.enable("esp_clangd")
+      end
+
       vim.lsp.enable({
         "bashls",
         "eslint",

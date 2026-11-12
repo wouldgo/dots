@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# esp-idf package: {{ with stat "/opt/esp-idf/tools/tools.json" }}{{ .modTime }}{{ end }}
+# esp-clang: its clangd is the one nvim uses in ESP-IDF projects, and
+# idf_tools.py installs it only on request. Runs again when esp-idf changes.
+set -euo pipefail
+
+idf_tools=/opt/esp-idf/tools/idf_tools.py
+[ -f "${idf_tools}" ] || exit 0
+
+python3 "${idf_tools}" install esp-clang

@@ -60,6 +60,8 @@ packages:
     fonts:
       - noto-fonts-cjk
     cli:
+      # clangd, the C/C++ language server of nvim
+      - clang
       # psql
       - postgresql-libs
       # drill
@@ -166,6 +168,8 @@ packages:
     fonts:
       - google-noto-sans-cjk-vf-fonts
     cli:
+      # clangd, the C/C++ language server of nvim
+      - clang-tools-extra
       # psql
       - postgresql
       # drill

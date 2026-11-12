@@ -241,6 +241,11 @@ To debug Go, Rust, JavaScript or TypeScript, use the VSCode keys:
 - `F10` step over, `F11` step into, `Shift+F11` step out, `Shift+F5` stop.
 - `Ctrl+Shift+D` shows or hides the debug views.
 
+C and C++ use clangd. It needs a `compile_commands.json`, in the project or
+in `build/`: CMake writes it with `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON`, and
+`idf.py build` always writes it. An ESP-IDF project (it has `sdkconfig`) uses
+the clangd of esp-clang, installed by chezmoi with `idf_tools.py`.
+
 Known problems:
 
 - `Ctrl+Shift+P`, `Ctrl+.` and similar keys need a terminal that reports them
