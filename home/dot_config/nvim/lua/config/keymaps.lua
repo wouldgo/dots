@@ -230,6 +230,19 @@ map({ "n", "i" }, "<C-S-f>", picker("grep"), "Search in files")
 map("x", "<C-S-f>", picker("grep_word"), "Search selection in files")
 map({ "n", "i", "v" }, "<C-S-h>", "<Cmd>GrugFar<CR>", "Replace in files")
 
+-- Space alternatives -------------------------------------------------------------
+
+-- Ctrl+Shift+letter and Ctrl+. need a terminal that tells them apart from the
+-- plain Ctrl keys: Alacritty does, Alacritty + tmux and GNOME Console do not
+map("n", "<leader>p", picker("commands"), "Command palette (Ctrl+Shift+P)")
+map("n", "<leader>f", picker("grep"), "Search in files (Ctrl+Shift+F)")
+map("x", "<leader>f", picker("grep_word"), "Search selection in files (Ctrl+Shift+F)")
+map("n", "<leader>e", function()
+  Snacks.explorer()
+end, "Explorer (Ctrl+Shift+E)")
+map("n", "<leader>m", picker("diagnostics"), "Problems (Ctrl+Shift+M)")
+map({ "n", "x" }, "<leader>.", vim.lsp.buf.code_action, "Quick fix (Ctrl+.)")
+
 -- Debug ------------------------------------------------------------------------
 
 map({ "n", "i" }, "<F5>", dap("continue"), "Debug: start/continue")

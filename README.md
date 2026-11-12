@@ -248,9 +248,10 @@ the clangd of esp-clang, installed by chezmoi with `idf_tools.py`.
 
 Known problems:
 
-- `Ctrl+Shift+P`, `Ctrl+.` and similar keys need a terminal that reports them
-  (Alacritty does). Over ssh from another terminal, some of them do not arrive:
-  use `:` for the commands.
+- `Ctrl+Shift+P`, `Ctrl+.` and the other `Ctrl+Shift` keys work only in Alacritty
+  without tmux: tmux and GNOME Console send them as the plain `Ctrl` key.
+  There, use `Space p` (command palette), `Space f` (search in files),
+  `Space e` (explorer), `Space m` (problems) and `Space .` (quick fix).
 - `:Lazy update` changes `~/.config/nvim/lazy-lock.json`. Bring it back to the
   repo with `chezmoi re-add` (see [Bring back changes made by hand](#8-bring-back-changes-made-by-hand)).
 
