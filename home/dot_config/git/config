@@ -1,3 +1,6 @@
+[core]
+	# bat comes from mise: less where mise is not active yet
+	pager = "if command -v bat >/dev/null; then exec bat --style=plain; else exec less; fi"
 [pull]
 	rebase = true
 [user]
