@@ -3,6 +3,15 @@
 skills:
   agents: [claude-code, codex, pi]
   sources:
+    cxuu/golang-skills:
+      - go-concurrency
+      - go-context
+      - go-defensive
+      - go-generics
+    danyuchn/asd-ste100-skill:
+      - asd-ste100
+    github/awesome-copilot:
+      - documentation-writer
     juliusbrussee/caveman:
       - cavecrew
       - caveman
@@ -26,5 +35,9 @@ skills:
       - surgical-patch
       - ultracave
       - verify-and-stop
+    lukasniessen/kubernetes-skill:
+      - kubernetes-skill
+    openshift/hypershift:
+      - "Effective Go"
     vercel-labs/skills:
       - find-skills
