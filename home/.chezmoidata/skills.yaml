@@ -3,6 +3,13 @@
 skills:
   agents: [claude-code, codex, pi]
   sources:
+    DietrichGebert/ponytail:
+      - ponytail
+      - ponytail-audit
+      - ponytail-debt
+      - ponytail-gain
+      - ponytail-help
+      - ponytail-review
     cxuu/golang-skills:
       - go-concurrency
       - go-context
