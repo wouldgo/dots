@@ -1,0 +1,116 @@
+// Zed as close as possible to the VSCode setup (~/.config/Code/User/settings.json).
+// Only what differs from the Zed defaults, or what VSCode sets explicitly.
+{
+  "agent": {
+    "dock": "right",
+    "favorite_models": [],
+    "model_parameters": []
+  },
+  "base_keymap": "VSCode",
+  "theme": {
+    "mode": "system",
+    "light": "Gruvbox Dark Hard",
+    "dark": "Gruvbox Dark Hard"
+  },
+  // UbuntuMono everywhere: it runs small, hence the large sizes
+  "buffer_font_family": "UbuntuMono Nerd Font",
+  "buffer_font_size": 28,
+  // Propo: same glyphs, proportional widths, fits the menus better
+  "ui_font_family": "UbuntuMono Nerd Font Propo",
+  "ui_font_size": 24,
+  "agent_ui_font_size": 26,
+  "agent_buffer_font_size": 26,
+  "terminal": {
+    "font_family": "UbuntuMono Nerd Font",
+    "font_size": 26
+  },
+
+  "tab_size": 2,
+  "preferred_line_length": 120,
+  "multi_cursor_modifier": "cmd_or_ctrl",
+  "colorize_brackets": true,
+  "hover_popover_delay": 500,
+  "hover_popover_hiding_delay": 150,
+  "preview_tabs": {
+    "enabled": false
+  },
+  // explorer.enableDragAndDrop false in VSCode
+  "project_panel": {
+    "dock": "right",
+    "drag_and_drop": false
+  },
+  "remove_trailing_whitespace_on_save": true,
+  "ensure_final_newline_on_save": true,
+
+  // Copilot is off in VSCode: no edit predictions here either
+  "edit_predictions": {
+    "provider": "none"
+  },
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  },
+
+  // The languages of the VSCode extensions that Zed does not have built in
+  "auto_install_extensions": {
+    "ansible": true,
+    "basher": true,
+    "docker-compose": true,
+    "dockerfile": true,
+    "env": true,
+    "git-firefly": true,
+    "ini": true,
+    "ltex": true,
+    "make": true,
+    "markdownlint": true,
+    "neocmake": true,
+    "proto": true,
+    "sql": true,
+    "templ": true,
+    "terraform": true,
+    "toml": true,
+    "xml": true,
+    "zig": true
+  },
+
+  "lsp": {
+    // shellcheck.customArgs in VSCode: follow the sourced files
+    "bash-language-server": {
+      "settings": {
+        "bashIde": {
+          "shellcheckArguments": "-x"
+        }
+      }
+    },
+    "gopls": {
+      "initialization_options": {
+        "buildFlags": ["-tags=test"]
+      }
+    }
+  },
+  "languages": {
+    // Only ESLint's fix on save, as source.fixAll.eslint in VSCode: no Prettier
+    "JavaScript": {
+      "format_on_save": "on",
+      "formatter": [{ "code_action": "source.fixAll.eslint" }]
+    },
+    "Makefile": {
+      "hard_tabs": true
+    },
+    "Templ": {
+      "format_on_save": "on"
+    }
+  },
+
+  // Claude Code in the agent panel, through ACP. The adapter comes from mise
+  // (claude-agent-acp): the registry entry downloads nothing on Zed 1.28.1.
+  // Shim path: Zed started from the desktop has no mise in its PATH. It uses
+  // the login of the claude CLI. "default" asks before every edit or command.
+  "agent_servers": {
+    "Claude Code": {
+      "type": "custom",
+      "command": "/home/dario/.local/share/mise/shims/claude-agent-acp",
+      "default_mode": "default"
+    }
+  }
+}

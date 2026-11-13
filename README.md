@@ -264,9 +264,25 @@ Known problems:
   There, use `Space p` (command palette), `Space f` (search in files),
   `Space e` (explorer), `Space m` (problems) and `Space .` (quick fix).
 - `:Lazy update` changes `~/.config/nvim/lazy-lock.json`. Bring it back to the
-  repo with `chezmoi re-add` (see [Bring back changes made by hand](#8-bring-back-changes-made-by-hand)).
+  repo with `chezmoi re-add` (see [Bring back changes made by hand](#9-bring-back-changes-made-by-hand)).
 
-## 8. Bring back changes made by hand
+## 8. Use Zed
+
+Zed has the settings and the keybindings of VSCode: Gruvbox Dark Hard, the
+project panel on the right, `Ctrl+Up/Down` to move lines, `Alt+Up/Down` to grow
+or shrink the selection, `Alt+Left/Right` to go back and forward, `Ctrl+B` for
+the panels on the right. The first start installs the language extensions.
+
+Go builds with the tag `test`, as in VSCode: gopls, the debug scenarios of
+`debugger: start` (`F4`, from `~/.config/zed/debug.json`) and the `go test`
+tasks next to the tests (`~/.config/zed/tasks.json`).
+
+Claude Code is in the agent panel: click `+` at its top and pick Claude Code.
+The adapter comes from mise (`claude-agent-acp`). It uses the login of the
+`claude` CLI; in the thread, `/login` changes it.
+It asks before every edit and command.
+
+## 9. Bring back changes made by hand
 
 Use this when you change a config file on the machine and want the change in
 the repo. This is a TL;DR. The full information is in the chezmoi docs:

@@ -1,0 +1,30 @@
+// Global debug scenarios, in every project (debugger: start). Build tag "test"
+// as gopls and go.testTags in VSCode: the zero-config Go scenarios of Zed
+// have no build flags
+[
+  {
+    "label": "Go: debug this package (-tags=test)",
+    "adapter": "Delve",
+    "request": "launch",
+    "mode": "debug",
+    "program": "$ZED_DIRNAME",
+    "buildFlags": "-tags=test"
+  },
+  {
+    "label": "Go: test this package (-tags=test)",
+    "adapter": "Delve",
+    "request": "launch",
+    "mode": "test",
+    "program": "$ZED_DIRNAME",
+    "buildFlags": "-tags=test"
+  },
+  {
+    "label": "Go: test under the cursor (-tags=test)",
+    "adapter": "Delve",
+    "request": "launch",
+    "mode": "test",
+    "program": "$ZED_DIRNAME",
+    "buildFlags": "-tags=test",
+    "args": ["-test.run", "^$ZED_SYMBOL$"]
+  }
+]

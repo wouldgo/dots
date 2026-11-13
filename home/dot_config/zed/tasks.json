@@ -1,0 +1,17 @@
+// Global tasks. go-test: they show up next to the tests, beside the ones of
+// Zed, with the build tag "test" of go.testTags in VSCode
+[
+  {
+    "label": "go test -tags=test -run $ZED_SYMBOL",
+    "command": "go",
+    "args": ["test", "-tags=test", "-v", "-run", "^$ZED_SYMBOL$", "."],
+    "cwd": "$ZED_DIRNAME",
+    "tags": ["go-test"]
+  },
+  {
+    "label": "go test -tags=test (this package)",
+    "command": "go",
+    "args": ["test", "-tags=test", "-v", "."],
+    "cwd": "$ZED_DIRNAME"
+  }
+]

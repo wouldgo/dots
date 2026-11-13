@@ -1,0 +1,36 @@
+// The VSCode bindings come from base_keymap; these are the ones changed in
+// ~/.config/Code/User/keybindings.json
+[
+  {
+    "context": "Editor",
+    "bindings": {
+      // Zed scrolls with them
+      "ctrl-up": "editor::MoveLineUp",
+      "ctrl-down": "editor::MoveLineDown",
+      // Zed moves lines with them
+      "alt-up": "editor::SelectLargerSyntaxNode",
+      "alt-down": "editor::SelectSmallerSyntaxNode"
+    }
+  },
+  {
+    "context": "Pane",
+    "bindings": {
+      "alt-left": "pane::GoBack",
+      "alt-right": "pane::GoForward"
+    }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      // The side bar of VSCode is on the right: so are the panels here
+      "ctrl-b": "workspace::ToggleRightDock"
+    }
+  },
+  {
+    // F11 is only Step Into, as in VSCode: no full screen
+    "context": "Workspace && !debugger_stopped",
+    "bindings": {
+      "f11": null
+    }
+  }
+]
