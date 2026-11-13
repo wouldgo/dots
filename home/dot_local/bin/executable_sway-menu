@@ -10,6 +10,7 @@ entries="Lock
 Audio
 Network
 VPN
+Remote
 GNOME Settings
 Reload sway
 Logout
@@ -24,6 +25,7 @@ case "$choice" in
     "Audio")          pavucontrol & ;;
     "Network")        nm-connection-editor & ;;
     "VPN")            ~/.local/bin/wg-menu & ;;
+    "Remote")         ~/.local/bin/remote-menu & ;;
     # GNOME panels refuse to load unless the desktop looks like GNOME
     "GNOME Settings") XDG_CURRENT_DESKTOP=GNOME gnome-control-center & ;;
     "Reload sway")    swaymsg reload ;;

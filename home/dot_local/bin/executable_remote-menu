@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Terminal of another machine on this sway, with waypipe over ssh: the GUI apps
+# started in it open here too. Hosts from ~/.ssh/config, or type user@host.
+# The other machine needs sshServer (chezmoi) and this key in authorized_keys.
+set -euo pipefail
+
+# Gruvbox, same colors as the launcher ($menu in ~/.config/sway/config)
+wmenu_opts=(-f "UbuntuMono Nerd Font 12" -N 282828 -n ebdbb2 -M fabd2f -m 282828 -S 504945 -s fabd2f)
+
+# Host lines without wildcards
+hosts=$(awk 'tolower($1) == "host" { for (i = 2; i <= NF; i++) if ($i !~ /[*?!]/) print $i }' \
+    ~/.ssh/config 2>/dev/null || true)
+
+host=$(printf '%s\n' "$hosts" | wmenu -p "Remote" "${wmenu_opts[@]}") || exit 0
+[[ -n "$host" ]] || exit 0
+
+# Errors (host down, key refused) in a notification: no terminal to show them
+if ! out=$(waypipe ssh "$host" alacritty 2>&1); then
+    notify-send "Remote: $host" "${out:-waypipe failed}"
+fi

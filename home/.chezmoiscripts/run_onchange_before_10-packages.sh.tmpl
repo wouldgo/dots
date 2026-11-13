@@ -28,6 +28,6 @@ sudo dnf group install -y {{ trimPrefix "@" . | quote }}
 {{- end }}
 {{- end }}
 {{- end }}
-sudo dnf install -y {{ range $group, $pkgs := .packages.fedora }}{{ if and (or (ne $group "sway") $.sway) (or (ne $group "greetd") $.greetd) }}{{ range $pkgs }}{{ if not (hasPrefix "@" .) }}{{ . | quote }} {{ end }}{{ end }}{{ end }}{{ end }}
+sudo dnf install -y {{ range $group, $pkgs := .packages.fedora }}{{ if and (or (ne $group "sway") $.sway) (or (ne $group "greetd") $.greetd) (or (ne $group "ssh-server") $.sshServer) }}{{ range $pkgs }}{{ if not (hasPrefix "@" .) }}{{ . | quote }} {{ end }}{{ end }}{{ end }}{{ end }}
 {{- end }}
 {{ end -}}

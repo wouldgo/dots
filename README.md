@@ -58,9 +58,10 @@ This is a TL;DR. The full information is in the chezmoi docs:
 1. Install `git` and `chezmoi`.
 2. Clone the repo: `git clone https://github.com/wouldgo/dots.git ~/git/dots`.
 3. Apply: `chezmoi init --apply --source ~/git/dots`.
-4. If chezmoi asks about the Apple keyboard, laptop, gaming, sway or greetd, answer the questions.
+4. If chezmoi asks about the Apple keyboard, laptop, gaming, sway, greetd or SSH logins, answer the questions.
    Answer no to sway where you can only use GNOME: chezmoi skips its packages and configs.
    Answer yes to greetd to replace GDM with tuigreet at the next boot. GNOME under greetd is not tested.
+   Answer yes to SSH logins on a machine that other machines open apps from (see section 6).
 5. Log out and log in again.
 
 To get changes later:
@@ -187,7 +188,40 @@ To start or stop a tunnel:
 This is a TL;DR. The full information is in
 [WireGuard](https://wiki.archlinux.org/title/WireGuard#NetworkManager) on the Arch wiki.
 
-## 6. Use nvim
+## 6. Open apps of another machine
+
+With waypipe, a Wayland app runs on one machine and shows its window on the
+sway of another one, over ssh. Example: the laptop shows zed or kicad of
+the desktop. waypipe is installed on all the machines.
+
+On the machine with the apps (the server), one time:
+
+1. Answer yes to SSH logins (`sshServer`). To change the answer later, set
+   `sshServer = true` in `~/.config/chezmoi/chezmoi.toml` and do `chezmoi apply`.
+   chezmoi enables sshd. Only keys can log in, root cannot.
+
+On the machine with the screen (the client), one time:
+
+1. Make a key if you do not have one: `ssh-keygen -t ed25519`.
+2. Copy the key to the server. Passwords are off, so do it on the server: add
+   the contents of `~/.ssh/id_ed25519.pub` to `~/.ssh/authorized_keys`.
+3. Optional: add a `Host` entry in `~/.ssh/config`. The menu shows these hosts.
+
+To open the apps, select `Remote` in the settings menu (`$mod+Shift+e`) and
+select or type the host. A terminal of the server opens. The GUI apps that you
+start in this terminal open on the client. Without the menu: `waypipe ssh host alacritty`.
+
+Known problems:
+
+- An app that is already open on the server can open its new window there, not
+  on the client (Brave, zed). For Brave, use a different profile:
+  `brave --user-data-dir=$HOME/.config/brave-remote`.
+- Chromium and Electron apps need `--ozone-platform=wayland`. Without it, they look for X11 and show nothing.
+- Black or broken windows from a server with an NVIDIA GPU: try `waypipe --no-gpu ssh host alacritty`.
+
+This is a TL;DR. The full information is in `man waypipe`.
+
+## 7. Use nvim
 
 nvim keeps the Vim modes and adds the VSCode keybindings on top: `Ctrl+S`,
 `Ctrl+P`, `Ctrl+Shift+F`, `F12`, `Ctrl+.`, `Ctrl+/`, `Ctrl+D` and the others.
@@ -213,9 +247,9 @@ Known problems:
   (Alacritty does). Over ssh from another terminal, some of them do not arrive:
   use `:` for the commands.
 - `:Lazy update` changes `~/.config/nvim/lazy-lock.json`. Bring it back to the
-  repo with `chezmoi re-add` (see [Bring back changes made by hand](#7-bring-back-changes-made-by-hand)).
+  repo with `chezmoi re-add` (see [Bring back changes made by hand](#8-bring-back-changes-made-by-hand)).
 
-## 7. Bring back changes made by hand
+## 8. Bring back changes made by hand
 
 Use this when you change a config file on the machine and want the change in
 the repo. This is a TL;DR. The full information is in the chezmoi docs:

@@ -29,6 +29,8 @@ packages:
       - alacritty
       # notify-send, used by the Claude Code notification hook
       - libnotify
+      # Wayland apps of another machine over ssh, both ends (remote-menu)
+      - waypipe
     # installed only when sway
     sway:
       - sway
@@ -134,6 +136,8 @@ packages:
       - alacritty
       # notify-send, used by the Claude Code notification hook
       - libnotify
+      # Wayland apps of another machine over ssh, both ends (remote-menu)
+      - waypipe
     # installed only when sway
     sway:
       - sway
@@ -177,6 +181,9 @@ packages:
     greetd:
       - greetd
       - tuigreet
+    # installed only when sshServer (Arch: sshd is in openssh)
+    ssh-server:
+      - openssh-server
     graphics-office:
       - gimp
       - inkscape

@@ -7,4 +7,5 @@
 .local/bin/sway-keys
 .local/bin/sway-menu
 .local/bin/wg-menu
+.local/bin/remote-menu
 {{ end -}}

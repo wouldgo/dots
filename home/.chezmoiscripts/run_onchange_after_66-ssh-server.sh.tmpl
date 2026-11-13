@@ -1,0 +1,30 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/usr/bin/env bash
+# SSH server, for the apps that another machine opens with waypipe (sshServer:
+# {{ .sshServer }}). Key login only: README, "Open apps of another machine".
+set -euo pipefail
+
+conf=/etc/ssh/sshd_config.d/10-dots.conf
+{{ if .sshServer -}}
+# 10-: sshd keeps the first value, before 50-redhat.conf and 99-archlinux.conf
+sudo tee "${conf}" >/dev/null <<'CONF'
+# chezmoi, run_onchange_after_66-ssh-server: keys only, no root
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+PermitRootLogin no
+CONF
+# Host keys: Fedora makes them at the first start, sshd -t needs them before
+sudo ssh-keygen -A
+sudo sshd -t
+# restart, not reload: picks up the drop-in when sshd already runs; open
+# sessions stay
+sudo systemctl enable sshd.service
+sudo systemctl restart sshd.service
+{{- else -}}
+# Off only when this script turned it on: an sshd enabled by hand stays
+if [[ -e "${conf}" ]]; then
+  sudo systemctl disable --now sshd.service
+  sudo rm "${conf}"
+fi
+{{- end }}
+{{ end -}}
