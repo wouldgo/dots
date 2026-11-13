@@ -110,6 +110,8 @@ The global skills of Claude Code, Codex and Pi are listed in
 You can also edit the list by hand and run `chezmoi apply` (or `skills-sync apply`).
 To update the skills to their latest version: `skills update -g -y`.
 A skill that you install and do not save goes away on the next apply.
+A skill with `allowed-tools` (tools that the agent runs without asking) is
+removed, and `skills-sync apply` fails until the list drops it.
 
 This is a TL;DR. The full information is in `skills --help` and on [skills.sh](https://skills.sh).
 

@@ -37,9 +37,21 @@ installed() {
   tool skills list --global --json
 }
 
+# The installed skills whose SKILL.md frontmatter has allowed-tools: the agent
+# runs those tools without asking while the skill is active
+self_authorizing() {
+  local name path
+  installed | tool jq -r '.[] | "\(.name)\t\(.path)"' | while IFS=$'\t' read -r name path; do
+    if awk 'NR == 1 && $0 != "---" { exit } NR > 1 && $0 == "---" { exit }
+      /^allowed-tools:/ { found = 1 } END { exit !found }' "${path}/SKILL.md" 2>/dev/null; then
+      echo "${name}"
+    fi
+  done
+}
+
 apply() {
   [ -f "${inventory}" ] || { echo "skills-sync: ${inventory} not found" >&2; exit 1; }
-  local data agents names extra source
+  local data agents names extra unsafe source
   data=$(tool yq -o json '.skills' "${inventory}")
   mapfile -t agents < <(tool jq -r '.agents[]' <<<"${data}")
 
@@ -55,7 +67,17 @@ apply() {
     '($data.sources | [.[][]]) as $listed | .[].name | select(. as $n | $listed | index($n) | not)')
   if [ "${#extra[@]}" -gt 0 ]; then
     echo "skills-sync: removing the skills not in the inventory: ${extra[*]}"
-    tool skills remove --global --yes --skill "${extra[@]}"
+    tool skills remove --global --yes --skill "${extra[@]}" </dev/null
+  fi
+
+  # No skill may grant itself tools. Also after an update of the skill: the
+  # error makes chezmoi run this again until the inventory drops it.
+  mapfile -t unsafe < <(self_authorizing)
+  if [ "${#unsafe[@]}" -gt 0 ]; then
+    echo "skills-sync: removing the skills with allowed-tools: ${unsafe[*]}" >&2
+    tool skills remove --global --yes --skill "${unsafe[@]}" </dev/null
+    echo "skills-sync: take them out of ${inventory}" >&2
+    exit 1
   fi
 }
 
