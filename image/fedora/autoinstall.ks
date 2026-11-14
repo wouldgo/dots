@@ -2,32 +2,14 @@
 # produces a complete OS without personal customization, clones the dots repo,
 # writes the chezmoi data detected from the hardware and powers off.
 #
-# Same settings as image/arch, last wins: the defaults in %pre, QEMU fw_cfg
+# Same settings as image/arch, no built-in ones. Sources, last wins: QEMU fw_cfg
 # opt/autoinstall (KEY=value), kernel cmdline autoinstall.<key>=<value>.
-# Whatever is still empty is asked on tty6 by %pre.
+# Whatever is missing is asked on tty6 by %pre; an unattended run stops instead.
 
 %pre --interpreter=/bin/bash --erroronfail --log=/tmp/autoinstall-pre.log
 set -euo pipefail
 
-declare -A CFG=(
-  [DISK]=""
-  [HOSTNAME]=""
-  [USERNAME]=dario
-  [FULLNAME]=""
-  [TIMEZONE]=Europe/Rome
-  [LANG]=en_US.UTF-8
-  [LOCALES]=en_US.UTF-8,it_IT.UTF-8
-  [KEYMAP]=us
-  # true, false, or empty = ask (default answer yes)
-  [LUKS]=""
-  # Gaming apps by chezmoi (Steam, Sunshine, GE-Proton): true, false, or empty = ask (default answer no)
-  [GAMING]=""
-  # sway desktop by chezmoi (packages and configs): true, false, or empty = ask (default answer yes)
-  [SWAY]=""
-  [DOTS_REPO]=https://github.com/wouldgo/dots.git
-  [DOTS_PUSH_URL]=git@github.com:wouldgo/dots.git
-  [DOTS_REF]=feature/chezmoi
-)
+declare -A CFG=()
 
 is_true() { [[ "${1,,}" =~ ^(1|y|yes|true|on)$ ]]; }
 ks_quote() { local s="${1//\\/\\\\}"; printf '"%s"' "${s//\"/\\\"}"; }
@@ -47,7 +29,7 @@ for param in $(< /proc/cmdline); do
 done
 
 UNATTENDED=false
-if [[ -n "${CFG[DISK]}" && -n "${CFG[PASSWORD_HASH]:-}" ]] \
+if [[ -n "${CFG[DISK]:-}" && -n "${CFG[PASSWORD_HASH]:-}" ]] \
   && { ! is_true "${CFG[LUKS]:-true}" || [[ -n "${CFG[LUKS_PASSPHRASE]:-}" ]]; }; then
   UNATTENDED=true
 fi
@@ -84,7 +66,7 @@ mapfile -t disks < <(lsblk -dnpo NAME,TYPE | awk '$2 == "disk" { print $1 }' \
   | grep -Ev '/dev/(zram|loop|sr)' | grep -vxF "${excluded:-/nonexistent}" || true)
 (( ${#disks[@]} > 0 )) || { echo "no target disk found"; exit 1; }
 
-if [[ "${CFG[DISK]}" == auto ]]; then
+if [[ "${CFG[DISK]:-}" == auto ]]; then
   CFG[DISK]=""
   for pattern in /dev/nvme /dev/vd /dev/sd; do
     for d in "${disks[@]}"; do
@@ -92,7 +74,7 @@ if [[ "${CFG[DISK]}" == auto ]]; then
     done
   done
   [[ -n "${CFG[DISK]}" ]] || CFG[DISK]="${disks[0]}"
-elif [[ -n "${CFG[DISK]}" ]]; then
+elif [[ -n "${CFG[DISK]:-}" ]]; then
   printf '%s\n' "${disks[@]}" | grep -qx "${CFG[DISK]}" \
     || { echo "${CFG[DISK]} is not an available disk"; exit 1; }
 else
@@ -112,13 +94,38 @@ else
 fi
 
 # --- questions ---
-ask() {
-  local key="$1" question="$2" default="${3:-}" answer
-  [[ -n "${CFG[${key}]:-}" ]] && return 0
-  ${UNATTENDED} && { CFG[${key}]="${default}"; return 0; }
-  read -r -p "${question}${default:+ [${default}]}: " answer
-  CFG[${key}]="${answer:-${default}}"
+# ask KEY "question" [CHECK]: fills CFG[KEY] when missing, CHECK validates it
+ask() { ask_key required "$@"; }
+# ask_optional KEY "question": an empty value is allowed
+ask_optional() { ask_key optional "$@"; }
+ask_key() {
+  local mode="$1" key="$2" question="$3" check="${4:-}" value
+  while true; do
+    if [[ -v "CFG[${key}]" ]]; then
+      value="${CFG[${key}]}"
+    elif ${UNATTENDED}; then
+      [[ "${mode}" == optional ]] && { CFG[${key}]=""; return 0; }
+      echo "unattended install: ${key} is not set"; exit 1
+    else
+      read -r -p "${question}: " value
+    fi
+    if [[ -z "${value}" ]]; then
+      [[ "${mode}" == optional ]] && { CFG[${key}]=""; return 0; }
+    elif [[ -z "${check}" ]] || "${check}" "${value}"; then
+      CFG[${key}]="${value}"
+      return 0
+    fi
+    ${UNATTENDED} && { echo "unattended install: ${key}=\"${value}\" is not valid"; exit 1; }
+    echo "Not valid: \"${value}\""
+    unset "CFG[${key}]"
+  done
 }
+# ask_bool KEY "question": CFG[KEY] becomes true or false
+ask_bool() {
+  ask "$1" "$2 (yes/no)" valid_bool
+  if is_true "${CFG[$1]}"; then CFG[$1]=true; else CFG[$1]=false; fi
+}
+valid_bool() { [[ "${1,,}" =~ ^(1|y|yes|true|on|0|n|no|false|off)$ ]]; }
 ask_secret() {
   local -n out="$1"
   local first second
@@ -130,17 +137,24 @@ ask_secret() {
   done
 }
 
-ask HOSTNAME "Hostname" "fedora"
-ask USERNAME "User name" "dario"
-ask FULLNAME "Full name" ""
-# Encryption is optional: a passphrase (or YubiKey PIN) at every boot
-ask LUKS "Encrypt the disk? A passphrase is asked at every boot (yes/no)" "yes"
-if is_true "${CFG[LUKS]}"; then CFG[LUKS]=true; else CFG[LUKS]=false; fi
-# Written to chezmoi.toml: chezmoi installs them
-ask GAMING "Install the gaming apps: Steam, Sunshine, GE-Proton (yes/no)" "no"
-if is_true "${CFG[GAMING]}"; then CFG[GAMING]=true; else CFG[GAMING]=false; fi
-ask SWAY "Install the sway desktop and its configs (yes/no)" "yes"
-if is_true "${CFG[SWAY]}"; then CFG[SWAY]=true; else CFG[SWAY]=false; fi
+ask HOSTNAME "Hostname"
+ask USERNAME "User name"
+ask_optional FULLNAME "Full name"
+ask TIMEZONE "Time zone, e.g. Europe/Rome"
+ask LANG "Language, e.g. en_US.UTF-8"
+ask_optional LOCALES "More locales, comma separated"
+ask KEYMAP "Keymap, e.g. us"
+# A passphrase (or YubiKey PIN) at every boot
+ask_bool LUKS "Encrypt the disk? A passphrase is asked at every boot"
+ask_optional DOTS_REPO "dots repo URL (empty = no dots, no chezmoi data)"
+if [[ -n "${CFG[DOTS_REPO]}" ]]; then
+  ask DOTS_REF "dots branch"
+  ask_optional DOTS_PUSH_URL "dots push URL (empty = the clone URL)"
+  # Written to chezmoi.toml: chezmoi installs them
+  ask_bool GAMING "Install the gaming apps: Steam, Sunshine, GE-Proton"
+  ask_bool SWAY "Install the sway desktop and its configs"
+fi
+ask_bool POWEROFF "Power off at the end"
 USER_PASSWORD=""
 [[ -n "${CFG[PASSWORD_HASH]:-}" ]] || ask_secret USER_PASSWORD "Password for ${CFG[USERNAME]}"
 LUKS_PASSPHRASE="${CFG[LUKS_PASSPHRASE]:-}"
@@ -177,6 +191,7 @@ extra_locales="$(tr ',' '\n' <<< "${CFG[LOCALES]}" | grep -vx "${CFG[LANG]}" | p
   else
     echo "user --name=${CFG[USERNAME]} --gecos=$(ks_quote "${CFG[FULLNAME]}") --groups=wheel --plaintext --password=$(ks_quote "${USER_PASSWORD}")"
   fi
+  if is_true "${CFG[POWEROFF]}"; then echo "poweroff"; fi
 } > /tmp/autoinstall-generated.ks
 
 # For %post: no secrets in this one, it's copied to the target
@@ -187,18 +202,18 @@ LUKS=${CFG[LUKS]}
 HAS_NVIDIA=${HAS_NVIDIA}
 IS_LAPTOP=${IS_LAPTOP}
 APPLE_KEYBOARD=${APPLE_KEYBOARD}
-GAMING=${CFG[GAMING]}
-SWAY=${CFG[SWAY]}
+GAMING=${CFG[GAMING]:-}
+SWAY=${CFG[SWAY]:-}
 DOTS_REPO=${CFG[DOTS_REPO]}
-DOTS_PUSH_URL=${CFG[DOTS_PUSH_URL]}
-DOTS_REF=${CFG[DOTS_REF]}
+DOTS_PUSH_URL=${CFG[DOTS_PUSH_URL]:-}
+DOTS_REF=${CFG[DOTS_REF]:-}
 UNATTENDED=${UNATTENDED}
 EOF
 # Read by the recovery-key step in %post --nochroot, stays in installer RAM
 printf '%s' "${LUKS_PASSPHRASE}" > /tmp/autoinstall-luks-passphrase
 chmod 600 /tmp/autoinstall-luks-passphrase
 
-echo "Installing to ${CFG[DISK]} as ${CFG[HOSTNAME]}, user ${CFG[USERNAME]}, luks ${CFG[LUKS]}, gaming ${CFG[GAMING]}, sway ${CFG[SWAY]}, dots ${CFG[DOTS_REF]}"
+echo "Installing to ${CFG[DISK]} as ${CFG[HOSTNAME]}, user ${CFG[USERNAME]}, luks ${CFG[LUKS]}, dots ${CFG[DOTS_REPO]:-none} ${CFG[DOTS_REF]:-}, gaming ${CFG[GAMING]:-}, sway ${CFG[SWAY]:-}"
 if ! ${UNATTENDED}; then
   chvt 1
 fi
@@ -220,7 +235,6 @@ firstboot --disable
 # text installs default to multi-user.target: boot into GDM
 xconfig --startxonboot
 selinux --enforcing
-poweroff
 
 %packages
 @^workstation-product-environment
@@ -289,17 +303,20 @@ echo "==> NOCOW dirs for VM images and containers"
 mkdir -p "${home}/vms" "${home}/.local/share/containers"
 chattr +C "${home}/vms" "${home}/.local/share/containers"
 
-echo "==> dots (${DOTS_REF})"
-mkdir -p "${home}/git"
-if git clone --branch "${DOTS_REF}" "${DOTS_REPO}" "${home}/git/dots"; then
-  if [[ -n "${DOTS_PUSH_URL}" ]]; then
-    git -C "${home}/git/dots" remote set-url origin "${DOTS_PUSH_URL}"
-  fi
+if [[ -z "${DOTS_REPO}" ]]; then
+  echo "==> no dots repo: no clone, no chezmoi data"
 else
-  echo "clone failed, clone it by hand after the first login"
-fi
-mkdir -p "${home}/.config/chezmoi"
-cat > "${home}/.config/chezmoi/chezmoi.toml" << EOF
+  echo "==> dots (${DOTS_REF})"
+  mkdir -p "${home}/git"
+  if git clone --branch "${DOTS_REF}" "${DOTS_REPO}" "${home}/git/dots"; then
+    if [[ -n "${DOTS_PUSH_URL}" ]]; then
+      git -C "${home}/git/dots" remote set-url origin "${DOTS_PUSH_URL}"
+    fi
+  else
+    echo "clone failed, clone it by hand after the first login"
+  fi
+  mkdir -p "${home}/.config/chezmoi"
+  cat > "${home}/.config/chezmoi/chezmoi.toml" << EOF
 sourceDir = "~/git/dots"
 
 [data]
@@ -308,6 +325,7 @@ isLaptop = ${IS_LAPTOP}
 gaming = ${GAMING}
 sway = ${SWAY}
 EOF
+fi
 chown -R "${user}:${user}" "${home}"
 restorecon -R "${home}"
 %end

@@ -1,7 +1,6 @@
 # Installer images
 
-These ISOs install a full GNOME system with no personal settings.
-Then the machine powers off.
+These ISOs install a full GNOME system. They have no built-in settings: the install asks for every one.
 After the first login, chezmoi adds the personal apps and configs (`home/`).
 
 | | Arch (`arch/`) | Fedora (`fedora/`) |
@@ -16,8 +15,7 @@ After the first login, chezmoi adds the personal apps and configs (`home/`).
 The two installers do the same steps:
 
 - They find the CPU microcode, NVIDIA, laptop and Apple keyboard.
-- They write the results to `~/.config/chezmoi/chezmoi.toml`. chezmoi does not ask again.
-- They clone this repo to `~/git/dots`. `DOTS_REF` sets the branch. The default is `feature/chezmoi`.
+- With a dots repo: they clone it to `~/git/dots` and write the results to `~/.config/chezmoi/chezmoi.toml`.
 - They add a LUKS recovery key and show it one time. Write it down.
 - They disable copy on write (CoW) for `~/vms` and `~/.local/share/containers`.
 - They install btrfs-assistant and compsize.
@@ -41,26 +39,39 @@ Rootless podman has limits. The scripts go around them:
 ## Install
 
 1. Boot the USB stick in UEFI mode.
-2. Select the disk. Type its path again to confirm. The installer erases all of the disk.
-3. Type the hostname, the user and the password.
-4. Select if the disk is encrypted. The default is yes.
-   With encryption, you type a passphrase at each boot.
-   Without encryption, the machine boots to the login screen.
-5. With encryption: type the LUKS passphrase. Write down the recovery key.
-6. Wait. The machine powers off at the end.
+2. Select the disk and type its path again. The whole disk is erased.
+3. Answer the questions. None has a default.
+4. Type the password and, with LUKS, the passphrase. Write down the recovery key.
 
-The installer reads the settings from three places. The last one wins:
-1. The defaults: `arch/overlay/airootfs/usr/local/share/autoinstall/defaults.env`, or the top of `%pre` in `fedora/autoinstall.ks`.
-2. QEMU: `-fw_cfg name=opt/autoinstall,file=<file with KEY=value lines>`.
-3. The kernel command line: `autoinstall.<key>=<value>`. Push `e` in the boot menu to edit it.
+| Key | Value | Required |
+|---|---|---|
+| `DISK` | target disk; `auto` = first NVMe, then virtio, then SATA/USB | yes |
+| `HOSTNAME`, `USERNAME` | | yes |
+| `FULLNAME` | | no |
+| `TIMEZONE` | e.g. `Europe/Rome` | yes |
+| `LANG` | e.g. `en_US.UTF-8` | yes |
+| `LOCALES` | more locales, comma separated | no |
+| `KEYMAP` | e.g. `us` | yes |
+| `SWAP_SIZE` | e.g. `8g`, `0` = none (Arch) | yes |
+| `MIRROR_COUNTRY` | comma separated, empty = worldwide (Arch) | no |
+| `LUKS` | `true` / `false` | yes |
+| `DOTS_REPO` | dots repo URL; empty = no clone, no chezmoi data | no |
+| `DOTS_REF` | dots branch | with `DOTS_REPO` |
+| `DOTS_PUSH_URL` | push URL; empty = the clone URL | no |
+| `GAMING`, `SWAY` | `true` / `false`, answers for chezmoi | with `DOTS_REPO` |
+| `POWEROFF` | `true` / `false`, power off at the end | yes |
+| `PASSWORD_HASH`, `LUKS_PASSPHRASE` | unattended runs only | |
 
-Example: `autoinstall.disk=/dev/nvme0n1 autoinstall.dots_ref=master`.
+Answers in advance, last wins:
 
-`LUKS=true` or `LUKS=false` gives the answer to the encryption question.
-`GAMING=true` or `GAMING=false` gives the answer to the gaming question (Steam, Sunshine, GE-Proton, installed by chezmoi). The default answer is no.
-`SWAY=true` or `SWAY=false` gives the answer to the sway question (packages and configs, installed by chezmoi). The default answer is yes.
-If `DISK` and `PASSWORD_HASH` have values, and `LUKS=false` or `LUKS_PASSPHRASE` has a value, the installer asks nothing.
-The Arch ISO also has a "live / rescue" boot entry. This entry does not install.
+- QEMU: `-fw_cfg name=opt/autoinstall,file=<file with KEY=value lines>`.
+- Kernel command line: `autoinstall.<key>=<value>` (`e` in the boot menu).
+  Example: `autoinstall.disk=/dev/nvme0n1 autoinstall.dots_ref=master`.
+
+Unattended: `DISK` and `PASSWORD_HASH` set, and `LUKS=false` or `LUKS_PASSPHRASE` set.
+Then every required key must be given, or the install stops.
+
+The Arch ISO also has a "live / rescue" boot entry. It does not install.
 
 ## After the first login
 

@@ -124,7 +124,17 @@ FULLNAME=Test User
 PASSWORD_HASH=$(openssl passwd -6 "${TEST_PASSWORD}")
 LUKS=${VM_LUKS:-true}
 LUKS_PASSPHRASE=${TEST_LUKS_PASSPHRASE}
+TIMEZONE=UTC
+LANG=en_US.UTF-8
+LOCALES=
+KEYMAP=us
 SWAP_SIZE=1g
+MIRROR_COUNTRY=
+DOTS_REPO=https://github.com/wouldgo/dots.git
+DOTS_REF=${DOTS_REF:-$(git -C "${REPO_DIR}" rev-parse --abbrev-ref HEAD)}
+DOTS_PUSH_URL=
+GAMING=false
+SWAY=true
 POWEROFF=true
 EOF
   echo "${file}"

@@ -36,7 +36,7 @@ More: [Test in QEMU](image/README.md#test-in-qemu).
 
 ## 3. Install the customizations with chezmoi
 
-The installer ISO clones the repo and answers the keyboard, laptop, gaming and sway questions.
+The installer ISO, given a dots repo, clones it and answers the keyboard, laptop, gaming and sway questions.
 On another machine, do steps 1 and 2 first.
 
 1. Install `git` and `chezmoi`.

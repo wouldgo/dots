@@ -3,11 +3,10 @@
 # GNOME. It produces a complete OS without personal customization, clones the dots
 # repo, writes the chezmoi data detected from the hardware and powers off.
 #
-# Settings, last wins:
-#   /usr/local/share/autoinstall/defaults.env
-#   QEMU fw_cfg opt/autoinstall (same KEY=value format)
+# No built-in settings. Sources, last wins:
+#   QEMU fw_cfg opt/autoinstall (KEY=value lines)
 #   kernel cmdline autoinstall.<key>=<value> (e.g. autoinstall.disk=/dev/vda)
-# Whatever is still empty is prompted for on tty1.
+# Whatever is missing is asked on tty1; an unattended run stops instead.
 set -Eeuo pipefail
 
 SHARE=/usr/local/share/autoinstall
@@ -40,8 +39,6 @@ load_env() {
 load_config() {
   local param fwcfg=/sys/firmware/qemu_fw_cfg/by_name/opt/autoinstall/raw
 
-  [[ -f "${SHARE}/defaults.env" ]] && load_env < "${SHARE}/defaults.env"
-
   modprobe qemu_fw_cfg 2>/dev/null || true
   if [[ -r "${fwcfg}" ]]; then
     load_env < "${fwcfg}"
@@ -72,14 +69,49 @@ load_config() {
   fi
 }
 
-# ask KEY "question" [default]: fills CFG[KEY] when empty
-ask() {
-  local key="$1" question="$2" default="${3:-}" answer
-  [[ -n "${CFG[${key}]:-}" ]] && return 0
-  ${UNATTENDED} && { CFG[${key}]="${default}"; return 0; }
-  read -r -p "${question}${default:+ [${default}]}: " answer
-  CFG[${key}]="${answer:-${default}}"
+# ask KEY "question" [CHECK]: fills CFG[KEY] when missing, CHECK validates it
+ask() { ask_key required "$@"; }
+# ask_optional KEY "question" [CHECK]: an empty value is allowed
+ask_optional() { ask_key optional "$@"; }
+
+ask_key() {
+  local mode="$1" key="$2" question="$3" check="${4:-}" value
+  while true; do
+    if [[ -v "CFG[${key}]" ]]; then
+      value="${CFG[${key}]}"
+    elif ${UNATTENDED}; then
+      [[ "${mode}" == optional ]] && { CFG[${key}]=""; return 0; }
+      die "unattended install: ${key} is not set"
+    else
+      read -r -p "${question}: " value
+    fi
+    if [[ -z "${value}" ]]; then
+      [[ "${mode}" == optional ]] && { CFG[${key}]=""; return 0; }
+    elif [[ -z "${check}" ]] || "${check}" "${value}"; then
+      CFG[${key}]="${value}"
+      return 0
+    fi
+    ${UNATTENDED} && die "unattended install: ${key}=\"${value}\" is not valid"
+    echo "Not valid: \"${value}\""
+    unset "CFG[${key}]"
+  done
 }
+
+# ask_bool KEY "question": CFG[KEY] becomes true or false
+ask_bool() {
+  ask "$1" "$2 (yes/no)" valid_bool
+  if is_true "${CFG[$1]}"; then CFG[$1]=true; else CFG[$1]=false; fi
+}
+
+valid_bool() { [[ "${1,,}" =~ ^(1|y|yes|true|on|0|n|no|false|off)$ ]]; }
+valid_timezone() { [[ "$1" != *..* && -f "/usr/share/zoneinfo/$1" ]]; }
+valid_locale() { sed -n 's/^#\{0,1\}\([^ #]\{1,\}\) .*/\1/p' /etc/locale.gen | grep -qxF "$1"; }
+valid_locales() {
+  local locale
+  for locale in ${1//,/ }; do valid_locale "${locale}" || return 1; done
+}
+valid_keymap() { localectl list-keymaps 2>/dev/null | grep -qxF "$1"; }
+valid_size() { [[ "$1" =~ ^(0|[1-9][0-9]*[kKmMgG])$ ]]; }
 
 # ask_secret VAR "question": reads twice, stores in the named variable
 ask_secret() {
@@ -294,7 +326,7 @@ configure_system() {
 
   arch-chroot "${MNT}" ln -sf "/usr/share/zoneinfo/${CFG[TIMEZONE]}" /etc/localtime
   arch-chroot "${MNT}" hwclock --systohc
-  for locale in ${CFG[LOCALES]//,/ }; do
+  for locale in ${CFG[LANG]} ${CFG[LOCALES]//,/ }; do
     sed -i "s/^#\(${locale} \)/\1/" "${MNT}/etc/locale.gen"
   done
   arch-chroot "${MNT}" locale-gen
@@ -399,6 +431,11 @@ setup_snapper() {
 
 setup_dots() {
   local user="${CFG[USERNAME]}" home="${MNT}/home/${CFG[USERNAME]}"
+
+  # The YubiKey enrollment script, for later (see enroll-yubikey --help)
+  install -m 755 /usr/local/bin/enroll-yubikey "${MNT}/usr/local/bin/enroll-yubikey"
+
+  [[ -n "${CFG[DOTS_REPO]}" ]] || { log "No dots repo: no clone, no chezmoi data"; return 0; }
   log "Cloning ${CFG[DOTS_REPO]} (${CFG[DOTS_REF]})"
   mkdir -p "${home}/git"
   if git clone --branch "${CFG[DOTS_REF]}" "${CFG[DOTS_REPO]}" "${home}/git/dots"; then
@@ -421,9 +458,6 @@ gaming = ${CFG[GAMING]}
 sway = ${CFG[SWAY]}
 EOF
   arch-chroot "${MNT}" chown -R "${user}:${user}" "/home/${user}"
-
-  # The YubiKey enrollment script, for later (see enroll-yubikey --help)
-  install -m 755 /usr/local/bin/enroll-yubikey "${MNT}/usr/local/bin/enroll-yubikey"
 }
 
 show_recovery_key() {
@@ -469,7 +503,7 @@ on_error() {
   local rc=$?
   echo "AUTOINSTALL FAILED (exit ${rc}, line ${BASH_LINENO[0]}): see ${LOG}"
   # Unattended runs (QEMU tests) must end; interactive ones keep the shell
-  ${UNATTENDED} && is_true "${CFG[POWEROFF]:-true}" && { sleep 3; systemctl poweroff; }
+  ${UNATTENDED} && is_true "${CFG[POWEROFF]:-}" && { sleep 3; systemctl poweroff; }
   exit "${rc}"
 }
 
@@ -496,19 +530,27 @@ main() {
   detect_hardware
   pick_disk
 
-  ask HOSTNAME "Hostname" "archlinux"
-  ask USERNAME "User name" "dario"
-  ask FULLNAME "Full name" ""
+  ask HOSTNAME "Hostname"
+  ask USERNAME "User name"
+  ask_optional FULLNAME "Full name"
+  ask TIMEZONE "Time zone, e.g. Europe/Rome" valid_timezone
+  ask LANG "Language, e.g. en_US.UTF-8" valid_locale
+  ask_optional LOCALES "More locales, comma separated" valid_locales
+  ask KEYMAP "Console keymap, e.g. us" valid_keymap
+  ask SWAP_SIZE "Swapfile size, e.g. 8g (0 = none)" valid_size
+  ask_optional MIRROR_COUNTRY "Mirror countries, comma separated (empty = worldwide)"
+  # A passphrase (or YubiKey PIN) at every boot
+  ask_bool LUKS "Encrypt the disk? A passphrase is asked at every boot"
 
-  # Encryption is optional: a passphrase (or YubiKey PIN) at every boot
-  ask LUKS "Encrypt the disk? A passphrase is asked at every boot (yes/no)" "yes"
-  if is_true "${CFG[LUKS]}"; then CFG[LUKS]=true; else CFG[LUKS]=false; fi
-
-  # Written to chezmoi.toml: chezmoi installs them
-  ask GAMING "Install the gaming apps: Steam, Sunshine, GE-Proton (yes/no)" "no"
-  if is_true "${CFG[GAMING]}"; then CFG[GAMING]=true; else CFG[GAMING]=false; fi
-  ask SWAY "Install the sway desktop and its configs (yes/no)" "yes"
-  if is_true "${CFG[SWAY]}"; then CFG[SWAY]=true; else CFG[SWAY]=false; fi
+  ask_optional DOTS_REPO "dots repo URL (empty = no dots, no chezmoi data)"
+  if [[ -n "${CFG[DOTS_REPO]}" ]]; then
+    ask DOTS_REF "dots branch"
+    ask_optional DOTS_PUSH_URL "dots push URL (empty = the clone URL)"
+    # Written to chezmoi.toml: chezmoi installs them
+    ask_bool GAMING "Install the gaming apps: Steam, Sunshine, GE-Proton"
+    ask_bool SWAY "Install the sway desktop and its configs"
+  fi
+  ask_bool POWEROFF "Power off at the end"
 
   USER_PASSWORD=""
   [[ -n "${CFG[PASSWORD_HASH]:-}" ]] || ask_secret USER_PASSWORD "Password for ${CFG[USERNAME]}"
@@ -517,7 +559,7 @@ main() {
     ask_secret LUKS_PASSPHRASE "Disk encryption passphrase"
   fi
 
-  echo "Installing to ${CFG[DISK]} as ${CFG[HOSTNAME]}, user ${CFG[USERNAME]}, luks ${CFG[LUKS]}, gaming ${CFG[GAMING]}, sway ${CFG[SWAY]}, dots ${CFG[DOTS_REF]}"
+  echo "Installing to ${CFG[DISK]} as ${CFG[HOSTNAME]}, user ${CFG[USERNAME]}, luks ${CFG[LUKS]}, dots ${CFG[DOTS_REPO]:-none} ${CFG[DOTS_REF]:-}, gaming ${CFG[GAMING]:-}, sway ${CFG[SWAY]:-}"
 
   wait_for_live_system
   update_mirrors
