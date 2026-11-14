@@ -7,305 +7,216 @@ My configurations. Clone this repo to `${HOME}/git/dots`.
 | Directory | Content |
 |---|---|
 | `image/` | Installer ISOs for Arch and Fedora. See [image/README.md](image/README.md). |
-| `tests/vm/` | QEMU test VMs for the ISOs and for chezmoi. |
+| `tests/` | QEMU test VMs for the ISOs and for chezmoi. See [tests/README.md](tests/README.md). |
 | `home/` | The chezmoi source. `.chezmoiroot` points to it. |
 
 ## 1. Make a new image
 
-You need rootless podman. To set it up, see the
-[podman rootless tutorial](https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md).
+Needs rootless podman ([tutorial](https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md)).
 
-1. Go to the repo: `cd ~/git/dots`.
-2. Build the Arch ISO: `./image/arch/build.sh`.
-3. Or build the Fedora ISO: `./image/fedora/build.sh`.
-4. Find the ISO in `image/<distro>/out/`.
-5. Write the ISO to a USB stick. For the ways to do it, see
-   [USB flash installation medium](https://wiki.archlinux.org/title/USB_flash_installation_medium)
-   on the Arch wiki.
+1. Build: `./image/arch/build.sh` or `./image/fedora/build.sh`.
+2. The ISO is in `image/<distro>/out/`.
+3. Write it to a USB stick ([USB flash installation medium](https://wiki.archlinux.org/title/USB_flash_installation_medium)).
 
-For the disk layout, the settings and the install steps, see [image/README.md](image/README.md).
+Disk layout, settings and install steps: [image/README.md](image/README.md).
 
 ## 2. Test the image locally
 
-You need QEMU and the OVMF (edk2) firmware. For more data, see
-[QEMU](https://wiki.archlinux.org/title/QEMU) on the Arch wiki and the
-[OVMF wiki](https://github.com/tianocore/tianocore.github.io/wiki/OVMF).
-The test user is `dario`. The password and the LUKS passphrase are `test`.
+Needs QEMU and OVMF ([QEMU](https://wiki.archlinux.org/title/QEMU), [OVMF](https://github.com/tianocore/tianocore.github.io/wiki/OVMF)).
+Test user `dario`, password and LUKS passphrase `test`.
 
-1. Install the ISO in a new VM:
-   `tests/vm/vm.sh install arch image/arch/out/arch-auto-*.iso`
-2. Wait. The VM powers off at the end.
-3. Save the clean disk: `tests/vm/vm.sh snapshot arch fresh-install`.
-4. Start the VM: `tests/vm/vm.sh run arch`. For sway, add `--gl`.
-5. Log in and test.
-6. Stop the VM: `tests/vm/vm.sh stop arch`.
-7. Go back to the clean disk: `tests/vm/vm.sh revert arch fresh-install`.
+1. Install in a new VM: `tests/vm/vm.sh install arch image/arch/out/arch-auto-*.iso`. The VM powers off at the end.
+2. Save the clean disk: `tests/vm/vm.sh snapshot arch fresh-install`.
+3. Start: `tests/vm/vm.sh run arch`. For sway, add `--gl`.
+4. Stop: `tests/vm/vm.sh stop arch`.
+5. Back to the clean disk: `tests/vm/vm.sh revert arch fresh-install`.
 
-Use `fedora` in place of `arch` for the Fedora VM.
-To see all commands, run `tests/vm/vm.sh` with no arguments.
-For more data, see "Test in QEMU" in [image/README.md](image/README.md#test-in-qemu).
+`fedora` in place of `arch` for Fedora. All commands: `tests/vm/vm.sh`.
+More: [Test in QEMU](image/README.md#test-in-qemu).
 
 ## 3. Install the customizations with chezmoi
 
-The installer ISO clones the repo and writes the chezmoi data.
-On a different machine, do steps 1 and 2 first.
-
-This is a TL;DR. The full information is in the chezmoi docs:
-[quick start](https://www.chezmoi.io/quick-start/),
-[init](https://www.chezmoi.io/reference/commands/init/),
-[apply](https://www.chezmoi.io/reference/commands/apply/).
+The installer ISO clones the repo and answers the keyboard, laptop, gaming and sway questions.
+On another machine, do steps 1 and 2 first.
 
 1. Install `git` and `chezmoi`.
-2. Clone the repo: `git clone https://github.com/wouldgo/dots.git ~/git/dots`.
+2. Clone: `git clone https://github.com/wouldgo/dots.git ~/git/dots`.
 3. Apply: `chezmoi init --apply --source ~/git/dots`.
-4. If chezmoi asks about the Apple keyboard, laptop, gaming, sway, greetd or SSH logins, answer the questions.
-   Answer no to sway where you can only use GNOME: chezmoi skips its packages and configs.
-   Answer yes to greetd to replace GDM with tuigreet at the next boot. GNOME under greetd is not tested.
-   Answer yes to SSH logins on a machine that other machines open apps from (see section 6).
-5. Log out and log in again.
+4. Answer the questions:
+   - sway: no where only GNOME is allowed. No skips its packages and configs.
+   - greetd: yes replaces GDM with tuigreet. GNOME under greetd is not tested.
+   - SSH logins: yes on a machine that other machines open apps from (section 6).
+5. Log out and log in.
 
-To get changes later:
+Update: `git -C ~/git/dots pull`, then `chezmoi apply`.
 
-1. Pull: `git -C ~/git/dots pull`.
-2. Apply: `chezmoi apply`.
+Docs: [quick start](https://www.chezmoi.io/quick-start/), [init](https://www.chezmoi.io/reference/commands/init/), [apply](https://www.chezmoi.io/reference/commands/apply/).
 
 ## 4. Add new stuff
 
-All changes go in `home/`. After each change, run `chezmoi diff` to see it. Then run `chezmoi apply`.
-For these two commands, see the chezmoi docs:
-[diff](https://www.chezmoi.io/reference/commands/diff/),
-[apply](https://www.chezmoi.io/reference/commands/apply/).
+All changes go in `home/`. Check with `chezmoi diff`, then `chezmoi apply`.
 
 ### Add a package
 
-1. Open `home/.chezmoidata/packages.yaml`.
-2. Add the package to a group under `arch` and under `fedora`.
-3. For an AUR package, use the `aur` section.
-4. For a third-party dnf repo, use the `fedora_repos` section.
+`home/.chezmoidata/packages.yaml`:
 
-For the file format, see
-[.chezmoidata](https://www.chezmoi.io/reference/special-files/chezmoidata-format/)
-in the chezmoi docs.
+- a group under `arch` and under `fedora`
+- `aur`: AUR packages
+- `fedora_repos`: third-party dnf repos
+
+Docs: [.chezmoidata](https://www.chezmoi.io/reference/special-files/chezmoidata-format/).
 
 ### Add a developer tool
 
-1. Add the tool to `home/dot_config/mise/config.toml`.
-2. Run `chezmoi apply`. mise installs the tool.
+1. Add it to `[tools]` in `home/dot_config/mise/config.toml`.
+   Not in the mise registry: also its backend in `[tool_alias]`.
+2. `chezmoi apply` installs it.
 
-This is a TL;DR. The full information is in the mise docs:
-[dev tools](https://mise.jdx.dev/dev-tools/),
-[configuration](https://mise.jdx.dev/configuration.html).
+Docs: [dev tools](https://mise.jdx.dev/dev-tools/), [configuration](https://mise.jdx.dev/configuration.html).
 
 ### Add an agent skill
 
-The global skills of Claude Code, Codex and Pi are listed in
-`home/.chezmoidata/skills.yaml`. `chezmoi apply` installs them with the
-`skills` CLI and removes the global skills that are not in the list.
+`home/.chezmoidata/skills.yaml` lists the global skills of Claude Code, Codex and Pi.
+`chezmoi apply` installs them and removes the global skills not in the list.
 
-1. Install the skill: `skills add <owner/repo> -g -s <skill>`.
-   To remove one: `skills remove -g -s <skill>`.
-2. Write the installed skills to the list: `skills-sync save`.
-3. Commit `home/.chezmoidata/skills.yaml`. On the other machines, `chezmoi apply`.
+1. Install: `skills add <owner/repo> -g -s <skill>`. Remove: `skills remove -g -s <skill>`.
+2. Save the list: `skills-sync save`.
+3. Commit `skills.yaml`. Other machines: `chezmoi apply`.
 
-You can also edit the list by hand and run `chezmoi apply` (or `skills-sync apply`).
-To update the skills to their latest version: `skills update -g -y`.
-A skill that you install and do not save goes away on the next apply.
-A skill with `allowed-tools` (tools that the agent runs without asking) is
-removed, and `skills-sync apply` fails until the list drops it.
+- Edit the list by hand, then `chezmoi apply` or `skills-sync apply`.
+- Update all: `skills update -g -y`.
+- A skill not saved goes away on the next apply.
+- A skill with `allowed-tools` is removed, and `skills-sync apply` fails until the list drops it.
 
-This is a TL;DR. The full information is in `skills --help` and on [skills.sh](https://skills.sh).
+Docs: `skills --help`, [skills.sh](https://skills.sh).
 
 ### Add a config file
 
-1. Copy the file into chezmoi: `chezmoi add ~/.config/<app>/<file>`.
-2. Or add it by hand in `home/`. Use the chezmoi names:
-   - `dot_` for a leading dot. Example: `dot_zshrc` is `~/.zshrc`.
-   - `executable_` for a file that runs. Put scripts in `home/dot_local/bin/`.
-   - `.tmpl` at the end for a template.
-3. For a file to download, add it to `home/.chezmoiexternal.toml`.
+- From the machine: `chezmoi add ~/.config/<app>/<file>`.
+- By hand in `home/`: `dot_` for a leading dot, `executable_` for a script
+  (scripts go in `home/dot_local/bin/`), `.tmpl` for a template.
+- A file to download: `home/.chezmoiexternal.toml`.
 
-This is a TL;DR. The full information is in the chezmoi docs:
-[add](https://www.chezmoi.io/reference/commands/add/),
-[source state attributes](https://www.chezmoi.io/reference/source-state-attributes/),
-[templating](https://www.chezmoi.io/user-guide/templating/),
-[.chezmoiexternal](https://www.chezmoi.io/reference/special-files/chezmoiexternal-format/).
+Docs: [add](https://www.chezmoi.io/reference/commands/add/), [source state attributes](https://www.chezmoi.io/reference/source-state-attributes/), [templating](https://www.chezmoi.io/user-guide/templating/), [.chezmoiexternal](https://www.chezmoi.io/reference/special-files/chezmoiexternal-format/).
 
 ### Add a value for each machine
 
-1. Add a prompt to `home/.chezmoi.toml.tmpl`. Use `promptBoolOnce`.
-2. Add the value to the `[data]` section.
-3. Use the value in a `.tmpl` file. Example: `{{ if .isLaptop }}`.
-4. Run `chezmoi init` to write the new value.
+1. A `promptBoolOnce` prompt in `home/.chezmoi.toml.tmpl`, and the value in `[data]`.
+2. Use it in a `.tmpl` file: `{{ if .isLaptop }}`.
+3. `chezmoi init` writes the new value.
 
-If the installer can find the value, also write it in the installer.
-See `image/arch/overlay/` and `image/fedora/autoinstall.ks`.
+If the installer can find the value, write it there too: `image/arch/overlay/`, `image/fedora/autoinstall.ks`.
 
-This is a TL;DR. The full information is in the chezmoi docs:
-[promptBoolOnce](https://www.chezmoi.io/reference/templates/init-functions/promptBoolOnce/),
-[templating](https://www.chezmoi.io/user-guide/templating/),
-[init](https://www.chezmoi.io/reference/commands/init/).
+Docs: [promptBoolOnce](https://www.chezmoi.io/reference/templates/init-functions/promptBoolOnce/), [templating](https://www.chezmoi.io/user-guide/templating/), [init](https://www.chezmoi.io/reference/commands/init/).
 
 ### Add a setup step
 
-1. Add a script to `home/.chezmoiscripts/`.
-2. Start the name with a prefix:
-   - `run_onchange_` runs the script when its content changes.
-   - `run_` runs the script on each apply.
-   - `before_` or `after_` sets when the script runs.
-3. Add a number to set the order. Example: `run_onchange_after_70-my-step.sh`.
+A script in `home/.chezmoiscripts/`, named `run_onchange_after_70-my-step.sh`:
 
-This is a TL;DR. The full information is in
-[use scripts to perform actions](https://www.chezmoi.io/user-guide/use-scripts-to-perform-actions/)
-in the chezmoi docs.
+- `run_onchange_`: runs when its content changes. `run_`: runs on each apply.
+- `before_` / `after_`: before or after the files.
+- The number sets the order.
+
+Docs: [use scripts to perform actions](https://www.chezmoi.io/user-guide/use-scripts-to-perform-actions/).
 
 ### Test the change
 
-The VM clones the repo from GitHub. Push the change first.
-The VM uses the branch in `DOTS_REF`. The default is `feature/chezmoi`.
-
-1. Push the change to your branch.
-2. Go back to a clean VM: `tests/vm/vm.sh revert arch fresh-install`.
-3. Start the VM: `tests/vm/vm.sh run arch`.
-4. In the VM, pull: `git -C ~/git/dots pull`.
-5. In the VM, apply: `chezmoi init --apply --source ~/git/dots`.
-6. Make sure that the change works.
+1. Clean VM: `tests/vm/vm.sh revert arch fresh-install`.
+2. Start: `tests/vm/vm.sh run arch`.
+3. Copy the working tree into it, no commit or push: `tests/vm/vm.sh sync arch`.
+4. In the VM: `chezmoi init --apply --source ~/git/dots`.
 
 ## 5. Use a WireGuard VPN
 
-NetworkManager keeps the tunnels and their keys, outside this repo.
-Do not put a `.conf` file in the repo: it contains the private key.
-On each machine, import each tunnel one time:
+NetworkManager keeps the tunnels and their keys. Never put a `.conf` in the repo: it has the private key.
 
-1. Import: `nmcli connection import type wireguard file wg0.conf`.
-   The file name, without `.conf`, is the tunnel name. The tunnel starts at once.
-2. To start the tunnel only on request: `nmcli connection modify wg0 connection.autoconnect no`.
-3. Delete the `.conf` file if you do not need it.
+On each machine, one time per tunnel:
 
-To start or stop a tunnel:
+1. Import: `nmcli connection import type wireguard file wg0.conf`. The file name is the tunnel name; it starts at once.
+2. Only on request: `nmcli connection modify wg0 connection.autoconnect no`.
+3. Delete the `.conf`.
 
-- GNOME: use the VPN toggle in the quick settings. No extension is necessary.
-- sway: click the VPN icon on waybar, or select `VPN` in the settings menu (`$mod+Shift+e`).
-  The icon is yellow when a tunnel is up. It is hidden when the machine has no tunnels.
+Start or stop:
 
-This is a TL;DR. The full information is in
-[WireGuard](https://wiki.archlinux.org/title/WireGuard#NetworkManager) on the Arch wiki.
+- GNOME: the VPN toggle in the quick settings.
+- sway: the VPN icon on waybar (yellow when up, hidden with no tunnels), or `VPN` in the settings menu (`$mod+Shift+e`).
+
+Docs: [WireGuard](https://wiki.archlinux.org/title/WireGuard#NetworkManager).
 
 ## 6. Open apps of another machine
 
-With waypipe, a Wayland app runs on one machine and shows its window on the
-sway of another one, over ssh. Example: the laptop shows zed or kicad of
-the desktop. waypipe is installed on all the machines.
+waypipe shows the window of an app that runs on another machine (the server) on this sway, over ssh.
 
-On the machine with the apps (the server), one time:
+Server, one time: SSH logins yes (`sshServer = true` in `~/.config/chezmoi/chezmoi.toml`, then `chezmoi apply`).
+sshd takes keys only, no root.
 
-1. Answer yes to SSH logins (`sshServer`). To change the answer later, set
-   `sshServer = true` in `~/.config/chezmoi/chezmoi.toml` and do `chezmoi apply`.
-   chezmoi enables sshd. Only keys can log in, root cannot.
+Client, one time:
 
-On the machine with the screen (the client), one time:
+1. A key: `ssh-keygen -t ed25519`.
+2. On the server, add `~/.ssh/id_ed25519.pub` to `~/.ssh/authorized_keys`.
+3. Optional: a `Host` entry in `~/.ssh/config`. The menu lists these hosts.
 
-1. Make a key if you do not have one: `ssh-keygen -t ed25519`.
-2. Copy the key to the server. Passwords are off, so do it on the server: add
-   the contents of `~/.ssh/id_ed25519.pub` to `~/.ssh/authorized_keys`.
-3. Optional: add a `Host` entry in `~/.ssh/config`. The menu shows these hosts.
-
-To open the apps, select `Remote` in the settings menu (`$mod+Shift+e`) and
-select or type the host. A terminal of the server opens. The GUI apps that you
-start in this terminal open on the client. Without the menu: `waypipe ssh host alacritty`.
+Open: `Remote` in the settings menu (`$mod+Shift+e`), then the host. A terminal of the server opens; the GUI apps started there open here.
+Without the menu: `waypipe ssh host alacritty`.
 
 Known problems:
 
-- An app that is already open on the server can open its new window there, not
-  on the client (Brave, zed). For Brave, use a different profile:
-  `brave --user-data-dir=$HOME/.config/brave-remote`.
-- Chromium and Electron apps need `--ozone-platform=wayland`. Without it, they look for X11 and show nothing.
-- Black or broken windows from a server with an NVIDIA GPU: try `waypipe --no-gpu ssh host alacritty`.
+- An app already open on the server opens its new window there (Brave, zed). Brave: `brave --user-data-dir=$HOME/.config/brave-remote`.
+- Chromium and Electron apps need `--ozone-platform=wayland`.
+- Black windows from an NVIDIA server: `waypipe --no-gpu ssh host alacritty`.
 
-This is a TL;DR. The full information is in `man waypipe`.
+Docs: `man waypipe`.
 
 ## 7. Use nvim
 
-nvim keeps the Vim modes and adds the VSCode keybindings on top: `Ctrl+S`,
-`Ctrl+P`, `Ctrl+Shift+F`, `F12`, `Ctrl+.`, `Ctrl+/`, `Ctrl+D` and the others.
-All of them are in `~/.config/nvim/lua/config/keymaps.lua`. To find one, press
-`Ctrl+K Ctrl+S`. The other commands start with `Space`: wait a moment after it
-and a menu shows them. Window commands are on `Space w` because `Ctrl+W` closes
-the editor. `Ctrl+A` belongs to tmux: select all with `ggVG`.
+- Vim modes plus the VSCode keys (`Ctrl+S`, `Ctrl+P`, `Ctrl+Shift+F`, `F12`, `Ctrl+.`, `Ctrl+/`, `Ctrl+D`…), in `~/.config/nvim/lua/config/keymaps.lua`.
+- `Ctrl+K Ctrl+S`: find a key. `Space`: the other commands. `Space w`: windows.
+- `Ctrl+A` is tmux: select all with `ggVG`.
+- The first start installs plugins, language servers and debuggers (`:Mason`); restart nvim after it.
 
-The first start installs the plugins, the language servers and the debuggers.
-Wait until it ends (`:Mason` shows the progress), then restart nvim.
+Debug Go (tag `test`), Rust, JavaScript and TypeScript:
 
-To debug Go, Rust, JavaScript or TypeScript, use the VSCode keys:
-
-- `F9` toggles a breakpoint, `Shift+F9` sets a breakpoint with a condition.
-- `F5` starts the debug or continues. On the first start, select what to run.
-  The configurations of `.vscode/launch.json` are in the list too.
+- `F9` breakpoint, `Shift+F9` conditional breakpoint.
+- `F5` start or continue; `.vscode/launch.json` is in the list.
 - `F10` step over, `F11` step into, `Shift+F11` step out, `Shift+F5` stop.
-- `Ctrl+Shift+D` shows or hides the debug views.
+- `Ctrl+Shift+D` debug views.
 
-C and C++ use clangd. It needs a `compile_commands.json`, in the project or
-in `build/`: CMake writes it with `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON`, and
-`idf.py build` always writes it. An ESP-IDF project (it has `sdkconfig`) uses
-the clangd of esp-clang, installed by chezmoi with `idf_tools.py`.
+C and C++: clangd, with `compile_commands.json` in the project or in `build/`
+(CMake: `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON`; `idf.py build` writes it).
+ESP-IDF projects (with `sdkconfig`) use the clangd of esp-clang.
 
-To debug an ESP32 over the USB serial port, without a JTAG probe:
+ESP32 debug over the USB serial port, no JTAG:
 
-1. `Space d f` builds a debug firmware (GDB stub, `-Og`) and flashes it.
-   The build goes to `~/.cache/nvim/esp-idf-debug/`: the project files do not change.
-2. `F5`, then `ESP-IDF: debug over the serial port`. Close `idf.py monitor` first.
-3. Go back to the normal firmware with `idf.py flash`.
+1. `Space d f`: build a debug firmware in `~/.cache/nvim/esp-idf-debug/` and flash it.
+2. `F5`, `ESP-IDF: debug over the serial port`. Close `idf.py monitor` first.
+3. Back to the normal firmware: `idf.py flash`.
 
-Only 2 breakpoints at a time: the stub uses the hardware breakpoints of the chip.
+Only 2 breakpoints at a time.
 
 Known problems:
 
-- `Ctrl+Shift+P`, `Ctrl+.` and the other `Ctrl+Shift` keys work only in Alacritty
-  without tmux: tmux and GNOME Console send them as the plain `Ctrl` key.
-  There, use `Space p` (command palette), `Space f` (search in files),
-  `Space e` (explorer), `Space m` (problems) and `Space .` (quick fix).
-- `:Lazy update` changes `~/.config/nvim/lazy-lock.json`. Bring it back to the
-  repo with `chezmoi re-add` (see [Bring back changes made by hand](#9-bring-back-changes-made-by-hand)).
+- The `Ctrl+Shift` keys work only in Alacritty without tmux. Elsewhere: `Space p` command palette,
+  `Space f` search in files, `Space e` explorer, `Space m` problems, `Space .` quick fix.
+- `:Lazy update` changes `~/.config/nvim/lazy-lock.json`: bring it back with `chezmoi re-add` (section 9).
 
 ## 8. Use Zed
 
-Zed has the settings and the keybindings of VSCode: Gruvbox Dark Hard, the
-project panel on the right, `Ctrl+Up/Down` to move lines, `Alt+Up/Down` to grow
-or shrink the selection, `Alt+Left/Right` to go back and forward, `Ctrl+B` for
-the panels on the right. The first start installs the language extensions.
-
-Go builds with the tag `test`, as in VSCode: gopls, the debug scenarios of
-`debugger: start` (`F4`, from `~/.config/zed/debug.json`) and the `go test`
-tasks next to the tests (`~/.config/zed/tasks.json`).
-
-Claude Code is in the agent panel: click `+` at its top and pick Claude Code.
-The adapter comes from mise (`claude-agent-acp`). It uses the login of the
-`claude` CLI; in the thread, `/login` changes it.
-It asks before every edit and command.
+- Settings and keybindings of VSCode. `Ctrl+B`: the panels on the right.
+- Go with the tag `test`: gopls, debug (`F4`), the `go test` tasks next to the tests.
+  gopls and delve come from mise.
+- Claude Code: `+` in the agent panel. It asks before every edit and command.
 
 ## 9. Bring back changes made by hand
 
-Use this when you change a config file on the machine and want the change in
-the repo. This is a TL;DR. The full information is in the chezmoi docs:
-[status](https://www.chezmoi.io/reference/commands/status/),
-[diff](https://www.chezmoi.io/reference/commands/diff/),
-[re-add](https://www.chezmoi.io/reference/commands/re-add/),
-[merge](https://www.chezmoi.io/reference/commands/merge/),
-[unmanaged](https://www.chezmoi.io/reference/commands/unmanaged/).
+1. Changed files: `chezmoi status`.
+   - `M` in column 1: changed on the machine after the last apply.
+   - `M` in column 2: `chezmoi apply` overwrites it.
+   - `R` in column 2: a script runs on the next apply.
+2. The change: `chezmoi diff ~/.config/<app>/<file>` (`-` machine, `+` repo; `--reverse` swaps them).
+3. Into the repo:
+   - a normal file: `chezmoi re-add ~/.config/<app>/<file>` (no file: all of them).
+   - a `.tmpl` file: `chezmoi merge ~/.config/<app>/<file>` or `chezmoi edit ~/.config/<app>/<file>`.
+4. Files chezmoi does not manage: `chezmoi unmanaged ~/.config`, then `chezmoi add`.
+5. Check and commit: `git -C ~/git/dots diff`.
 
-1. Find the changed files: `chezmoi status`.
-   - An `M` in the first column: you changed the file after the last apply.
-   - An `M` in the second column: `chezmoi apply` overwrites the file.
-   - An `R` in the second column: a script runs on the next apply.
-2. See the change: `chezmoi diff ~/.config/<app>/<file>`.
-   - `-` lines are the file on the machine. `+` lines are the repo.
-   - `chezmoi diff --reverse` shows the other direction.
-3. Copy the change into the repo:
-   - A normal file: `chezmoi re-add ~/.config/<app>/<file>`.
-     Without a file, `chezmoi re-add` copies all the changed files.
-   - A `.tmpl` file: `re-add` does not work. Use
-     `chezmoi merge ~/.config/<app>/<file>`, or edit the source with
-     `chezmoi edit ~/.config/<app>/<file>`.
-4. Find files that chezmoi does not manage: `chezmoi unmanaged ~/.config`.
-   Add them with `chezmoi add` (see [Add a config file](#add-a-config-file)).
-5. Check the result in the repo: `git -C "$(chezmoi source-path)/.." diff`.
-   Then commit.
+Docs: [status](https://www.chezmoi.io/reference/commands/status/), [diff](https://www.chezmoi.io/reference/commands/diff/), [re-add](https://www.chezmoi.io/reference/commands/re-add/), [merge](https://www.chezmoi.io/reference/commands/merge/), [unmanaged](https://www.chezmoi.io/reference/commands/unmanaged/).
