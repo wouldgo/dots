@@ -38,9 +38,18 @@ return {
     lazy = false,
     dependencies = { "mason-org/mason.nvim", "saghen/blink.cmp" },
     config = function()
+      -- gopls sends the printf verbs (%+v, %d, ...) as string tokens with the
+      -- format modifier, but only to a client that declares it: the whole list,
+      -- a list is merged by index
+      local modifiers = vim.lsp.protocol.make_client_capabilities().textDocument.semanticTokens.tokenModifiers
       vim.lsp.config("gopls", {
+        capabilities = {
+          textDocument = {
+            semanticTokens = { tokenModifiers = vim.list_extend(vim.deepcopy(modifiers), { "format" }) },
+          },
+        },
         settings = {
-          gopls = { buildFlags = { "-tags=test" } },
+          gopls = { buildFlags = { "-tags=test" }, semanticTokens = true },
         },
       })
 

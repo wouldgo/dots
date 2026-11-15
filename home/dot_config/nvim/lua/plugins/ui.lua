@@ -3,7 +3,11 @@ return {
     "ellisonleao/gruvbox.nvim",
     priority = 1000,
     -- Medium contrast, the same background as the Alacritty theme
-    opts = { contrast = "" },
+    opts = {
+      contrast = "",
+      -- printf verbs from gopls, apart from the string green
+      overrides = { ["@lsp.mod.format"] = { link = "GruvboxPurple" } },
+    },
     config = function(_, opts)
       require("gruvbox").setup(opts)
       vim.cmd.colorscheme("gruvbox")
