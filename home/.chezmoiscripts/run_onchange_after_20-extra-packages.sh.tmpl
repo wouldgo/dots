@@ -43,11 +43,5 @@ sudo dnf install -y {{ range .packages.fedora_gaming }}{{ . | quote }} {{ end }}
 sudo dnf config-manager addrepo --overwrite --from-repofile={{ $repo.repofile | quote }}
 sudo dnf install -y {{ range $repo.packages }}{{ . | quote }} {{ end }}
 {{- end }}
-
-# zed: not in the Fedora repos. Official installer: ~/.local/zed.app, linked in
-# ~/.local/bin, with desktop entry; it updates itself afterwards
-if [ ! -x "${HOME}/.local/bin/zed" ]; then
-  curl -fsSL https://zed.dev/install.sh | sh
-fi
 {{- end }}
 {{ end -}}

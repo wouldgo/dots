@@ -161,7 +161,7 @@ Without the menu: `waypipe ssh host alacritty`.
 
 Known problems:
 
-- An app already open on the server opens its new window there (Brave, zed). Brave: `brave --user-data-dir=$HOME/.config/brave-remote`.
+- An app already open on the server opens its new window there (Brave, VSCode). Brave: `brave --user-data-dir=$HOME/.config/brave-remote`.
 - Chromium and Electron apps need `--ozone-platform=wayland`.
 - Black windows from an NVIDIA server: `waypipe --no-gpu ssh host alacritty`.
 
@@ -198,16 +198,9 @@ Known problems:
 
 - The `Ctrl+Shift` keys work only in Alacritty without tmux. Elsewhere: `Space p` command palette,
   `Space f` search in files, `Space e` explorer, `Space m` problems, `Space .` quick fix.
-- `:Lazy update` changes `~/.config/nvim/lazy-lock.json`: bring it back with `chezmoi re-add` (section 9).
+- `:Lazy update` changes `~/.config/nvim/lazy-lock.json`: bring it back with `chezmoi re-add` (section 8).
 
-## 8. Use Zed
-
-- Settings and keybindings of VSCode. `Ctrl+B`: the panels on the right.
-- Go with the tag `test`: gopls, debug (`F4`), the `go test` tasks next to the tests.
-  gopls and delve come from mise.
-- Claude Code: `+` in the agent panel. It asks before every edit and command.
-
-## 9. Bring back changes made by hand
+## 8. Bring back changes made by hand
 
 1. Changed files: `chezmoi status`.
    - `M` in column 1: changed on the machine after the last apply.

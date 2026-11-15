@@ -1,7 +1,5 @@
 packages:
   arch:
-    apps:
-      - zed
     base:
       - base-devel
       - cmake
@@ -102,6 +100,7 @@ packages:
       - brave-bin
     dev:
       - esp-idf
+      - visual-studio-code-bin
     # installed only when gaming
     gaming:
       - sunshine-bin
@@ -202,13 +201,17 @@ packages:
       - kicad
     # cuda is only in NVIDIA's versioned repo: install it by hand
   # Third-party dnf repos (the Fedora counterpart of aur), see
-  # run_onchange_after_20-extra-packages, which also installs zed with its
-  # official installer. esp-idf has no Fedora package: use Espressif's installer
+  # run_onchange_after_20-extra-packages. esp-idf has no Fedora package: use
+  # Espressif's installer
   fedora_repos:
     brave:
       repofile: https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
       packages:
         - brave-browser
+    vscode:
+      repofile: https://packages.microsoft.com/yumrepos/vscode/config.repo
+      packages:
+        - code
   # Installed only when gaming, see run_onchange_after_20-extra-packages (it
   # needs RPM Fusion nonfree and the LizardByte COPR). GE-Proton has no package:
   # run_onchange_after_70-ge-proton downloads the latest release
