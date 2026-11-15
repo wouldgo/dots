@@ -23,6 +23,17 @@ return {
     end,
   },
   {
+    -- TODO, FIXME, BUG, HACK, XXX in the comments, as todo-tree: also without
+    -- the colon; Space t lists them in the whole project
+    "folke/todo-comments.nvim",
+    event = { "BufReadPost", "BufNewFile" },
+    dependencies = { "nvim-lua/plenary.nvim" },
+    opts = {
+      highlight = { pattern = [[.*<(KEYWORDS)\s*]] },
+      search = { pattern = [[\b(KEYWORDS)\b]] },
+    },
+  },
+  {
     -- Search and replace in the whole project (Ctrl+Shift+H)
     "MagicDuck/grug-far.nvim",
     cmd = "GrugFar",

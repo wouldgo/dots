@@ -171,6 +171,7 @@ Docs: `man waypipe`.
 
 - Vim modes plus the VSCode keys (`Ctrl+S`, `Ctrl+P`, `Ctrl+Shift+F`, `F12`, `Ctrl+.`, `Ctrl+/`, `Ctrl+D`…), in `~/.config/nvim/lua/config/keymaps.lua`.
 - `Ctrl+K Ctrl+S`: find a key. `Space`: the other commands. `Space w`: windows.
+- `Space l`: run the code lens of the line (`run test` in Go). `Space t`: the TODOs of the project.
 - `Ctrl+A` is tmux: select all with `ggVG`.
 - The first start installs plugins, language servers and debuggers (`:Mason`); restart nvim after it.
 

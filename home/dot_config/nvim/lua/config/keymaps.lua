@@ -242,6 +242,8 @@ map("n", "<leader>e", function()
 end, "Explorer (Ctrl+Shift+E)")
 map("n", "<leader>m", picker("diagnostics"), "Problems (Ctrl+Shift+M)")
 map({ "n", "x" }, "<leader>.", vim.lsp.buf.code_action, "Quick fix (Ctrl+.)")
+map("n", "<leader>l", vim.lsp.codelens.run, "Run code lens")
+map("n", "<leader>t", picker("todo_comments"), "TODOs")
 
 -- Debug ------------------------------------------------------------------------
 

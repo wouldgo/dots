@@ -17,6 +17,7 @@ return {
         "gopls",
         "json-lsp",
         "lua-language-server",
+        "pyright",
         "rust-analyzer",
         "vtsls",
         "yaml-language-server",
@@ -30,6 +31,8 @@ return {
         "prettier",
         "shfmt",
         "stylua",
+        -- linters
+        "markdownlint-cli2",
       },
     },
   },
@@ -49,9 +52,31 @@ return {
           },
         },
         settings = {
-          gopls = { buildFlags = { "-tags=test" }, semanticTokens = true },
+          -- The test lens stands in for the run test lens of the VSCode Go extension
+          gopls = { buildFlags = { "-tags=test" }, semanticTokens = true, codelenses = { test = true } },
         },
       })
+      -- shellcheck.customArgs in VSCode: follow the sourced files
+      vim.lsp.config("bashls", {
+        settings = { bashIde = { shellcheckArguments = "-x" } },
+      })
+      -- Pylance checks no types by default: unresolved names, imports and unused
+      -- code only. nvim-lspconfig hides the unused code, Pylance greys it out.
+      vim.lsp.config("pyright", {
+        settings = {
+          pyright = { disableTaggedHints = false },
+          python = { analysis = { typeCheckingMode = "off" } },
+        },
+      })
+      -- Run and Debug are commands of the VSCode extension, not of the server
+      vim.lsp.config("rust_analyzer", {
+        settings = { ["rust-analyzer"] = { lens = { run = { enable = false }, debug = { enable = false } } } },
+      })
+
+      -- Types and parameter names in the code, implementations and tests above
+      -- the functions, as VSCode shows them (Space l runs a lens)
+      vim.lsp.inlay_hint.enable(true)
+      vim.lsp.codelens.enable(true)
 
       -- C/C++: clangd finds compile_commands.json also in build/. An ESP-IDF
       -- project (it has sdkconfig) gets the clangd of esp-clang instead: it
@@ -103,9 +128,25 @@ return {
         "gopls",
         "jsonls",
         "lua_ls",
+        "pyright",
         "rust_analyzer",
         "vtsls",
         "yamlls",
+      })
+    end,
+  },
+  {
+    -- markdownlint as the VSCode extension, which has no language server
+    "mfussenegger/nvim-lint",
+    event = { "BufReadPost", "BufNewFile" },
+    config = function()
+      local lint = require("lint")
+      lint.linters_by_ft = { markdown = { "markdownlint-cli2" } }
+      vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost", "InsertLeave" }, {
+        group = vim.api.nvim_create_augroup("lint", { clear = true }),
+        callback = function()
+          lint.try_lint()
+        end,
       })
     end,
   },
