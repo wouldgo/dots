@@ -56,6 +56,8 @@ cmctl = "latest"
 "codex" = "latest"
 termaid = "latest"
 scroll = "latest"
+"github:asinglebit/guitar" = "latest"
+"github:redhat-et/ripwire" = "latest"
 
 [tool_alias]
 zoxide = "aqua:ajeetdsouza/zoxide"
