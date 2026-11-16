@@ -64,6 +64,7 @@ apkeep = "latest"
 sqlmux = "latest"
 termaid = "latest"
 scroll = "latest"
+guitar = "latest"
 
 [tool_alias]
 gopls = "go:golang.org/x/tools/gopls"
@@ -111,6 +112,7 @@ apkeep = "github:EFForg/apkeep"
 sqlmux = "github:kackerx/sqlmux"
 termaid = "pipx:termaid"
 scroll = "go:github.com/rynobey/scroll"
+guitar = "github:asinglebit/guitar"
 
 [settings]
 trusted_config_paths = [
