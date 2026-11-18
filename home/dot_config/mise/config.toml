@@ -65,6 +65,8 @@ sqlmux = "latest"
 termaid = "latest"
 scroll = "latest"
 guitar = "latest"
+sops = "latest"
+age = "latest"
 
 [tool_alias]
 gopls = "go:golang.org/x/tools/gopls"
